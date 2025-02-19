@@ -23,7 +23,7 @@ public class Product {
     @Column(nullable = false) // Not Null 제약
     private int price;
 
-    // 상품 URL 주소
+    // 상품 이미지 URL 주소
     @Column(length = 50, nullable = false)
     private String imageURL;
 }

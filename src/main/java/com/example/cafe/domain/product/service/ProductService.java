@@ -5,6 +5,7 @@ import com.example.cafe.domain.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -18,7 +19,7 @@ public class ProductService {
         return productRepository.findById(id);
     }
 
-    // 주문 담기
+    // 주문 담기 (샘플)
     public Product add(String name, int price, String imageURL) {
 
         Product product = Product.builder()
@@ -28,5 +29,16 @@ public class ProductService {
                 .build();
 
         return productRepository.save(product);
+    }
+
+    // 단일 상품 담기
+    public Optional<Product> orderProduct(String name) {
+        Optional<Product> product = productRepository.findByName(name);
+
+        return product;
+    }
+
+    // 다중 상품 담기
+    public List<Product> ordersProducts(List<String> productNames) {
     }
 }
