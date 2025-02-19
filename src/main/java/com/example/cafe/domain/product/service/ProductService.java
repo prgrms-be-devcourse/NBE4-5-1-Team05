@@ -17,4 +17,15 @@ public class ProductService {
     public Optional<Product> findById(Long id) {
         return productRepository.findById(id);
     }
+
+    // 주문 담기
+    public Product add(String name, int price) {
+
+        Product product = Product.builder()
+                .name(name)
+                .price(price)
+                .build();
+
+        return productRepository.save(product);
+    }
 }

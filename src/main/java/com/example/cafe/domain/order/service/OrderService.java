@@ -17,4 +17,16 @@ public class OrderService {
     public Optional<Order> findById(Long id) {
         return orderRepository.findById(id);
     }
+
+    // 주문 정보 기입
+    public Order add(String email, String address, int postCode) {
+
+        Order order = Order.builder()
+                .email(email)
+                .address(address)
+                .postCode(postCode)
+                .build();
+
+        return orderRepository.save(order);
+    }
 }
