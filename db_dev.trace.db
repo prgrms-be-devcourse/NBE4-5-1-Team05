@@ -380,3 +380,9 @@ org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "\000d\00
 2025-02-19 16:45:13.024669+09:00 jdbc[3]: exception
 org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "/* insert for com.example.cafe.domain.order.entity.Orders.Order */insert into [*]orders (address,email,post_code,order_id) values (?,?,?,default)"; expected "identifier"; SQL statement:
 /* insert for com.example.cafe.domain.order.entity.Orders.Order */insert into orders (address,email,post_code,order_id) values (?,?,?,default) [42001-232]
+2025-02-19 17:23:20.214689+09:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "[*]ORDER_ID"; SQL statement:
+ORDER_ID [42000-232]
+2025-02-19 17:23:28.580681+09:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "[*]POST_CODE"; expected "PREPARE"; SQL statement:
+POST_CODE [42001-232]
