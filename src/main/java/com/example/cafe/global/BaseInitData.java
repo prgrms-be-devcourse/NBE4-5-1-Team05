@@ -1,6 +1,6 @@
 package com.example.cafe.global;
 
-import com.example.cafe.domain.order.service.OrderService;
+import com.example.cafe.domain.order.service.OrdersService;
 import com.example.cafe.domain.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class BaseInitData {
 
-    private final OrderService orderService;
+    private final OrdersService ordersService;
     private final ProductService productService;
 
     @Autowired
@@ -33,13 +33,13 @@ public class BaseInitData {
     public void orderInit() {
 
         // 샘플 데이터 생성 (유저 정보 작성)
-        orderService.add("harun9988@naver.com", "서울시 구로구", 352);
+        ordersService.add("haeun9988@naver.com", "서울시 구로구", 352);
     }
 
     @Transactional
     public void productInit() {
 
         // 샘플 데이터 생성 (상품 담기)
-        productService.add("아메리카노", 4500);
+        productService.add("아메리카노", 4500, "이미지");
     }
 }

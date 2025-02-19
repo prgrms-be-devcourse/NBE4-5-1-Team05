@@ -8,7 +8,7 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Order {
+public class Orders {
 
     // 주문 id (기본키)
     @Id
@@ -24,5 +24,6 @@ public class Order {
     private String address;
 
     // 회원 우편 번호
+    @Column
     private int postCode;
 }

@@ -19,11 +19,12 @@ public class ProductService {
     }
 
     // 주문 담기
-    public Product add(String name, int price) {
+    public Product add(String name, int price, String imageURL) {
 
         Product product = Product.builder()
                 .name(name)
                 .price(price)
+                .imageURL(imageURL)
                 .build();
 
         return productRepository.save(product);
