@@ -42,7 +42,8 @@ public class OrdersService {
     public Optional<Orders> orderProduct(String productName, String email, String address, int postCode) {
 
         // 상품명으로 Product 정보를 조회하여 변수에 저장
-        Optional<Product> ordersProduct = productRepository.findByName(productName);
+        System.out.println("productname"+productName);
+        Optional<Product> ordersProduct = productRepository.findByName("아메리카노");
 
         Product product = ordersProduct.get();
 

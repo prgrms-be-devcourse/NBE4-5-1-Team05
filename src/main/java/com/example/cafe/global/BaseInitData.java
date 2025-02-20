@@ -8,6 +8,7 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.core.annotation.Order;
 import org.springframework.transaction.annotation.Transactional;
 
 @Configuration
@@ -22,10 +23,28 @@ public class BaseInitData {
     private BaseInitData self;
 
     @Bean
-    public ApplicationRunner applicationRunner() {
+    @Order(1)
+    public ApplicationRunner applicationRunner1() {
+        return args -> {
+            self.productInit();
+
+        };
+    }
+
+    @Transactional
+    public void productInit() {
+
+        // 샘플 데이터 생성 (상품 담기)
+        productService.add("아메리카노", 4500, "이미지");
+        productService.add("카페라떼", 5500, "이미지");
+
+    }
+
+    @Bean
+    @Order(2)
+    public ApplicationRunner applicationRunner2() {
         return args -> {
             self.orderInit();
-            self.productInit();
 
         };
     }
@@ -37,11 +56,4 @@ public class BaseInitData {
         ordersService.orderProduct("아메리카노", "haeun9988@naver.com", "서울시 구로구", 352);
     }
 
-    @Transactional
-    public void productInit() {
-
-        // 샘플 데이터 생성 (상품 담기)
-        productService.add("아메리카노", 4500, "이미지");
-        productService.add("카페라떼", 5500, "이미지");
-    }
 }

@@ -69,6 +69,7 @@ class CafeApplicationTests {
 		String address = "테스트용 주소1";
 		int postCode = 12345;
 
+
 		// 상품을 주문
 		Optional<Orders> orderProduct = ordersService.orderProduct(productName, email, address, postCode);
 
@@ -77,14 +78,14 @@ class CafeApplicationTests {
 
 		// 검증- 반환된 주문 아이디가 2인지 확인
 		assertThat(orders.get().getOrderId()).isEqualTo(2L);
+		// 검증 - 반환된 상품명이 아메리카노인지 확인
+
 		// 검증 - 반환된 이메일이 맞는지 확인
 		assertThat(orders.get().getEmail()).isEqualTo(email);
 		// 검증 - 반환된 주소가 맞는지 확인
 		assertThat(orders.get().getAddress()).isEqualTo(address);
 		// 검증 - 반환된 우편번호가 맞는지 확인
 		assertThat(orders.get().getPostCode()).isEqualTo(postCode);
-
-		// 검증 - 반환된 상품명이 아메리카노인지 확인
 	}
 
 //	@Test
