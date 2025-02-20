@@ -4,6 +4,7 @@ import com.example.cafe.domain.order.entity.Orders;
 import com.example.cafe.domain.order.entity.OrdersItem;
 import com.example.cafe.domain.order.repository.OrdersRepository;
 import com.example.cafe.domain.order.service.OrdersService;
+import com.example.cafe.domain.product.entity.Product;
 import com.example.cafe.domain.product.repository.ProductRepository;
 import com.example.cafe.domain.product.service.ProductService;
 import org.junit.jupiter.api.DisplayName;
@@ -15,7 +16,9 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
@@ -76,6 +79,27 @@ class CafeApplicationTests {
 	@DisplayName("출력 시험")
 	void contextLoads() {
 		System.out.println("Hello World");
+	}
+
+	@Test
+	@DisplayName("모든 상품 조회")
+	void findAllProducts() {
+
+		List<Product> products = productRepository.findAll();
+
+		assertThat(products).isNotNull();
+		assertThat(products.size()).isEqualTo(2);
+
+	}
+
+	@Test
+	@DisplayName("저장되어 있는 모든 구매내역 조회")
+	void findAllOrders() {
+
+		List<Orders> ordersList = ordersRepository.findAll();
+
+		assertThat(ordersList).isNotNull();
+		assertThat(ordersList.size()).isGreaterThan(0);
 	}
 
 	@Test
@@ -184,6 +208,12 @@ class CafeApplicationTests {
 		
 		//조회 된 이메일이 똑같은지 확인
 		assertThat(foundOrder.getEmail()).isEqualTo(email2);
+
+		// 검증 - 반환된 상품명이 아메리카노인지 확인
+		List<OrdersItem> ordersItems = foundOrder.getOrdersItems();
+		OrdersItem savedOrdersItem = ordersItems.getFirst();
+
+		assertThat(savedOrdersItem.getOrderProductName()).isEqualTo(productName);
 	}
 
 	@Test
@@ -201,20 +231,68 @@ class CafeApplicationTests {
 				.hasMessage("조회하려는 이메일이 없습니다.");
 	}
 
+	@Test
+	@DisplayName("다중 상품 주문 + 이메일로 찾아 검증")
+	void ordersProducts() {
+
+		// 주문할 상품 이름 2개, 이메일, 주소, 우편번호 저장
+		ArrayList<String> productNames = new ArrayList<>();
+			productNames.add("아메리카노");
+			productNames.add("카페라떼");
+		String email = "test4@gmail.com";
+		String address = "테스트용 주소4";
+		int postCode = 78645;
+
+		// 상품 이름들만 넘겨 변수에 저장
+		Orders multiOrders = ordersService.orderProducts(productNames, email, address, postCode);
+
+		// 영속화
+		Orders orders = ordersRepository.save(multiOrders);
+
+		// 이메일로 찾아 변수에 저장
+		Orders foundProduct = ordersService.findOrderByEmail(email);
+
+		/// 검증 ///
+		// 이메일
+		assertThat(foundProduct.getEmail()).isEqualTo(email);
+
+		// 주소
+		assertThat(foundProduct.getAddress()).isEqualTo(address);
+
+		// 우편번호
+		assertThat(foundProduct.getPostCode()).isEqualTo(postCode);
+
+		// 주문 음료 이름
+		ArrayList<OrdersItem> OrdersItems = new ArrayList<>(orders.getOrdersItems());
+		ArrayList<String> OrdersProductNames = OrdersItems.stream()
+				.map(OrdersItem::getOrderProductName)
+				.collect(Collectors.toCollection(ArrayList::new));
+
+		assertThat(OrdersProductNames).contains("아메리카노");
+		assertThat(OrdersProductNames).contains("카페라떼");
+	}
+
 //	@Test
-//	@DisplayName("다중 상품 주문")
-//	void ordersProducts() {
-//		// 주문할 상품 이름 2개 저장
-//		List<String> productNames = Arrays.asList("아메리카노", "카페라떼");
+//	@DisplayName("단일로 주문한 상품의 수량 확인")
+//	void findOrderProductQuantity() {
 //
-//		// 상품 이름들만 넘겨 변수에 저장
-//		List<Product> productsBuy = productService.ordersProducts(productNames);
-//
-//		// 영속화해서 id로 찾아 변수에 저장
-//		List<Product> foundsProduct = productRepository.findById(productsBuy.get().getId()).orElse(null);
-//
-//		// 검증(크기가 2인지 확인)
-//		assertThat(foundsProduct).hasSameClassAs(2);
 //	}
 
+// 	@Test
+//	@DisplayName("다중으로 주문한 각 상품의 수량 확인")
+//	void findOrderProductsQuantity() {
+//
+//	}
+
+//	@Test
+//	@DisplayName("오후 2시부터 다음날 오후 2시까지의 한 구매자의 상품 확인")
+//	void findOrderProduct2pmBefore() {
+//
+//	}
+
+//	@Test
+//	@DisplayName("오후 2시부터 다음날 오후 2시 이후까지의 한 구매자의 상품 확인")
+//	void findOrderProduct2pmAfter() {
+//
+//	}
 }

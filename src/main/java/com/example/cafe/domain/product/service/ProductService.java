@@ -31,4 +31,16 @@ public class ProductService {
 
         return productRepository.save(product);
     }
+
+    public Product findByName(String name) {
+
+        Optional<Product> product = productRepository.findByName(name);
+
+        if(product.isEmpty()){
+            System.out.println("조회된 상품 없음");
+            return null;
+        }
+
+        return product.get();
+    }
 }

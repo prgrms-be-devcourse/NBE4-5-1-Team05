@@ -34,7 +34,7 @@ public class BaseInitData {
     @Transactional
     public void productInit() {
 
-        // 샘플 데이터 생성 (상품 담기)
+        // 샘플 데이터 생성 (상품 담아두기)
         productService.add("아메리카노", 4500, "이미지");
         productService.add("카페라떼", 5500, "이미지");
 
@@ -44,7 +44,9 @@ public class BaseInitData {
     public void orderInit() {
 
         // 샘플 데이터 생성 (유저 정보 작성)
-        ordersService.orderProduct("아메리카노", "haeun9988@naver.com", "서울시 구로구", 352);
+        ordersService.orderProduct("아메리카노", 1, "haeun9988@naver.com", "서울시 구로구", 352);
+        ordersService.orderProduct("아메리카노", 2, "apple1234@google.com", "서울시 강남구", 12345);
+        ordersService.orderProduct("카페라떼", 1, "banana9876@google.com", "경기도 고양시", 86452);
     }
 
 }
