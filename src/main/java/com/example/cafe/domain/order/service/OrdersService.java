@@ -39,11 +39,10 @@ public class OrdersService {
     }
 
     // 상품 담기
-    public Optional<Orders> orderProduct(String productName, String email, String address, int postCode) {
+    public Orders orderProduct(String productName, String email, String address, int postCode) {
 
         // 상품명으로 Product 정보를 조회하여 변수에 저장
-        System.out.println("productname"+productName);
-        Optional<Product> ordersProduct = productRepository.findByName("아메리카노");
+        Optional<Product> ordersProduct = productRepository.findByName(productName);
 
         Product product = ordersProduct.get();
 
@@ -51,7 +50,7 @@ public class OrdersService {
     }
 
     // 주문 생성
-    private Optional<Orders> createOrder(Product product, String email, String address, int postCode) {
+    private Orders createOrder(Product product, String email, String address, int postCode) {
 
         // Order 객체를 생성해 회원 이메일, 주소, 우편번호 객체 생성 (나중에 Date도 생성)
         Orders orders = Orders.builder()
@@ -72,8 +71,6 @@ public class OrdersService {
         orders.addOrdersItem(ordersItem);
 
         // Orders 객체 영속화
-        ordersRepository.save(orders);
-
-        return Optional.of(orders);
+        return ordersRepository.save(orders);  // 해당 변수는 로컬(자바 메모리)에 저장된 값은 반환됨
     }
 }

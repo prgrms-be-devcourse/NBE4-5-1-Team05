@@ -45,8 +45,7 @@ public class OrdersItem {
     @Column(nullable = false)
     private int orderProductPrice;
 
-
-    // 주문 총수량
+    // 주문 총 수량
     private int quantity;
 
     // 연관관계 편의 메서드
