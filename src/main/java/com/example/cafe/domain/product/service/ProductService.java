@@ -15,12 +15,7 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final OrdersService ordersService;
 
-    // 주문 상품 찾기
-    public Optional<Product> findById(Long id) {
-        return productRepository.findById(id);
-    }
-
-    // 주문 담기 (샘플)
+    // 메뉴 담기
     public Product add(String name, int price, String imageURL) {
 
         Product product = Product.builder()
@@ -32,6 +27,12 @@ public class ProductService {
         return productRepository.save(product);
     }
 
+    // 상품 id로 찾기
+    public Optional<Product> findById(Long id) {
+        return productRepository.findById(id);
+    }
+
+    // 상품명으로 찾기
     public Product findByName(String name) {
 
         Optional<Product> product = productRepository.findByName(name);

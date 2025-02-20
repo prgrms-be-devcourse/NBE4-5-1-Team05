@@ -1,6 +1,7 @@
 package com.example.cafe.global;
 
 import com.example.cafe.domain.order.entity.Orders;
+import com.example.cafe.domain.order.service.OrdersItemService;
 import com.example.cafe.domain.order.service.OrdersService;
 import com.example.cafe.domain.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,8 @@ public class BaseInitData {
     @Autowired
     @Lazy
     private BaseInitData self;
+    @Autowired
+    private OrdersItemService ordersItemService;
 
     @Bean
     @Order(1)
@@ -50,9 +53,9 @@ public class BaseInitData {
         Orders o3 = ordersService.add( "banana9876@google.com", "경기도 고양시", 86452);
 
         // 샘플 데이터 생성 (주문서 작성)
-        ordersService.orderProduct(o1,"아메리카노", 1);
-        ordersService.orderProduct(o2,"아메리카노", 2);
-        ordersService.orderProduct(o3, "카페라떼", 1);
+        ordersItemService.orderProduct(o1,"아메리카노", 1);
+        ordersItemService.orderProduct(o2,"아메리카노", 2);
+        ordersItemService.orderProduct(o3, "카페라떼", 1);
     }
 
 }
