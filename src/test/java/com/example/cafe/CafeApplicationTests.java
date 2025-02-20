@@ -12,10 +12,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +23,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 @SpringBootTest
-@EnableJpaAuditing
 @ActiveProfiles("test")
 @Transactional
 @Configuration
@@ -299,6 +298,35 @@ class CafeApplicationTests {
 			// 주문 음료 이름
 			assertThat(productNames.contains(orderProductName)).isTrue();
 		}
+	}
+
+	@Test
+	@DisplayName("날짜 생성 및 확인")
+	void orderDate() {
+		// 주문할 상품명, 이메일, 주소, 우편주소 하나 저장
+		ArrayList<String> productName = new ArrayList<>();
+			productName.add("카페라떼");
+		String email = "test5@gmail.com";
+		String address = "테스트용 주소5";
+		ArrayList<Integer> quantity = new ArrayList<>();
+			quantity.add(2);
+		int postCode = 97283;
+
+		// 현재 날짜와 시간 생성 (나노초 차이 때문에 500나노초 더하기)
+		LocalDateTime currentTime = LocalDateTime.now().plusNanos(500);
+
+		// 주문 하기
+		ordersService.startOrders(productName, quantity, email, address, postCode);
+
+		// 이메일로 찾아 변수에 저장
+		Orders foundProduct = ordersService.findOrderByEmail(email);
+
+		// 날짜가 같은지 확인
+		LocalDateTime orderedDateTime = foundProduct.getOrdersItems().getFirst().getOrderDate();
+
+		assertThat(orderedDateTime).isNotNull();
+		assertThat(orderedDateTime).isEqualToIgnoringNanos(currentTime);
+
 	}
 
 //	@Test

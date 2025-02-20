@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
 
@@ -56,6 +57,10 @@ public class OrdersItem extends BaseTime {
     @CreatedDate
     @Column(nullable = false)
     private LocalDateTime orderDate;
+
+    // 주문 수정 날짜
+    @LastModifiedDate
+    private LocalDateTime modifiedDate;
 
     // 연관관계 편의 메서드
     public void setOrder(Orders orders) {
