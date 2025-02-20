@@ -386,3 +386,6 @@ ORDER_ID [42000-232]
 2025-02-19 17:23:28.580681+09:00 jdbc[13]: exception
 org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "[*]POST_CODE"; expected "PREPARE"; SQL statement:
 POST_CODE [42001-232]
+2025-02-19 22:12:54.348666+09:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "[*]ORDERS"; SQL statement:
+ORDERS [42000-232]

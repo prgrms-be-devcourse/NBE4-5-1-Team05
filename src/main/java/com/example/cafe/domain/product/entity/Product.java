@@ -26,4 +26,5 @@ public class Product {
     // 상품 이미지 URL 주소
     @Column(length = 50, nullable = false)
     private String imageURL;
+
 }
