@@ -330,14 +330,38 @@ class CafeApplicationTests {
 	}
 
 //	@Test
-//	@DisplayName("오후 2시부터 다음날 오후 2시까지의 한 구매자의 상품 확인")
+//	@DisplayName("날짜 생성 및 수정")
+//	void orderDateAndModify() {
+//
+//	}
+
+//	@Test
+//	@DisplayName("오후 2시부터 다음날 오후 2시까지의 한 구매자의 주문 내역 확인")
 //	void findOrderProduct2pmBefore() {
 //
 //	}
 
 //	@Test
-//	@DisplayName("오후 2시부터 다음날 오후 2시 이후까지의 한 구매자의 상품 확인")
+//	@DisplayName("오후 2시부터 다음날 오후 2시 이후까지의 한 구매자의 주문 내역 확인")
 //	void findOrderProduct2pmAfter() {
+//
+//	}
+
+//	@Test
+//	@DisplayName("주문 삭제 후 확인")
+//	void deleteOrder() {
+//
+//	}
+
+//	@Test
+//	@DisplayName("이미 구매한 상품에서 상품의 갯수 차감")
+//	void reduceProduct() {
+//
+//	}
+
+//	@Test
+//	@DisplayName("")
+//	void findOrderProduct2pmBefore() {
 //
 //	}
 }
