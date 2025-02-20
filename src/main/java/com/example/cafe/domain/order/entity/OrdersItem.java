@@ -45,9 +45,8 @@ public class OrdersItem {
     private int orderProductPrice;
 
     // 주문하려는 상품의 수량
-    @Builder.Default
     @Column(nullable = false)
-    private int quantity = 1;
+    private int quantity;
 
     // 나중에 주문 날짜 추가
 

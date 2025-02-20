@@ -3,19 +3,15 @@ package com.example.cafe.domain.order.service;
 import com.example.cafe.domain.order.entity.Orders;
 import com.example.cafe.domain.order.entity.OrdersItem;
 import com.example.cafe.domain.order.repository.OrdersItemRepository;
-import com.example.cafe.domain.order.repository.OrdersRepository;
 import com.example.cafe.domain.product.entity.Product;
 import com.example.cafe.domain.product.service.ProductService;
-import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Optional;
 
 @Service
-@Builder
 @RequiredArgsConstructor
 public class OrdersItemService {
 
@@ -24,21 +20,6 @@ public class OrdersItemService {
 
     @Autowired
     private final ProductService productService;
-
-    @Autowired
-    private final OrdersRepository ordersRepository;
-
-    // 주문 id로 주문 내역 찾기
-    public Optional<OrdersItem> findById(Long orderId) {
-        return ordersItemRepository.findById(orderId);
-    }
-
-    // 이메일로 주문 내역 찾기
-    public OrdersItem findOrderByEmail(String email) {
-
-        return ordersItemRepository.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("조회하려는 이메일이 없습니다."));
-    }
 
     // TODO: orderRepository save가 다중 작업시 반복처리 되는것이 신경쓰인다. jpa가 효율적으로 해주나?
     // TODO: 다중 상품 주문 담기에서 quantity 로직 매커니즘이 올바르지 않다.
