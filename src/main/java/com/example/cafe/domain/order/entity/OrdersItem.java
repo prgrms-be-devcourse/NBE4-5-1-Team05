@@ -1,17 +1,21 @@
 package com.example.cafe.domain.order.entity;
 
+import com.example.cafe.global.entity.BaseTime;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrdersItem {
+public class OrdersItem extends BaseTime {
 
     // 상품 주문 id (기본키)
     @Id
@@ -48,7 +52,10 @@ public class OrdersItem {
     @Column(nullable = false)
     private int quantity;
 
-    // 나중에 주문 날짜 추가
+    // 주문 날짜
+    @CreatedDate
+    @Column(nullable = false)
+    private LocalDateTime orderDate;
 
     // 연관관계 편의 메서드
     public void setOrder(Orders orders) {

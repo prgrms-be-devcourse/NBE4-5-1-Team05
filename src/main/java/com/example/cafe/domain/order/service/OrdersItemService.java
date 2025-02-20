@@ -32,19 +32,10 @@ public class OrdersItemService {
          *각각의 Product에 해당하는 수량이 필요할것 같아요
          * */
 
-//      // 들어있는 상품명의 갯수에 따라 단일로 저장
-//        for (String productName : productNames) {
-//            orderProduct(orders, productName, quantity);
-//        }
-
         // 들어있는 상품명의 갯수에 따라 단일로 저장
         for (int i = 0; i < productNames.size(); i++) {
             orderProduct(orders, productNames.get(i), quantity.get(i));
         }
-
-//        ordersItemRepository.saveAll(ordersItems);
-
-//        return ordersRepository.save(orders);
     }
 
     // 단일 상품 주문 담기
