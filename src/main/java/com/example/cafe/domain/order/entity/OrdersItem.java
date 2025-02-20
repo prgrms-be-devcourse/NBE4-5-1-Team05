@@ -44,7 +44,7 @@ public class OrdersItem {
     @Column(nullable = false)
     private int orderProductPrice;
 
-    // 주문 총 수량
+    // 주문하려는 상품의 수량
     @Builder.Default
     @Column(nullable = false)
     private int quantity = 1;

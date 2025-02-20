@@ -39,8 +39,8 @@ public class OrdersService {
     }
     
     // 주문 id로 주문 내역 찾기
-    public Optional<Orders> findById(Long id) {
-        return ordersRepository.findById(id);
+    public Optional<Orders> findById(Long orderId) {
+        return ordersRepository.findById(orderId);
     }
 
     // 이메일로 주문 내역 찾기
@@ -49,33 +49,10 @@ public class OrdersService {
         return ordersRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("조회하려는 이메일이 없습니다."));
     }
-
-    // 단일 상품 주문 담기
-    public Orders orderProduct(String productName, int quantity, String email, String address, int postCode) {
-
-        // 상품명으로 Product 정보를 조회하여 변수에 저장
-        Product product = productService.findByName(productName);
-
-        OrdersItem orderedItem = createOrderItem(product, quantity);
-
-        return createOrder(product, quantity, email, address, postCode);
-    }
-
-    // 단일 상품 주문 생성
-    private Orders createOrder(Product product, int quantity, String email, String address, int postCode) {
-
-        // Order 객체를 생성해 회원 이메일, 주소, 우편번호 객체 생성 (나중에 날짜도 생성)
-        Orders orders = Orders.builder()
-                .email(email)
-                .address(address)
-                .postCode(postCode)
-                .build();
-
-        // Orders 객체 영속화 후 리턴
-        return ordersRepository.save(orders);  // 해당 변수는 로컬(자바 메모리)에 저장된 값은 반환됨
-    }
-
+    
+    // 구매자 정보와 구매한 상품들을 객체화시켜 orderProduct로 리턴
     private OrdersItem createOrderItem(Orders orders, Product product, int quantity) {
+
         // 구매한 상품 객체 생성
         return OrdersItem.builder()
                 .orders(orders)
@@ -85,48 +62,35 @@ public class OrdersService {
                 .quantity(quantity)
                 .build();
     }
-    
-    // 다중 상품 주문 담기
-    public Orders orderProducts(ArrayList<String> productNames, String email, String address, int postCode) {
 
-        // 주문자 정보부터 변수에 담기
-        ArrayList<Product> products = new ArrayList<>();
+    // TODO: orderRepository save가 다중 작업시 반복처리 되는것이 신경쓰인다. jpa가 효율적으로 해주나?
+    // TODO: 다중 상품 주문 담기에서 quantity 로직 매커니즘이 올바르지 않다.
+    // TODO: Repository 호출이 최소화, 저는 빈번해요 -> jpa 기능 중에 일괄처리 작동 이것이  지혼자 해주는지? 그게 기억이안나요 -> transactional 처리를 해야되요
 
-        for (String productName : productNames) {
+    // 단일로 상품 주문 담기
+    public Orders orderProduct(Orders orders, String productName, int quantity) {
 
-            // 상품명으로 상품 찾기
-            Product orderProduct = productRepository.findByName(productName).get();
+        // 상품명으로 Product 정보를 조회하여 변수에 저장
+        Product product = productService.findByName(productName);
+        OrdersItem orderedItem = createOrderItem(orders, product, quantity);
 
-            // 상품 담기
-            products.add(orderProduct);
-        }
+        orders.addOrdersItem(orderedItem);
 
-        return createOrders(products, email, address, postCode);
+        // 레포지터리에 저장 및
+        return ordersRepository.save(orders);
     }
 
-    // 다중 상품 주문 생성
-    private Orders createOrders(ArrayList<Product> products, String email, String address, int postCode) {
+    // 다중 상품 주문 담기
+    public Orders orderProducts(Orders orders, ArrayList<String> productNames, ArrayList<Integer> quantity) {
+       //OrdersItem 수량이 의미하는
+        /*
+        *각각의 Product에 해당하는 수량이 필요할것 같아요
+        * */
 
-        // Order 객체를 생성해 회원 이메일, 주소, 우편번호 객체 생성 (나중에 날짜도 생성)
-        Orders orders = Orders.builder()
-                .email(email)
-                .address(address)
-                .postCode(postCode)
-                .build();
-
-        // 구매한 상품 객체를 ArrayList 타입인 Product에 저장
-        for (Product product : products) {
-            OrdersItem ordersItem = OrdersItem.builder()
-                    .orderProductId(product.getProductId())
-                    .orderProductName(product.getName())
-                    .orderProductPrice(product.getPrice())
-                    .quantity(1)    // 수량 1 추가 (임시)
-                    .build();
-
-            orders.addOrdersItem(ordersItem);
+       for (String productName : productNames) {
+            orderProduct(orders, productName, quantity);
         }
 
-        // Orders 객체 영속화 후 리턴
         return ordersRepository.save(orders);
     }
 }

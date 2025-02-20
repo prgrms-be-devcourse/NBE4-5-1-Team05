@@ -113,7 +113,7 @@ class CafeApplicationTests {
 		int postCode = 12345;
 
 		// 상품을 주문
-		Orders orderProduct = ordersService.orderProduct(productName, email, address, postCode);
+		Orders orderProduct = ordersService.orderProduct(productName, 1, email, address, postCode);
 
 		// 영속화 후 id로 찾아 변수에 저장
 		Orders orders = ordersRepository.findById(orderProduct.getOrderId()).orElse(null);
@@ -153,13 +153,16 @@ class CafeApplicationTests {
 		-> testcase2) 이메일을 통해서 단일 상품조회
 		*/
 
-		// 검증 - 반환된 이메일이 맞는지 확인
+		/// 검증 ///
+		// 수량 확인
+
+		// 이메일이 맞는지 확인
 		assertThat(orders.getEmail()).isEqualTo(email);
 
-		// 검증 - 반환된 주소가 맞는지 확인
+		// 주소가 맞는지 확인
 		assertThat(orders.getAddress()).isEqualTo(address);
 
-		// 검증 - 반환된 우편번호가 맞는지 확인
+		// 반환된 우편번호가 맞는지 확인
 		assertThat(orders.getPostCode()).isEqualTo(postCode);
 
 		// 주문이 왔을때 해당 주문에 포함된 아메리카노에 대한 정보를 어디에서 가져올 것인가
@@ -175,7 +178,7 @@ class CafeApplicationTests {
 		// 검증 - 반환된 상품명이 아메리카노인지 확인
 		// OrderItem -> orderProuductName으로 접근 뒤 검증
 
-		// 검증 - 반환된 상품명이 아메리카노인지 확인
+		// 상품명이 아메리카노인지 확인
         List<OrdersItem> ordersItems = orders.getOrdersItems();
 		OrdersItem savedOrdersItem = ordersItems.getFirst();
 
@@ -192,7 +195,7 @@ class CafeApplicationTests {
 		int postCode = 54867;
 
 		// 상품을 주문
-		Orders orderProduct = ordersService.orderProduct(productName, email, address, postCode);
+		Orders orderProduct = ordersService.orderProduct(productName, 1, email, address, postCode);
 
 		// 영속화
 		ordersRepository.findById(orderProduct.getOrderId()).orElse(null);
@@ -200,6 +203,7 @@ class CafeApplicationTests {
 		// 저장해 둔 이메일
 		String email2 = "test3@gmail.com";
 
+		/// 검증 ///
 		// 이메일로 주문내역 찾아 변수에 저장
 		Orders foundOrder = ordersService.findOrderByEmail(email2);
 

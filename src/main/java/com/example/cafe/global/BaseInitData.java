@@ -1,5 +1,6 @@
 package com.example.cafe.global;
 
+import com.example.cafe.domain.order.entity.Orders;
 import com.example.cafe.domain.order.service.OrdersService;
 import com.example.cafe.domain.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -44,9 +45,14 @@ public class BaseInitData {
     public void orderInit() {
 
         // 샘플 데이터 생성 (유저 정보 작성)
-        ordersService.orderProduct("아메리카노", 1, "haeun9988@naver.com", "서울시 구로구", 352);
-        ordersService.orderProduct("아메리카노", 2, "apple1234@google.com", "서울시 강남구", 12345);
-        ordersService.orderProduct("카페라떼", 1, "banana9876@google.com", "경기도 고양시", 86452);
+        Orders o1 = ordersService.add("haeun9988@naver.com", "서울시 구로구", 352);
+        Orders o2 = ordersService.add( "apple1234@google.com", "서울시 강남구", 12345);
+        Orders o3 = ordersService.add( "banana9876@google.com", "경기도 고양시", 86452);
+
+        // 샘플 데이터 생성 (주문서 작성)
+        ordersService.orderProduct(o1,"아메리카노", 1);
+        ordersService.orderProduct(o2,"아메리카노", 2);
+        ordersService.orderProduct(o3, "카페라떼", 1);
     }
 
 }
