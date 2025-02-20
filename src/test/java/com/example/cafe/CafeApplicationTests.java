@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.List;
@@ -24,6 +25,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 @SpringBootTest
 @EnableJpaAuditing
 @ActiveProfiles("test")
+@Transactional
 class CafeApplicationTests {
 
 	@Autowired
@@ -70,7 +72,7 @@ class CafeApplicationTests {
 				findOrders(long email);
 				addOrdersItem();
 
-		Orders의 특정 지역변수만 알고있을때 OrdersItem을 찾아야돼요
+		Orders의 특정 지역변수만 알고있을때 OrdersItem을 찾아야 돼요
 		요구조건이 충실한거고, 확장성이 고려되지않음 이름으로 찾고
 		- Orders o = Orders.findByemail();
 		- long id = o.getId();
@@ -82,7 +84,6 @@ class CafeApplicationTests {
 		if(oi.getName() == 사용자의 입력값)
 		return oi;
 		}
-
 
 		OrdersItem
 		- Orders 정보
@@ -117,14 +118,23 @@ class CafeApplicationTests {
 		// 2. OrdersItem하고 Product 연결하는 메서드를 작성하였는데 그게 잘 작동하는지
 		// 검증 - 반환된 상품명이 아메리카노인지 확인
 		// OrderItem -> orderProuductName으로 접근 뒤 검증
+
+		// 검증 - 반환된 상품명이 아메리카노인지 확인
 		Orders savedOrder = orders;
-		OrdersItem savedOrderItem = savedOrder.ge
+		List<OrdersItem> ordersItems = savedOrder.getOrdersItems();
+		OrdersItem savedOrdersItem = ordersItems.get(0);
+
+		assertThat(savedOrdersItem.getOrderProductName()).isEqualTo(productName);
 	}
 
 	@Test
-	@DisplayName("이메일로 주문 내역 찾기")
+	@DisplayName("이메일로 단일 주문 내역 찾기")
 	void findByEmail() {
+		
+		// 저장해 둔 이메일
+		String email = "test1@gmail.com";
 
+		Orders foundOrder = ordersService.findOrderByEmail(email);
 	}
 
 //	@Test

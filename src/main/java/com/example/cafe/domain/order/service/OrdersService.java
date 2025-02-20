@@ -26,7 +26,7 @@ public class OrdersService {
         return ordersRepository.findById(id);
     }
 
-    // 주문 정보 기입
+    // 주문자 정보 기입
     public Orders add(String email, String address, int postCode) {
 
         Orders orders = Orders.builder()
@@ -72,5 +72,10 @@ public class OrdersService {
 
         // Orders 객체 영속화
         return ordersRepository.save(orders);  // 해당 변수는 로컬(자바 메모리)에 저장된 값은 반환됨
+    }
+
+    public Orders findOrderByEmail(String email) {
+        return ordersRepository.findByEmail(email)
+                .orElseThrow("주문");
     }
 }
