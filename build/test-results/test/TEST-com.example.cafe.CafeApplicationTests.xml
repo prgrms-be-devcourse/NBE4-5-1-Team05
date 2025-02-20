@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.example.cafe.CafeApplicationTests" tests="3" skipped="0" failures="0" errors="0" timestamp="2025-02-20T04:04:31" hostname="DESKTOP-5V66N75" time="0.41">
+<testsuite name="com.example.cafe.CafeApplicationTests" tests="4" skipped="0" failures="1" errors="0" timestamp="2025-02-20T04:55:55" hostname="DESKTOP-5V66N75" time="0.525">
   <properties/>
-  <testcase name="단일 상품 주문" classname="com.example.cafe.CafeApplicationTests" time="0.401"/>
-  <testcase name="출력 시험" classname="com.example.cafe.CafeApplicationTests" time="0.004"/>
-  <testcase name="이메일로 단일 주문 내역 찾기" classname="com.example.cafe.CafeApplicationTests" time="0.003"/>
-  <system-out><![CDATA[13:04:27.703 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.example.cafe.CafeApplicationTests]: CafeApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-13:04:27.801 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.example.cafe.CafeApplication for test class com.example.cafe.CafeApplicationTests
+  <testcase name="이메일로 단일 주문 내역 찾기 - 실패" classname="com.example.cafe.CafeApplicationTests" time="0.465"/>
+  <testcase name="이메일로 단일 주문 내역 찾기 - 성공" classname="com.example.cafe.CafeApplicationTests" time="0.025"/>
+  <testcase name="단일 상품 주문" classname="com.example.cafe.CafeApplicationTests" time="0.026">
+    <failure message="org.opentest4j.AssertionFailedError: &#13;&#10;expected: 2L&#13;&#10; but was: 3L" type="org.opentest4j.AssertionFailedError">org.opentest4j.AssertionFailedError: 
+expected: 2L
+ but was: 3L
+	at app//com.example.cafe.CafeApplicationTests.orderProduct(CafeApplicationTests.java:99)
+	at java.base@23.0.1/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base@23.0.1/java.util.ArrayList.forEach(ArrayList.java:1597)
+	at java.base@23.0.1/java.util.ArrayList.forEach(ArrayList.java:1597)
+</failure>
+  </testcase>
+  <testcase name="출력 시험" classname="com.example.cafe.CafeApplicationTests" time="0.005"/>
+  <system-out><![CDATA[13:55:51.028 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.example.cafe.CafeApplicationTests]: CafeApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+13:55:51.149 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.example.cafe.CafeApplication for test class com.example.cafe.CafeApplicationTests
 
   .   ____          _            __ _ _
  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
@@ -16,18 +26,18 @@
 
 ?[32m :: Spring Boot :: ?[39m              ?[2m (v3.4.2)?[0;39m
 
-?[2m2025-02-20T13:04:28.211+09:00?[0;39m ?[32m INFO?[0;39m ?[35m31192?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36mcom.example.cafe.CafeApplicationTests   ?[0;39m ?[2m:?[0;39m Starting CafeApplicationTests using Java 23.0.1 with PID 31192 (started by haeun in C:\Java_work\project1\NBE4-5-1-Team05)
-?[2m2025-02-20T13:04:28.212+09:00?[0;39m ?[32m INFO?[0;39m ?[35m31192?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36mcom.example.cafe.CafeApplicationTests   ?[0;39m ?[2m:?[0;39m The following 1 profile is active: "test"
-?[2m2025-02-20T13:04:28.718+09:00?[0;39m ?[32m INFO?[0;39m ?[35m31192?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36m.s.d.r.c.RepositoryConfigurationDelegate?[0;39m ?[2m:?[0;39m Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-?[2m2025-02-20T13:04:28.770+09:00?[0;39m ?[32m INFO?[0;39m ?[35m31192?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36m.s.d.r.c.RepositoryConfigurationDelegate?[0;39m ?[2m:?[0;39m Finished Spring Data repository scanning in 44 ms. Found 2 JPA repository interfaces.
-?[2m2025-02-20T13:04:29.210+09:00?[0;39m ?[32m INFO?[0;39m ?[35m31192?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36mo.hibernate.jpa.internal.util.LogHelper ?[0;39m ?[2m:?[0;39m HHH000204: Processing PersistenceUnitInfo [name: default]
-?[2m2025-02-20T13:04:29.269+09:00?[0;39m ?[32m INFO?[0;39m ?[35m31192?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.Version                   ?[0;39m ?[2m:?[0;39m HHH000412: Hibernate ORM core version 6.6.5.Final
-?[2m2025-02-20T13:04:29.304+09:00?[0;39m ?[32m INFO?[0;39m ?[35m31192?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36mo.h.c.internal.RegionFactoryInitiator   ?[0;39m ?[2m:?[0;39m HHH000026: Second-level cache disabled
-?[2m2025-02-20T13:04:29.573+09:00?[0;39m ?[32m INFO?[0;39m ?[35m31192?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36mo.s.o.j.p.SpringPersistenceUnitInfo     ?[0;39m ?[2m:?[0;39m No LoadTimeWeaver setup: ignoring JPA class transformer
-?[2m2025-02-20T13:04:29.603+09:00?[0;39m ?[32m INFO?[0;39m ?[35m31192?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36mcom.zaxxer.hikari.HikariDataSource      ?[0;39m ?[2m:?[0;39m HikariPool-1 - Starting...
-?[2m2025-02-20T13:04:29.776+09:00?[0;39m ?[32m INFO?[0;39m ?[35m31192?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36mcom.zaxxer.hikari.pool.HikariPool       ?[0;39m ?[2m:?[0;39m HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:db_test user=SA
-?[2m2025-02-20T13:04:29.779+09:00?[0;39m ?[32m INFO?[0;39m ?[35m31192?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36mcom.zaxxer.hikari.HikariDataSource      ?[0;39m ?[2m:?[0;39m HikariPool-1 - Start completed.
-?[2m2025-02-20T13:04:29.834+09:00?[0;39m ?[32m INFO?[0;39m ?[35m31192?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.connections.pooling   ?[0;39m ?[2m:?[0;39m HHH10001005: Database info:
+?[2m2025-02-20T13:55:51.637+09:00?[0;39m ?[32m INFO?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36mcom.example.cafe.CafeApplicationTests   ?[0;39m ?[2m:?[0;39m Starting CafeApplicationTests using Java 23.0.1 with PID 11788 (started by haeun in C:\Java_work\project1\NBE4-5-1-Team05)
+?[2m2025-02-20T13:55:51.638+09:00?[0;39m ?[32m INFO?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36mcom.example.cafe.CafeApplicationTests   ?[0;39m ?[2m:?[0;39m The following 1 profile is active: "test"
+?[2m2025-02-20T13:55:52.274+09:00?[0;39m ?[32m INFO?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36m.s.d.r.c.RepositoryConfigurationDelegate?[0;39m ?[2m:?[0;39m Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+?[2m2025-02-20T13:55:52.343+09:00?[0;39m ?[32m INFO?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36m.s.d.r.c.RepositoryConfigurationDelegate?[0;39m ?[2m:?[0;39m Finished Spring Data repository scanning in 60 ms. Found 2 JPA repository interfaces.
+?[2m2025-02-20T13:55:52.897+09:00?[0;39m ?[32m INFO?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36mo.hibernate.jpa.internal.util.LogHelper ?[0;39m ?[2m:?[0;39m HHH000204: Processing PersistenceUnitInfo [name: default]
+?[2m2025-02-20T13:55:52.969+09:00?[0;39m ?[32m INFO?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.Version                   ?[0;39m ?[2m:?[0;39m HHH000412: Hibernate ORM core version 6.6.5.Final
+?[2m2025-02-20T13:55:53.008+09:00?[0;39m ?[32m INFO?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36mo.h.c.internal.RegionFactoryInitiator   ?[0;39m ?[2m:?[0;39m HHH000026: Second-level cache disabled
+?[2m2025-02-20T13:55:53.317+09:00?[0;39m ?[32m INFO?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36mo.s.o.j.p.SpringPersistenceUnitInfo     ?[0;39m ?[2m:?[0;39m No LoadTimeWeaver setup: ignoring JPA class transformer
+?[2m2025-02-20T13:55:53.349+09:00?[0;39m ?[32m INFO?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36mcom.zaxxer.hikari.HikariDataSource      ?[0;39m ?[2m:?[0;39m HikariPool-1 - Starting...
+?[2m2025-02-20T13:55:53.533+09:00?[0;39m ?[32m INFO?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36mcom.zaxxer.hikari.pool.HikariPool       ?[0;39m ?[2m:?[0;39m HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:db_test user=SA
+?[2m2025-02-20T13:55:53.535+09:00?[0;39m ?[32m INFO?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36mcom.zaxxer.hikari.HikariDataSource      ?[0;39m ?[2m:?[0;39m HikariPool-1 - Start completed.
+?[2m2025-02-20T13:55:53.591+09:00?[0;39m ?[32m INFO?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.connections.pooling   ?[0;39m ?[2m:?[0;39m HHH10001005: Database info:
 	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
 	Database driver: undefined/unknown
 	Database version: 2.3.232
@@ -35,14 +45,14 @@
 	Isolation level: undefined/unknown
 	Minimum pool size: undefined/unknown
 	Maximum pool size: undefined/unknown
-?[2m2025-02-20T13:04:30.689+09:00?[0;39m ?[32m INFO?[0;39m ?[35m31192?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36mo.h.e.t.j.p.i.JtaPlatformInitiator      ?[0;39m ?[2m:?[0;39m HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
-?[2m2025-02-20T13:04:30.703+09:00?[0;39m ?[32mDEBUG?[0;39m ?[35m31192?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.SQL                       ?[0;39m ?[2m:?[0;39m 
+?[2m2025-02-20T13:55:54.491+09:00?[0;39m ?[32m INFO?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36mo.h.e.t.j.p.i.JtaPlatformInitiator      ?[0;39m ?[2m:?[0;39m HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+?[2m2025-02-20T13:55:54.507+09:00?[0;39m ?[32mDEBUG?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.SQL                       ?[0;39m ?[2m:?[0;39m 
     ?[34mdrop?[0m ?[34mtable?[0m ?[34mif?[0m ?[34mexists?[0m orders ?[34mcascade?[0m 
-?[2m2025-02-20T13:04:30.706+09:00?[0;39m ?[32mDEBUG?[0;39m ?[35m31192?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.SQL                       ?[0;39m ?[2m:?[0;39m 
+?[2m2025-02-20T13:55:54.511+09:00?[0;39m ?[32mDEBUG?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.SQL                       ?[0;39m ?[2m:?[0;39m 
     ?[34mdrop?[0m ?[34mtable?[0m ?[34mif?[0m ?[34mexists?[0m orders_item ?[34mcascade?[0m 
-?[2m2025-02-20T13:04:30.706+09:00?[0;39m ?[32mDEBUG?[0;39m ?[35m31192?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.SQL                       ?[0;39m ?[2m:?[0;39m 
+?[2m2025-02-20T13:55:54.511+09:00?[0;39m ?[32mDEBUG?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.SQL                       ?[0;39m ?[2m:?[0;39m 
     ?[34mdrop?[0m ?[34mtable?[0m ?[34mif?[0m ?[34mexists?[0m product ?[34mcascade?[0m 
-?[2m2025-02-20T13:04:30.710+09:00?[0;39m ?[32mDEBUG?[0;39m ?[35m31192?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.SQL                       ?[0;39m ?[2m:?[0;39m 
+?[2m2025-02-20T13:55:54.515+09:00?[0;39m ?[32mDEBUG?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.SQL                       ?[0;39m ?[2m:?[0;39m 
     ?[34mcreate?[0m ?[34mtable?[0m orders (
         post_code ?[34minteger?[0m,
         order_id ?[34mbigint?[0m generated ?[34mby?[0m ?[34mdefault?[0m ?[34mas?[0m ?[34midentity?[0m,
@@ -50,7 +60,7 @@
         email ?[34mvarchar?[0m(50) ?[34mnot?[0m ?[34mnull?[0m,
         ?[34mprimary?[0m ?[34mkey?[0m (order_id)
     )
-?[2m2025-02-20T13:04:30.718+09:00?[0;39m ?[32mDEBUG?[0;39m ?[35m31192?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.SQL                       ?[0;39m ?[2m:?[0;39m 
+?[2m2025-02-20T13:55:54.523+09:00?[0;39m ?[32mDEBUG?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.SQL                       ?[0;39m ?[2m:?[0;39m 
     ?[34mcreate?[0m ?[34mtable?[0m orders_item (
         order_product_price ?[34minteger?[0m ?[34mnot?[0m ?[34mnull?[0m,
         quantity ?[34minteger?[0m ?[34mnot?[0m ?[34mnull?[0m,
@@ -60,7 +70,7 @@
         order_product_name ?[34mvarchar?[0m(255) ?[34mnot?[0m ?[34mnull?[0m,
         ?[34mprimary?[0m ?[34mkey?[0m (orders_item_id)
     )
-?[2m2025-02-20T13:04:30.719+09:00?[0;39m ?[32mDEBUG?[0;39m ?[35m31192?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.SQL                       ?[0;39m ?[2m:?[0;39m 
+?[2m2025-02-20T13:55:54.525+09:00?[0;39m ?[32mDEBUG?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.SQL                       ?[0;39m ?[2m:?[0;39m 
     ?[34mcreate?[0m ?[34mtable?[0m product (
         price ?[34minteger?[0m ?[34mnot?[0m ?[34mnull?[0m,
         product_id ?[34mbigint?[0m generated ?[34mby?[0m ?[34mdefault?[0m ?[34mas?[0m ?[34midentity?[0m,
@@ -68,45 +78,45 @@
         name ?[34mvarchar?[0m(50) ?[34mnot?[0m ?[34mnull?[0m,
         ?[34mprimary?[0m ?[34mkey?[0m (product_id)
     )
-?[2m2025-02-20T13:04:30.720+09:00?[0;39m ?[32mDEBUG?[0;39m ?[35m31192?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.SQL                       ?[0;39m ?[2m:?[0;39m 
+?[2m2025-02-20T13:55:54.526+09:00?[0;39m ?[32mDEBUG?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.SQL                       ?[0;39m ?[2m:?[0;39m 
     ?[34malter?[0m ?[34mtable?[0m ?[34mif?[0m ?[34mexists?[0m orders_item 
        ?[34madd?[0m ?[34mconstraint?[0m FKqa7i0ev3xqm2d6t93n9blxef1 
        ?[34mforeign?[0m ?[34mkey?[0m (order_id) 
        ?[34mreferences?[0m orders
-?[2m2025-02-20T13:04:30.734+09:00?[0;39m ?[32m INFO?[0;39m ?[35m31192?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36mj.LocalContainerEntityManagerFactoryBean?[0;39m ?[2m:?[0;39m Initialized JPA EntityManagerFactory for persistence unit 'default'
-?[2m2025-02-20T13:04:31.130+09:00?[0;39m ?[33m WARN?[0;39m ?[35m31192?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36mJpaBaseConfiguration$JpaWebConfiguration?[0;39m ?[2m:?[0;39m spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-?[2m2025-02-20T13:04:31.395+09:00?[0;39m ?[32m INFO?[0;39m ?[35m31192?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36mcom.example.cafe.CafeApplicationTests   ?[0;39m ?[2m:?[0;39m Started CafeApplicationTests in 3.469 seconds (process running for 4.486)
-?[2m2025-02-20T13:04:31.404+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m31192?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36mo.s.t.i.TransactionInterceptor          ?[0;39m ?[2m:?[0;39m Getting transaction for [com.example.cafe.global.BaseInitData$$SpringCGLIB$$0.productInit]
-?[2m2025-02-20T13:04:31.407+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m31192?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36mo.s.t.i.TransactionInterceptor          ?[0;39m ?[2m:?[0;39m Getting transaction for [org.springframework.data.jpa.repository.support.SimpleJpaRepository.save]
-?[2m2025-02-20T13:04:31.430+09:00?[0;39m ?[32mDEBUG?[0;39m ?[35m31192?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.SQL                       ?[0;39m ?[2m:?[0;39m 
+?[2m2025-02-20T13:55:54.541+09:00?[0;39m ?[32m INFO?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36mj.LocalContainerEntityManagerFactoryBean?[0;39m ?[2m:?[0;39m Initialized JPA EntityManagerFactory for persistence unit 'default'
+?[2m2025-02-20T13:55:54.998+09:00?[0;39m ?[33m WARN?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36mJpaBaseConfiguration$JpaWebConfiguration?[0;39m ?[2m:?[0;39m spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+?[2m2025-02-20T13:55:55.303+09:00?[0;39m ?[32m INFO?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36mcom.example.cafe.CafeApplicationTests   ?[0;39m ?[2m:?[0;39m Started CafeApplicationTests in 4.009 seconds (process running for 5.427)
+?[2m2025-02-20T13:55:55.313+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36mo.s.t.i.TransactionInterceptor          ?[0;39m ?[2m:?[0;39m Getting transaction for [com.example.cafe.global.BaseInitData$$SpringCGLIB$$0.productInit]
+?[2m2025-02-20T13:55:55.317+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36mo.s.t.i.TransactionInterceptor          ?[0;39m ?[2m:?[0;39m Getting transaction for [org.springframework.data.jpa.repository.support.SimpleJpaRepository.save]
+?[2m2025-02-20T13:55:55.341+09:00?[0;39m ?[32mDEBUG?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.SQL                       ?[0;39m ?[2m:?[0;39m 
     /* ?[34minsert?[0m ?[34mfor?[0m
         com.example.cafe.domain.product.entity.Product */?[34minsert?[0m 
     ?[34minto?[0m
         product (imageurl, name, price, product_id) 
     ?[34mvalues?[0m
         (?, ?, ?, ?[34mdefault?[0m)
-?[2m2025-02-20T13:04:31.434+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m31192?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.bind             ?[0;39m ?[2m:?[0;39m binding parameter (1:VARCHAR) <- [이미지]
-?[2m2025-02-20T13:04:31.435+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m31192?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.bind             ?[0;39m ?[2m:?[0;39m binding parameter (2:VARCHAR) <- [아메리카노]
-?[2m2025-02-20T13:04:31.435+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m31192?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.bind             ?[0;39m ?[2m:?[0;39m binding parameter (3:INTEGER) <- [4500]
-?[2m2025-02-20T13:04:31.457+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m31192?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.extract          ?[0;39m ?[2m:?[0;39m extracted value (1:BIGINT) -> [1]
-?[2m2025-02-20T13:04:31.465+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m31192?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36mo.s.t.i.TransactionInterceptor          ?[0;39m ?[2m:?[0;39m Completing transaction for [org.springframework.data.jpa.repository.support.SimpleJpaRepository.save]
-?[2m2025-02-20T13:04:31.465+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m31192?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36mo.s.t.i.TransactionInterceptor          ?[0;39m ?[2m:?[0;39m Getting transaction for [org.springframework.data.jpa.repository.support.SimpleJpaRepository.save]
-?[2m2025-02-20T13:04:31.466+09:00?[0;39m ?[32mDEBUG?[0;39m ?[35m31192?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.SQL                       ?[0;39m ?[2m:?[0;39m 
+?[2m2025-02-20T13:55:55.347+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.bind             ?[0;39m ?[2m:?[0;39m binding parameter (1:VARCHAR) <- [이미지]
+?[2m2025-02-20T13:55:55.348+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.bind             ?[0;39m ?[2m:?[0;39m binding parameter (2:VARCHAR) <- [아메리카노]
+?[2m2025-02-20T13:55:55.348+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.bind             ?[0;39m ?[2m:?[0;39m binding parameter (3:INTEGER) <- [4500]
+?[2m2025-02-20T13:55:55.371+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.extract          ?[0;39m ?[2m:?[0;39m extracted value (1:BIGINT) -> [1]
+?[2m2025-02-20T13:55:55.381+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36mo.s.t.i.TransactionInterceptor          ?[0;39m ?[2m:?[0;39m Completing transaction for [org.springframework.data.jpa.repository.support.SimpleJpaRepository.save]
+?[2m2025-02-20T13:55:55.381+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36mo.s.t.i.TransactionInterceptor          ?[0;39m ?[2m:?[0;39m Getting transaction for [org.springframework.data.jpa.repository.support.SimpleJpaRepository.save]
+?[2m2025-02-20T13:55:55.382+09:00?[0;39m ?[32mDEBUG?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.SQL                       ?[0;39m ?[2m:?[0;39m 
     /* ?[34minsert?[0m ?[34mfor?[0m
         com.example.cafe.domain.product.entity.Product */?[34minsert?[0m 
     ?[34minto?[0m
         product (imageurl, name, price, product_id) 
     ?[34mvalues?[0m
         (?, ?, ?, ?[34mdefault?[0m)
-?[2m2025-02-20T13:04:31.466+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m31192?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.bind             ?[0;39m ?[2m:?[0;39m binding parameter (1:VARCHAR) <- [이미지]
-?[2m2025-02-20T13:04:31.466+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m31192?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.bind             ?[0;39m ?[2m:?[0;39m binding parameter (2:VARCHAR) <- [카페라떼]
-?[2m2025-02-20T13:04:31.466+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m31192?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.bind             ?[0;39m ?[2m:?[0;39m binding parameter (3:INTEGER) <- [5500]
-?[2m2025-02-20T13:04:31.466+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m31192?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.extract          ?[0;39m ?[2m:?[0;39m extracted value (1:BIGINT) -> [2]
-?[2m2025-02-20T13:04:31.467+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m31192?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36mo.s.t.i.TransactionInterceptor          ?[0;39m ?[2m:?[0;39m Completing transaction for [org.springframework.data.jpa.repository.support.SimpleJpaRepository.save]
-?[2m2025-02-20T13:04:31.467+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m31192?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36mo.s.t.i.TransactionInterceptor          ?[0;39m ?[2m:?[0;39m Completing transaction for [com.example.cafe.global.BaseInitData$$SpringCGLIB$$0.productInit]
-?[2m2025-02-20T13:04:31.473+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m31192?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36mo.s.t.i.TransactionInterceptor          ?[0;39m ?[2m:?[0;39m Getting transaction for [com.example.cafe.global.BaseInitData$$SpringCGLIB$$0.orderInit]
-?[2m2025-02-20T13:04:31.473+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m31192?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36mo.s.t.i.TransactionInterceptor          ?[0;39m ?[2m:?[0;39m No need to create transaction for [org.springframework.data.jpa.repository.support.SimpleJpaRepository.findByName]: This method is not transactional.
-?[2m2025-02-20T13:04:31.545+09:00?[0;39m ?[32mDEBUG?[0;39m ?[35m31192?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.SQL                       ?[0;39m ?[2m:?[0;39m 
+?[2m2025-02-20T13:55:55.382+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.bind             ?[0;39m ?[2m:?[0;39m binding parameter (1:VARCHAR) <- [이미지]
+?[2m2025-02-20T13:55:55.382+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.bind             ?[0;39m ?[2m:?[0;39m binding parameter (2:VARCHAR) <- [카페라떼]
+?[2m2025-02-20T13:55:55.382+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.bind             ?[0;39m ?[2m:?[0;39m binding parameter (3:INTEGER) <- [5500]
+?[2m2025-02-20T13:55:55.383+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.extract          ?[0;39m ?[2m:?[0;39m extracted value (1:BIGINT) -> [2]
+?[2m2025-02-20T13:55:55.383+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36mo.s.t.i.TransactionInterceptor          ?[0;39m ?[2m:?[0;39m Completing transaction for [org.springframework.data.jpa.repository.support.SimpleJpaRepository.save]
+?[2m2025-02-20T13:55:55.383+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36mo.s.t.i.TransactionInterceptor          ?[0;39m ?[2m:?[0;39m Completing transaction for [com.example.cafe.global.BaseInitData$$SpringCGLIB$$0.productInit]
+?[2m2025-02-20T13:55:55.390+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36mo.s.t.i.TransactionInterceptor          ?[0;39m ?[2m:?[0;39m Getting transaction for [com.example.cafe.global.BaseInitData$$SpringCGLIB$$0.orderInit]
+?[2m2025-02-20T13:55:55.391+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36mo.s.t.i.TransactionInterceptor          ?[0;39m ?[2m:?[0;39m No need to create transaction for [org.springframework.data.jpa.repository.support.SimpleJpaRepository.findByName]: This method is not transactional.
+?[2m2025-02-20T13:55:55.461+09:00?[0;39m ?[32mDEBUG?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.SQL                       ?[0;39m ?[2m:?[0;39m 
     /* <criteria> */ ?[34mselect?[0m
         p1_0.product_id,
         p1_0.imageurl,
@@ -116,40 +126,52 @@
         product p1_0 
     ?[34mwhere?[0m
         p1_0.name=?
-?[2m2025-02-20T13:04:31.546+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m31192?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.bind             ?[0;39m ?[2m:?[0;39m binding parameter (1:VARCHAR) <- [아메리카노]
-?[2m2025-02-20T13:04:31.551+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m31192?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.extract          ?[0;39m ?[2m:?[0;39m extracted value (1:BIGINT) -> [1]
-?[2m2025-02-20T13:04:31.551+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m31192?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.extract          ?[0;39m ?[2m:?[0;39m extracted value (2:VARCHAR) -> [이미지]
-?[2m2025-02-20T13:04:31.551+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m31192?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.extract          ?[0;39m ?[2m:?[0;39m extracted value (3:VARCHAR) -> [아메리카노]
-?[2m2025-02-20T13:04:31.551+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m31192?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.extract          ?[0;39m ?[2m:?[0;39m extracted value (4:INTEGER) -> [4500]
-?[2m2025-02-20T13:04:31.555+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m31192?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36mo.s.t.i.TransactionInterceptor          ?[0;39m ?[2m:?[0;39m Getting transaction for [org.springframework.data.jpa.repository.support.SimpleJpaRepository.save]
-?[2m2025-02-20T13:04:31.561+09:00?[0;39m ?[32mDEBUG?[0;39m ?[35m31192?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.SQL                       ?[0;39m ?[2m:?[0;39m 
+?[2m2025-02-20T13:55:55.462+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.bind             ?[0;39m ?[2m:?[0;39m binding parameter (1:VARCHAR) <- [아메리카노]
+?[2m2025-02-20T13:55:55.470+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.extract          ?[0;39m ?[2m:?[0;39m extracted value (1:BIGINT) -> [1]
+?[2m2025-02-20T13:55:55.471+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.extract          ?[0;39m ?[2m:?[0;39m extracted value (2:VARCHAR) -> [이미지]
+?[2m2025-02-20T13:55:55.471+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.extract          ?[0;39m ?[2m:?[0;39m extracted value (3:VARCHAR) -> [아메리카노]
+?[2m2025-02-20T13:55:55.471+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.extract          ?[0;39m ?[2m:?[0;39m extracted value (4:INTEGER) -> [4500]
+?[2m2025-02-20T13:55:55.474+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36mo.s.t.i.TransactionInterceptor          ?[0;39m ?[2m:?[0;39m Getting transaction for [org.springframework.data.jpa.repository.support.SimpleJpaRepository.save]
+?[2m2025-02-20T13:55:55.481+09:00?[0;39m ?[32mDEBUG?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.SQL                       ?[0;39m ?[2m:?[0;39m 
     /* ?[34minsert?[0m ?[34mfor?[0m
         com.example.cafe.domain.?[34morder?[0m.entity.Orders */?[34minsert?[0m 
     ?[34minto?[0m
         orders (address, email, post_code, order_id) 
     ?[34mvalues?[0m
         (?, ?, ?, ?[34mdefault?[0m)
-?[2m2025-02-20T13:04:31.562+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m31192?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.bind             ?[0;39m ?[2m:?[0;39m binding parameter (1:VARCHAR) <- [서울시 구로구]
-?[2m2025-02-20T13:04:31.562+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m31192?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.bind             ?[0;39m ?[2m:?[0;39m binding parameter (2:VARCHAR) <- [haeun9988@naver.com]
-?[2m2025-02-20T13:04:31.562+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m31192?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.bind             ?[0;39m ?[2m:?[0;39m binding parameter (3:INTEGER) <- [352]
-?[2m2025-02-20T13:04:31.563+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m31192?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.extract          ?[0;39m ?[2m:?[0;39m extracted value (1:BIGINT) -> [1]
-?[2m2025-02-20T13:04:31.564+09:00?[0;39m ?[32mDEBUG?[0;39m ?[35m31192?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.SQL                       ?[0;39m ?[2m:?[0;39m 
+?[2m2025-02-20T13:55:55.481+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.bind             ?[0;39m ?[2m:?[0;39m binding parameter (1:VARCHAR) <- [서울시 구로구]
+?[2m2025-02-20T13:55:55.482+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.bind             ?[0;39m ?[2m:?[0;39m binding parameter (2:VARCHAR) <- [haeun9988@naver.com]
+?[2m2025-02-20T13:55:55.482+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.bind             ?[0;39m ?[2m:?[0;39m binding parameter (3:INTEGER) <- [352]
+?[2m2025-02-20T13:55:55.482+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.extract          ?[0;39m ?[2m:?[0;39m extracted value (1:BIGINT) -> [1]
+?[2m2025-02-20T13:55:55.485+09:00?[0;39m ?[32mDEBUG?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.SQL                       ?[0;39m ?[2m:?[0;39m 
     /* ?[34minsert?[0m ?[34mfor?[0m
         com.example.cafe.domain.?[34morder?[0m.entity.OrdersItem */?[34minsert?[0m 
     ?[34minto?[0m
         orders_item (order_product_id, order_product_name, order_product_price, order_id, quantity, orders_item_id) 
     ?[34mvalues?[0m
         (?, ?, ?, ?, ?, ?[34mdefault?[0m)
-?[2m2025-02-20T13:04:31.565+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m31192?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.bind             ?[0;39m ?[2m:?[0;39m binding parameter (1:BIGINT) <- [1]
-?[2m2025-02-20T13:04:31.565+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m31192?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.bind             ?[0;39m ?[2m:?[0;39m binding parameter (2:VARCHAR) <- [아메리카노]
-?[2m2025-02-20T13:04:31.565+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m31192?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.bind             ?[0;39m ?[2m:?[0;39m binding parameter (3:INTEGER) <- [4500]
-?[2m2025-02-20T13:04:31.565+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m31192?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.bind             ?[0;39m ?[2m:?[0;39m binding parameter (4:BIGINT) <- [1]
-?[2m2025-02-20T13:04:31.565+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m31192?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.bind             ?[0;39m ?[2m:?[0;39m binding parameter (5:INTEGER) <- [1]
-?[2m2025-02-20T13:04:31.566+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m31192?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.extract          ?[0;39m ?[2m:?[0;39m extracted value (1:BIGINT) -> [1]
-?[2m2025-02-20T13:04:31.566+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m31192?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36mo.s.t.i.TransactionInterceptor          ?[0;39m ?[2m:?[0;39m Completing transaction for [org.springframework.data.jpa.repository.support.SimpleJpaRepository.save]
-?[2m2025-02-20T13:04:31.566+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m31192?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36mo.s.t.i.TransactionInterceptor          ?[0;39m ?[2m:?[0;39m Completing transaction for [com.example.cafe.global.BaseInitData$$SpringCGLIB$$0.orderInit]
-?[2m2025-02-20T13:04:31.920+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m31192?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36mo.s.t.i.TransactionInterceptor          ?[0;39m ?[2m:?[0;39m No need to create transaction for [org.springframework.data.jpa.repository.support.SimpleJpaRepository.findByName]: This method is not transactional.
-?[2m2025-02-20T13:04:31.921+09:00?[0;39m ?[32mDEBUG?[0;39m ?[35m31192?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.SQL                       ?[0;39m ?[2m:?[0;39m 
+?[2m2025-02-20T13:55:55.485+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.bind             ?[0;39m ?[2m:?[0;39m binding parameter (1:BIGINT) <- [1]
+?[2m2025-02-20T13:55:55.485+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.bind             ?[0;39m ?[2m:?[0;39m binding parameter (2:VARCHAR) <- [아메리카노]
+?[2m2025-02-20T13:55:55.485+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.bind             ?[0;39m ?[2m:?[0;39m binding parameter (3:INTEGER) <- [4500]
+?[2m2025-02-20T13:55:55.485+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.bind             ?[0;39m ?[2m:?[0;39m binding parameter (4:BIGINT) <- [1]
+?[2m2025-02-20T13:55:55.485+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.bind             ?[0;39m ?[2m:?[0;39m binding parameter (5:INTEGER) <- [1]
+?[2m2025-02-20T13:55:55.487+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.extract          ?[0;39m ?[2m:?[0;39m extracted value (1:BIGINT) -> [1]
+?[2m2025-02-20T13:55:55.487+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36mo.s.t.i.TransactionInterceptor          ?[0;39m ?[2m:?[0;39m Completing transaction for [org.springframework.data.jpa.repository.support.SimpleJpaRepository.save]
+?[2m2025-02-20T13:55:55.487+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36mo.s.t.i.TransactionInterceptor          ?[0;39m ?[2m:?[0;39m Completing transaction for [com.example.cafe.global.BaseInitData$$SpringCGLIB$$0.orderInit]
+?[2m2025-02-20T13:55:55.943+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36mo.s.t.i.TransactionInterceptor          ?[0;39m ?[2m:?[0;39m No need to create transaction for [org.springframework.data.jpa.repository.support.SimpleJpaRepository.findByEmail]: This method is not transactional.
+?[2m2025-02-20T13:55:55.945+09:00?[0;39m ?[32mDEBUG?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.SQL                       ?[0;39m ?[2m:?[0;39m 
+    /* <criteria> */ ?[34mselect?[0m
+        o1_0.order_id,
+        o1_0.address,
+        o1_0.email,
+        o1_0.post_code 
+    ?[34mfrom?[0m
+        orders o1_0 
+    ?[34mwhere?[0m
+        o1_0.email=?
+?[2m2025-02-20T13:55:55.947+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.bind             ?[0;39m ?[2m:?[0;39m binding parameter (1:VARCHAR) <- [test@gmail.com]
+?[2m2025-02-20T13:55:55.975+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36mo.s.t.i.TransactionInterceptor          ?[0;39m ?[2m:?[0;39m No need to create transaction for [org.springframework.data.jpa.repository.support.SimpleJpaRepository.findByName]: This method is not transactional.
+?[2m2025-02-20T13:55:55.977+09:00?[0;39m ?[32mDEBUG?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.SQL                       ?[0;39m ?[2m:?[0;39m 
     /* <criteria> */ ?[34mselect?[0m
         p1_0.product_id,
         p1_0.imageurl,
@@ -159,39 +181,96 @@
         product p1_0 
     ?[34mwhere?[0m
         p1_0.name=?
-?[2m2025-02-20T13:04:31.921+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m31192?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.bind             ?[0;39m ?[2m:?[0;39m binding parameter (1:VARCHAR) <- [아메리카노]
-?[2m2025-02-20T13:04:31.921+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m31192?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.extract          ?[0;39m ?[2m:?[0;39m extracted value (1:BIGINT) -> [1]
-?[2m2025-02-20T13:04:31.923+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m31192?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.extract          ?[0;39m ?[2m:?[0;39m extracted value (2:VARCHAR) -> [이미지]
-?[2m2025-02-20T13:04:31.923+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m31192?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.extract          ?[0;39m ?[2m:?[0;39m extracted value (3:VARCHAR) -> [아메리카노]
-?[2m2025-02-20T13:04:31.923+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m31192?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.extract          ?[0;39m ?[2m:?[0;39m extracted value (4:INTEGER) -> [4500]
-?[2m2025-02-20T13:04:31.923+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m31192?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36mo.s.t.i.TransactionInterceptor          ?[0;39m ?[2m:?[0;39m Getting transaction for [org.springframework.data.jpa.repository.support.SimpleJpaRepository.save]
-?[2m2025-02-20T13:04:31.924+09:00?[0;39m ?[32mDEBUG?[0;39m ?[35m31192?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.SQL                       ?[0;39m ?[2m:?[0;39m 
+?[2m2025-02-20T13:55:55.978+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.bind             ?[0;39m ?[2m:?[0;39m binding parameter (1:VARCHAR) <- [아메리카노]
+?[2m2025-02-20T13:55:55.978+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.extract          ?[0;39m ?[2m:?[0;39m extracted value (1:BIGINT) -> [1]
+?[2m2025-02-20T13:55:55.978+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.extract          ?[0;39m ?[2m:?[0;39m extracted value (2:VARCHAR) -> [이미지]
+?[2m2025-02-20T13:55:55.979+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.extract          ?[0;39m ?[2m:?[0;39m extracted value (3:VARCHAR) -> [아메리카노]
+?[2m2025-02-20T13:55:55.979+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.extract          ?[0;39m ?[2m:?[0;39m extracted value (4:INTEGER) -> [4500]
+?[2m2025-02-20T13:55:55.979+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36mo.s.t.i.TransactionInterceptor          ?[0;39m ?[2m:?[0;39m Getting transaction for [org.springframework.data.jpa.repository.support.SimpleJpaRepository.save]
+?[2m2025-02-20T13:55:55.980+09:00?[0;39m ?[32mDEBUG?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.SQL                       ?[0;39m ?[2m:?[0;39m 
     /* ?[34minsert?[0m ?[34mfor?[0m
         com.example.cafe.domain.?[34morder?[0m.entity.Orders */?[34minsert?[0m 
     ?[34minto?[0m
         orders (address, email, post_code, order_id) 
     ?[34mvalues?[0m
         (?, ?, ?, ?[34mdefault?[0m)
-?[2m2025-02-20T13:04:31.924+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m31192?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.bind             ?[0;39m ?[2m:?[0;39m binding parameter (1:VARCHAR) <- [테스트용 주소1]
-?[2m2025-02-20T13:04:31.924+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m31192?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.bind             ?[0;39m ?[2m:?[0;39m binding parameter (2:VARCHAR) <- [test1@gmail.com]
-?[2m2025-02-20T13:04:31.924+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m31192?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.bind             ?[0;39m ?[2m:?[0;39m binding parameter (3:INTEGER) <- [12345]
-?[2m2025-02-20T13:04:31.925+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m31192?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.extract          ?[0;39m ?[2m:?[0;39m extracted value (1:BIGINT) -> [2]
-?[2m2025-02-20T13:04:31.925+09:00?[0;39m ?[32mDEBUG?[0;39m ?[35m31192?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.SQL                       ?[0;39m ?[2m:?[0;39m 
+?[2m2025-02-20T13:55:55.980+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.bind             ?[0;39m ?[2m:?[0;39m binding parameter (1:VARCHAR) <- [테스트용 주소1]
+?[2m2025-02-20T13:55:55.980+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.bind             ?[0;39m ?[2m:?[0;39m binding parameter (2:VARCHAR) <- [test1@gmail.com]
+?[2m2025-02-20T13:55:55.980+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.bind             ?[0;39m ?[2m:?[0;39m binding parameter (3:INTEGER) <- [12345]
+?[2m2025-02-20T13:55:55.980+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.extract          ?[0;39m ?[2m:?[0;39m extracted value (1:BIGINT) -> [2]
+?[2m2025-02-20T13:55:55.981+09:00?[0;39m ?[32mDEBUG?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.SQL                       ?[0;39m ?[2m:?[0;39m 
     /* ?[34minsert?[0m ?[34mfor?[0m
         com.example.cafe.domain.?[34morder?[0m.entity.OrdersItem */?[34minsert?[0m 
     ?[34minto?[0m
         orders_item (order_product_id, order_product_name, order_product_price, order_id, quantity, orders_item_id) 
     ?[34mvalues?[0m
         (?, ?, ?, ?, ?, ?[34mdefault?[0m)
-?[2m2025-02-20T13:04:31.925+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m31192?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.bind             ?[0;39m ?[2m:?[0;39m binding parameter (1:BIGINT) <- [1]
-?[2m2025-02-20T13:04:31.925+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m31192?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.bind             ?[0;39m ?[2m:?[0;39m binding parameter (2:VARCHAR) <- [아메리카노]
-?[2m2025-02-20T13:04:31.926+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m31192?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.bind             ?[0;39m ?[2m:?[0;39m binding parameter (3:INTEGER) <- [4500]
-?[2m2025-02-20T13:04:31.926+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m31192?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.bind             ?[0;39m ?[2m:?[0;39m binding parameter (4:BIGINT) <- [2]
-?[2m2025-02-20T13:04:31.926+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m31192?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.bind             ?[0;39m ?[2m:?[0;39m binding parameter (5:INTEGER) <- [1]
-?[2m2025-02-20T13:04:31.926+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m31192?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.extract          ?[0;39m ?[2m:?[0;39m extracted value (1:BIGINT) -> [2]
-?[2m2025-02-20T13:04:31.926+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m31192?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36mo.s.t.i.TransactionInterceptor          ?[0;39m ?[2m:?[0;39m Completing transaction for [org.springframework.data.jpa.repository.support.SimpleJpaRepository.save]
-?[2m2025-02-20T13:04:31.927+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m31192?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36mo.s.t.i.TransactionInterceptor          ?[0;39m ?[2m:?[0;39m Getting transaction for [org.springframework.data.jpa.repository.support.SimpleJpaRepository.findById]
-?[2m2025-02-20T13:04:31.933+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m31192?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36mo.s.t.i.TransactionInterceptor          ?[0;39m ?[2m:?[0;39m Completing transaction for [org.springframework.data.jpa.repository.support.SimpleJpaRepository.findById]
+?[2m2025-02-20T13:55:55.981+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.bind             ?[0;39m ?[2m:?[0;39m binding parameter (1:BIGINT) <- [1]
+?[2m2025-02-20T13:55:55.982+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.bind             ?[0;39m ?[2m:?[0;39m binding parameter (2:VARCHAR) <- [아메리카노]
+?[2m2025-02-20T13:55:55.982+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.bind             ?[0;39m ?[2m:?[0;39m binding parameter (3:INTEGER) <- [4500]
+?[2m2025-02-20T13:55:55.982+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.bind             ?[0;39m ?[2m:?[0;39m binding parameter (4:BIGINT) <- [2]
+?[2m2025-02-20T13:55:55.982+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.bind             ?[0;39m ?[2m:?[0;39m binding parameter (5:INTEGER) <- [1]
+?[2m2025-02-20T13:55:55.982+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.extract          ?[0;39m ?[2m:?[0;39m extracted value (1:BIGINT) -> [2]
+?[2m2025-02-20T13:55:55.983+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36mo.s.t.i.TransactionInterceptor          ?[0;39m ?[2m:?[0;39m Completing transaction for [org.springframework.data.jpa.repository.support.SimpleJpaRepository.save]
+?[2m2025-02-20T13:55:55.983+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36mo.s.t.i.TransactionInterceptor          ?[0;39m ?[2m:?[0;39m Getting transaction for [org.springframework.data.jpa.repository.support.SimpleJpaRepository.findById]
+?[2m2025-02-20T13:55:55.990+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36mo.s.t.i.TransactionInterceptor          ?[0;39m ?[2m:?[0;39m Completing transaction for [org.springframework.data.jpa.repository.support.SimpleJpaRepository.findById]
+?[2m2025-02-20T13:55:55.990+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36mo.s.t.i.TransactionInterceptor          ?[0;39m ?[2m:?[0;39m No need to create transaction for [org.springframework.data.jpa.repository.support.SimpleJpaRepository.findByEmail]: This method is not transactional.
+?[2m2025-02-20T13:55:55.991+09:00?[0;39m ?[32mDEBUG?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.SQL                       ?[0;39m ?[2m:?[0;39m 
+    /* <criteria> */ ?[34mselect?[0m
+        o1_0.order_id,
+        o1_0.address,
+        o1_0.email,
+        o1_0.post_code 
+    ?[34mfrom?[0m
+        orders o1_0 
+    ?[34mwhere?[0m
+        o1_0.email=?
+?[2m2025-02-20T13:55:55.991+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.bind             ?[0;39m ?[2m:?[0;39m binding parameter (1:VARCHAR) <- [test1@gmail.com]
+?[2m2025-02-20T13:55:55.993+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.extract          ?[0;39m ?[2m:?[0;39m extracted value (1:BIGINT) -> [2]
+?[2m2025-02-20T13:55:56.002+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36mo.s.t.i.TransactionInterceptor          ?[0;39m ?[2m:?[0;39m No need to create transaction for [org.springframework.data.jpa.repository.support.SimpleJpaRepository.findByName]: This method is not transactional.
+?[2m2025-02-20T13:55:56.003+09:00?[0;39m ?[32mDEBUG?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.SQL                       ?[0;39m ?[2m:?[0;39m 
+    /* <criteria> */ ?[34mselect?[0m
+        p1_0.product_id,
+        p1_0.imageurl,
+        p1_0.name,
+        p1_0.price 
+    ?[34mfrom?[0m
+        product p1_0 
+    ?[34mwhere?[0m
+        p1_0.name=?
+?[2m2025-02-20T13:55:56.004+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.bind             ?[0;39m ?[2m:?[0;39m binding parameter (1:VARCHAR) <- [아메리카노]
+?[2m2025-02-20T13:55:56.004+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.extract          ?[0;39m ?[2m:?[0;39m extracted value (1:BIGINT) -> [1]
+?[2m2025-02-20T13:55:56.005+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.extract          ?[0;39m ?[2m:?[0;39m extracted value (2:VARCHAR) -> [이미지]
+?[2m2025-02-20T13:55:56.005+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.extract          ?[0;39m ?[2m:?[0;39m extracted value (3:VARCHAR) -> [아메리카노]
+?[2m2025-02-20T13:55:56.005+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.extract          ?[0;39m ?[2m:?[0;39m extracted value (4:INTEGER) -> [4500]
+?[2m2025-02-20T13:55:56.005+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36mo.s.t.i.TransactionInterceptor          ?[0;39m ?[2m:?[0;39m Getting transaction for [org.springframework.data.jpa.repository.support.SimpleJpaRepository.save]
+?[2m2025-02-20T13:55:56.006+09:00?[0;39m ?[32mDEBUG?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.SQL                       ?[0;39m ?[2m:?[0;39m 
+    /* ?[34minsert?[0m ?[34mfor?[0m
+        com.example.cafe.domain.?[34morder?[0m.entity.Orders */?[34minsert?[0m 
+    ?[34minto?[0m
+        orders (address, email, post_code, order_id) 
+    ?[34mvalues?[0m
+        (?, ?, ?, ?[34mdefault?[0m)
+?[2m2025-02-20T13:55:56.006+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.bind             ?[0;39m ?[2m:?[0;39m binding parameter (1:VARCHAR) <- [테스트용 주소1]
+?[2m2025-02-20T13:55:56.006+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.bind             ?[0;39m ?[2m:?[0;39m binding parameter (2:VARCHAR) <- [test1@gmail.com]
+?[2m2025-02-20T13:55:56.006+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.bind             ?[0;39m ?[2m:?[0;39m binding parameter (3:INTEGER) <- [12345]
+?[2m2025-02-20T13:55:56.007+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.extract          ?[0;39m ?[2m:?[0;39m extracted value (1:BIGINT) -> [3]
+?[2m2025-02-20T13:55:56.008+09:00?[0;39m ?[32mDEBUG?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.SQL                       ?[0;39m ?[2m:?[0;39m 
+    /* ?[34minsert?[0m ?[34mfor?[0m
+        com.example.cafe.domain.?[34morder?[0m.entity.OrdersItem */?[34minsert?[0m 
+    ?[34minto?[0m
+        orders_item (order_product_id, order_product_name, order_product_price, order_id, quantity, orders_item_id) 
+    ?[34mvalues?[0m
+        (?, ?, ?, ?, ?, ?[34mdefault?[0m)
+?[2m2025-02-20T13:55:56.008+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.bind             ?[0;39m ?[2m:?[0;39m binding parameter (1:BIGINT) <- [1]
+?[2m2025-02-20T13:55:56.008+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.bind             ?[0;39m ?[2m:?[0;39m binding parameter (2:VARCHAR) <- [아메리카노]
+?[2m2025-02-20T13:55:56.008+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.bind             ?[0;39m ?[2m:?[0;39m binding parameter (3:INTEGER) <- [4500]
+?[2m2025-02-20T13:55:56.008+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.bind             ?[0;39m ?[2m:?[0;39m binding parameter (4:BIGINT) <- [3]
+?[2m2025-02-20T13:55:56.008+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.bind             ?[0;39m ?[2m:?[0;39m binding parameter (5:INTEGER) <- [1]
+?[2m2025-02-20T13:55:56.008+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36morg.hibernate.orm.jdbc.extract          ?[0;39m ?[2m:?[0;39m extracted value (1:BIGINT) -> [3]
+?[2m2025-02-20T13:55:56.009+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36mo.s.t.i.TransactionInterceptor          ?[0;39m ?[2m:?[0;39m Completing transaction for [org.springframework.data.jpa.repository.support.SimpleJpaRepository.save]
+?[2m2025-02-20T13:55:56.009+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36mo.s.t.i.TransactionInterceptor          ?[0;39m ?[2m:?[0;39m Getting transaction for [org.springframework.data.jpa.repository.support.SimpleJpaRepository.findById]
+?[2m2025-02-20T13:55:56.009+09:00?[0;39m ?[32mTRACE?[0;39m ?[35m11788?[0;39m ?[2m--- [    Test worker] ?[0;39m?[36mo.s.t.i.TransactionInterceptor          ?[0;39m ?[2m:?[0;39m Completing transaction for [org.springframework.data.jpa.repository.support.SimpleJpaRepository.findById]
 Hello World
 ]]></system-out>
   <system-err><![CDATA[Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build what is described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Mockito.html#0.3

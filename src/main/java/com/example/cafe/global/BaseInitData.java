@@ -27,7 +27,7 @@ public class BaseInitData {
     public ApplicationRunner applicationRunner1() {
         return args -> {
             self.productInit();
-
+            self.orderInit();
         };
     }
 
@@ -38,15 +38,6 @@ public class BaseInitData {
         productService.add("아메리카노", 4500, "이미지");
         productService.add("카페라떼", 5500, "이미지");
 
-    }
-
-    @Bean
-    @Order(2)
-    public ApplicationRunner applicationRunner2() {
-        return args -> {
-            self.orderInit();
-
-        };
     }
 
     @Transactional

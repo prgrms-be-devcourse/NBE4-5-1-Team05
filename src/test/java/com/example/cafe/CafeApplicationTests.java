@@ -4,28 +4,27 @@ import com.example.cafe.domain.order.entity.Orders;
 import com.example.cafe.domain.order.entity.OrdersItem;
 import com.example.cafe.domain.order.repository.OrdersRepository;
 import com.example.cafe.domain.order.service.OrdersService;
-import com.example.cafe.domain.product.entity.Product;
 import com.example.cafe.domain.product.repository.ProductRepository;
 import com.example.cafe.domain.product.service.ProductService;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 @SpringBootTest
 @EnableJpaAuditing
 @ActiveProfiles("test")
 @Transactional
+@Configuration
 class CafeApplicationTests {
 
 	@Autowired
@@ -33,10 +32,45 @@ class CafeApplicationTests {
 
 	@Autowired
 	private ProductRepository productRepository;
-    @Autowired
-    private OrdersRepository ordersRepository;
-    @Autowired
-    private OrdersService ordersService;
+
+	@Autowired
+	private OrdersRepository ordersRepository;
+
+	@Autowired
+	private OrdersService ordersService;
+
+//	// 테스트 전 한번만 실행
+//	@BeforeAll
+//	static void beforeAll() {
+//		// db 저장 작업까지하시고
+//		// before each product들만 넣으시고
+//		// test case로 작업하는게 좋아보여요
+//		// 목적) 프로젝트 시작과 더불어 가장 처음 product data 세팅하자!
+//		// - db에 저장된 product 정보를 가져온다.
+//		// - baseInitdata 여기서
+//		// - cafeApplication main() 여기서
+//		// - test case- beforeall
+//		// 어차피 baseinitdata에서 data 세팅을하면 test케이스도 적용이 된다. 선택이다.
+//		// beforeAll - product 만 준비하고
+//		//             커피, 바나나 ,사과, 에 대한 정보
+//		// test case에서 주문을 준비한다.
+//		// 실제 주문하는 상황을 가정해서 생각해야 설계가 이후에 별로 안바
+//		// 데이터로 그냥 집어넣고 시작하면
+//		// 사용자가 넘겨주는 데이터의 흐름 생각하지 않게 x
+//		// 이미 값이 들어가
+//		// ex orders랑 ordersItem
+//		// 사실은 상호의존적관계 코드상 둘중에 하나만 있을 수가 없게되어있어
+//		// test케이스 수기작성하기
+//		// 확인 하는 절차는 test case에서
+//
+//		// 다중 주문하였을때, 한명이 하나의 orders내에서 여러개의 ordersitem
+//
+//		// 한명이 두개의 orders 생기는 경우
+//		// 이것을 어떻게 처리할 것인지?
+//		// - orders 기존 추가할까?
+//		// - 아니야 두개는 다른거야
+//		// 1. 날짜 비교 통해서 나중에 일괄 처리하여 배송이 완료됨을 알린다. ()
+//	}
 
 	@Test
 	@DisplayName("출력 시험")
@@ -48,15 +82,18 @@ class CafeApplicationTests {
 	@DisplayName("단일 상품 주문")
 	void orderProduct() {
 
-		String productName = "아메리카노";
-		String email = "test1@gmail.com";
-		String address = "테스트용 주소1";
+		// 주문할 상품명, 이메일, 주소, 우편주소 하나 저장
+		String productName = "카페라떼";
+		String email = "test2@gmail.com";
+		String address = "테스트용 주소2";
 		int postCode = 12345;
 
 		// 상품을 주문
 		Orders orderProduct = ordersService.orderProduct(productName, email, address, postCode);
 
 		// 영속화 후 id로 찾아 변수에 저장
+		Orders orders = ordersRepository.findById(orderProduct.getOrderId()).orElse(null);
+
 		/* ordersRepository
 		Orders를 저장을해요 (회원정보를 담고 있어요)
 		OrdersItem은 주문정보를 담고있어요
@@ -92,11 +129,6 @@ class CafeApplicationTests {
 		-> testcase2) 이메일을 통해서 단일 상품조회
 		*/
 
-		Orders orders = ordersRepository.findById(orderProduct.getOrderId()).orElse(null);
-
-		// 검증- 반환된 주문 아이디가 2인지 확인
-		assertThat(orders.getOrderId()).isEqualTo(2L);
-
 		// 검증 - 반환된 이메일이 맞는지 확인
 		assertThat(orders.getEmail()).isEqualTo(email);
 
@@ -120,21 +152,53 @@ class CafeApplicationTests {
 		// OrderItem -> orderProuductName으로 접근 뒤 검증
 
 		// 검증 - 반환된 상품명이 아메리카노인지 확인
-		Orders savedOrder = orders;
-		List<OrdersItem> ordersItems = savedOrder.getOrdersItems();
-		OrdersItem savedOrdersItem = ordersItems.get(0);
+        List<OrdersItem> ordersItems = orders.getOrdersItems();
+		OrdersItem savedOrdersItem = ordersItems.getFirst();
 
 		assertThat(savedOrdersItem.getOrderProductName()).isEqualTo(productName);
 	}
 
 	@Test
-	@DisplayName("이메일로 단일 주문 내역 찾기")
-	void findByEmail() {
-		
-		// 저장해 둔 이메일
-		String email = "test1@gmail.com";
+	@DisplayName("이메일로 단일 주문 내역 찾기 - 성공")
+	void findByEmailSuccess() {
+		// 주문할 상품명, 이메일, 주소, 우편주소 하나 저장
+		String productName = "아메리카노";
+		String email = "test3@gmail.com";
+		String address = "테스트용 주소3";
+		int postCode = 54867;
 
-		Orders foundOrder = ordersService.findOrderByEmail(email);
+		// 상품을 주문
+		Orders orderProduct = ordersService.orderProduct(productName, email, address, postCode);
+
+		// 영속화
+		ordersRepository.findById(orderProduct.getOrderId()).orElse(null);
+
+		// 저장해 둔 이메일
+		String email2 = "test3@gmail.com";
+
+		// 이메일로 주문내역 찾아 변수에 저장
+		Orders foundOrder = ordersService.findOrderByEmail(email2);
+
+		// 조회 된 주문이 비어있는지 확인
+		assertThat(foundOrder).isNotNull();
+		
+		//조회 된 이메일이 똑같은지 확인
+		assertThat(foundOrder.getEmail()).isEqualTo(email2);
+	}
+
+	@Test
+	@DisplayName("이메일로 단일 주문 내역 찾기 - 실패")
+	void findByEmailFail() {
+
+		// 저장해 둔 이메일
+		String email = "testX@gmail.com";
+
+		// 조회 된 주문이 비어있는지 확인
+		assertThatThrownBy(() -> {
+			ordersService.findOrderByEmail(email);
+		})
+				.isInstanceOf(RuntimeException.class)
+				.hasMessage("조회하려는 이메일이 없습니다.");
 	}
 
 //	@Test

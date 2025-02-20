@@ -1,6 +1,5 @@
 package com.example.cafe.domain.order.entity;
 
-import com.example.cafe.domain.product.entity.Product;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -47,6 +46,8 @@ public class OrdersItem {
 
     // 주문 총 수량
     private int quantity;
+
+    // 나중에 주문 날짜 추가
 
     // 연관관계 편의 메서드
     public void setOrder(Orders orders) {

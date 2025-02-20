@@ -20,11 +20,6 @@ public class OrdersService {
 
     @Autowired
     private ProductRepository productRepository;
-    
-    // 주문 id 찾기
-    public Optional<Orders> findById(Long id) {
-        return ordersRepository.findById(id);
-    }
 
     // 주문자 정보 기입
     public Orders add(String email, String address, int postCode) {
@@ -36,6 +31,18 @@ public class OrdersService {
                 .build();
 
         return ordersRepository.save(orders);
+    }
+    
+    // 주문 id로 주문 내역 찾기
+    public Optional<Orders> findById(Long id) {
+        return ordersRepository.findById(id);
+    }
+
+    // 이메일로 주문 내역 찾기
+    public Orders findOrderByEmail(String email) {
+
+        return ordersRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("조회하려는 이메일이 없습니다."));
     }
 
     // 상품 담기
@@ -72,10 +79,5 @@ public class OrdersService {
 
         // Orders 객체 영속화
         return ordersRepository.save(orders);  // 해당 변수는 로컬(자바 메모리)에 저장된 값은 반환됨
-    }
-
-    public Orders findOrderByEmail(String email) {
-        return ordersRepository.findByEmail(email)
-                .orElseThrow("주문");
     }
 }

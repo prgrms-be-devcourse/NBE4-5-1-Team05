@@ -29,8 +29,6 @@ public class Orders {
     // 회원 우편 번호
     @Column
     private int postCode;
-    
-    // 나중에 주문 날짜 추가
 
     // OrderItem 연관관계 주문한 상품 목록
     @OneToMany(mappedBy = "orders", cascade = CascadeType.ALL, orphanRemoval = true)
