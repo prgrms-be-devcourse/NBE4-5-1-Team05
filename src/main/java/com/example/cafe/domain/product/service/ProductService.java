@@ -31,28 +31,4 @@ public class ProductService {
 
         return productRepository.save(product);
     }
-
-//    // 단일 상품 담기
-//    public Optional<Product> orderProduct(String name) {
-//        Optional<Product> product = productRepository.findByName(name);
-//
-//        return product;
-//    }
-
-    // 단일 상품 담기
-    public Optional<Product> orderProduct(String productName, String email, String address, int postCode) {
-
-        // 상품명으로 Product 정보를 조회하여 변수에 저장
-        Optional<Product> ordersProduct = productRepository.findByName(productName);
-
-        // OrdersService에서 주문 실행 및 영속화
-        ordersService.createOrder(ordersProduct.get() , email, address, postCode);
-
-        return ordersProduct;
-    }
-
-//    // 다중 상품 담기
-//    public List<Product> ordersProducts(List<String> productNames) {
-//
-//    }
 }

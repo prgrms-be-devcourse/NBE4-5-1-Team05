@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class BaseInitData {
 
-//    private final OrdersService ordersService;
+    private final OrdersService ordersService;
     private final ProductService productService;
 
     @Autowired
@@ -24,18 +24,18 @@ public class BaseInitData {
     @Bean
     public ApplicationRunner applicationRunner() {
         return args -> {
-//            self.orderInit();
+            self.orderInit();
             self.productInit();
 
         };
     }
 
-//    @Transactional
-//    public void orderInit() {
-//
-//        // 샘플 데이터 생성 (유저 정보 작성)
-//        ordersService.add("haeun9988@naver.com", "서울시 구로구", 352);
-//    }
+    @Transactional
+    public void orderInit() {
+
+        // 샘플 데이터 생성 (유저 정보 작성)
+        ordersService.orderProduct("아메리카노", "haeun9988@naver.com", "서울시 구로구", 352);
+    }
 
     @Transactional
     public void productInit() {
@@ -43,8 +43,5 @@ public class BaseInitData {
         // 샘플 데이터 생성 (상품 담기)
         productService.add("아메리카노", 4500, "이미지");
         productService.add("카페라떼", 5500, "이미지");
-
-
-        productService.orderProduct("아메리카노", "haeun9988@naver.com", "서울시 구로구", 352);
     }
 }

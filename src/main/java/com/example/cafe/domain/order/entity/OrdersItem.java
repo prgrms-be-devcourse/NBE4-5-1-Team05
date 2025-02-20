@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class OrdersItem {
 
-    // 주문 상품 id (기본키)
+    // 상품 주문 id (기본키)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // id 자동 증가
     private Long ordersItemId;
@@ -32,15 +32,22 @@ public class OrdersItem {
     //  Product객체가 entity폴더트리내에 있는것이 맞는가?
     //  dto에 가깝다고 생각합니다. 그래서 이걸 알아볼게
     //  데이터 정보 보음 (구조체/VO) 까지만 역할을 하는 객체의 파일트리의 적합한 위치
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id")
-    private Product product;
+
+    // 주문 상품의 id
+    @Column(nullable = false)
+    private Long orderProductId;
+
+    // 주문한 상품명
+    @Column(nullable = false)
+    private String orderProductName;
+
+    // 주문한 총가격
+    @Column(nullable = false)
+    private int orderProductPrice;
+
 
     // 주문 총수량
     private int quantity;
-
-    // 주문한 상품 총가격
-    private int price;
 
     // 연관관계 편의 메서드
     public void setOrder(Orders orders) {

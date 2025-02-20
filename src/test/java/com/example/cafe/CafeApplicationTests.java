@@ -32,6 +32,8 @@ class CafeApplicationTests {
 	private ProductRepository productRepository;
     @Autowired
     private OrdersRepository ordersRepository;
+    @Autowired
+    private OrdersService ordersService;
 
 	@Test
 	@DisplayName("출력 시험")
@@ -68,10 +70,10 @@ class CafeApplicationTests {
 		int postCode = 12345;
 
 		// 상품을 주문
-		Optional<Product> orderProduct = productService.orderProduct(productName, email, address, postCode);
+		Optional<Orders> orderProduct = ordersService.orderProduct(productName, email, address, postCode);
 
 		// 영속화 후 id로 찾아 변수에 저장
-		Optional<Orders> orders = ordersRepository.findById(orderProduct.get().getId()+1);
+		Optional<Orders> orders = ordersRepository.findById(orderProduct.get().getOrderId());
 
 		// 검증- 반환된 주문 아이디가 2인지 확인
 		assertThat(orders.get().getOrderId()).isEqualTo(2L);
