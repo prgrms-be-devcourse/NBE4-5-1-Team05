@@ -64,5 +64,8 @@ public class BaseInitData {
         o1.getOrdersItems().get(0).setOrderDate(LocalDate.now().minusDays(1).atStartOfDay());
         o3.getOrdersItems().get(0).setOrderDate(LocalDate.now().minusDays(2).atStartOfDay());
 
+        // 샘플 데이터에 배송 상태 주입
+        o1.getOrdersItems().get(0).setCompleted(true);
+        o3.getOrdersItems().get(0).setCompleted(true);
     }
 }
