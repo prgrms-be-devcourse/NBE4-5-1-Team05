@@ -57,9 +57,6 @@ public class BaseInitData {
         ordersItemService.orderProduct(o1,"아메리카노", 1);
         ordersItemService.orderProduct(o2,"아메리카노", 2);
         ordersItemService.orderProduct(o3, "카페라떼", 1);
-
-        // 샘플 데이터 날짜 수동 설정
-
     }
 
 }

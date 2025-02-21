@@ -4,6 +4,7 @@ import com.example.cafe.domain.order.entity.Orders;
 import com.example.cafe.domain.order.entity.OrdersItem;
 import com.example.cafe.domain.order.repository.OrdersItemRepository;
 import com.example.cafe.domain.order.repository.OrdersRepository;
+import com.example.cafe.domain.order.service.OrdersItemService;
 import com.example.cafe.domain.order.service.OrdersService;
 import com.example.cafe.domain.product.entity.Product;
 import com.example.cafe.domain.product.repository.ProductRepository;
@@ -39,6 +40,8 @@ class CafeApplicationTests {
 
 	@Autowired
 	private OrdersItemRepository ordersItemRepository;
+    @Autowired
+    private OrdersItemService ordersItemService;
 
 //	// 테스트 전 한번만 실행
 //	@BeforeAll
@@ -86,7 +89,7 @@ class CafeApplicationTests {
 		List<Product> products = productRepository.findAll();
 
 		assertThat(products).isNotNull();
-		assertThat(products.size()).isEqualTo(2);
+		assertThat(products.size()).isEqualTo(3);
 
 	}
 
@@ -333,17 +336,80 @@ class CafeApplicationTests {
 	@DisplayName("오후 2시부터 다음날 오후 2시까지의 한 구매자의 주문 내역 확인")
 	void findOrderProduct2pmBefore() {
 
-		// 주문할 상품명, 이메일, 주소, 우편주소 하나 저장
+		// 구매자 생성
+//		Orders orders = ordersService.add("testemail@mail.com", "서울시 마포구", 96587);
+//		ordersRepository.save(orders);
+
+		System.out.println("서비스 저장 a");
+		Orders orders = ordersService.add("testemail@mail.com", "서울시 마포구", 96587);
+
+		// 주문할 상품 생성
 		ArrayList<String> productName = new ArrayList<>();
 			productName.add("카페라떼");
 			productName.add("아이스티");
-		String email = "test6@gmail.com";
-		String address = "테스트용 주소6";
 		ArrayList<Integer> quantity = new ArrayList<>();
 			quantity.add(2);
 			quantity.add(4);
-		int postCode = 95487;
 
+		// 당일 오후 2시 이전에 주문 (카페라떼)
+		OrdersItem ordersItemBefore2pm = OrdersItem.builder()
+				.orders(orders)
+				.orderProductId(2L)
+				.orderProductName("카페라떼")
+				.quantity(2)
+				.orderDate(LocalDateTime.of(2025, 2, 20, 8, 30))
+				.build();
+
+		orders.addOrdersItem(ordersItemBefore2pm);
+		System.out.println("서비스 저장 b");
+		ordersItemRepository.save(ordersItemBefore2pm);
+
+		// 당일 오후 2시 이후에 주문 (아이스티)
+		OrdersItem ordersItemAfter2pm = OrdersItem.builder()
+				.orders(orders)
+				.orderProductId(3L)
+				.orderProductName("아이스티")
+				.quantity(4)
+				.orderDate(LocalDateTime.of(2025, 2, 21, 13, 30))
+				.build();
+
+		orders.addOrdersItem(ordersItemAfter2pm);
+		System.out.println("서비스 저장 c");
+		ordersItemRepository.save(ordersItemAfter2pm);
+
+		// 변수 ctime 설정
+		OrdersItemService.setCtime(10);
+
+		// 배송 메서드 실행
+		List<Orders> deliveryOrders = ordersItemService.findOrdersDuring2pm();
+		/*
+		해당 메서드 로직에 스케줄러가 작동되는 시간을 조절하는 변수가 (* * * * *)
+		* */
+
+		/// 검증 ///
+		System.out.println("{ 배송 대상 주문 목록 테스트 }");
+
+		if (deliveryOrders.isEmpty()) {
+			System.out.println("배송할 주문이 없습니다.");
+		} else {
+			for (Orders order : deliveryOrders) {
+				System.out.println("주문자 이메일: " + order.getEmail());
+				System.out.println("주문 상품");
+				for (OrdersItem orderItem : order.getOrdersItems()) {
+					System.out.println("상품명: " + orderItem.getOrderProductName() + ", 갯수: " + orderItem.getQuantity());
+				}
+			}
+		}
+
+		// 비어있는지 확인
+		assertThat(deliveryOrders).isNotNull();
+
+		// 크기 확인
+		assertThat(deliveryOrders.size()).isEqualTo(4);
+
+		// 주문 가져오기
+//		Orders filteredDeliveryOrders = deliveryOrders.get(0);
+//		List<OrdersItem> filteredDeliveryOrdersItems = filteredDeliveryOrders.getOrdersItems();
 
 	}
 
