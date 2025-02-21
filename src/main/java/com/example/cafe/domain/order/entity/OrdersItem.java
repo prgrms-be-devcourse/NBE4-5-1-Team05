@@ -1,13 +1,12 @@
 package com.example.cafe.domain.order.entity;
 
-import com.example.cafe.global.entity.BaseTime;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 
@@ -16,7 +15,8 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrdersItem extends BaseTime {
+@EntityListeners(AuditingEntityListener.class)
+public class OrdersItem {
 
     // 상품 주문 id (기본키)
     @Id
@@ -54,20 +54,21 @@ public class OrdersItem extends BaseTime {
     private int quantity;
 
     // 주문 날짜
-    @CreatedDate
-    @Column(nullable = false)
-    private LocalDateTime orderDate;
+    @Column
+    @Builder.Default
+    private LocalDateTime orderDate = LocalDateTime.now();
 
-    // 주문 수정 날짜
+    // 객체(주문) 수정 날짜
     @LastModifiedDate
     private LocalDateTime modifiedDate;
 
     // 주문 완료
-    @Column(nullable = false, columnDefinition = "boolean default false")
+    @Column(columnDefinition = "boolean default false")
     private boolean completed;
 
     // 연관관계 편의 메서드
     public void setOrder(Orders orders) {
         this.orders = orders;
     }
+
 }

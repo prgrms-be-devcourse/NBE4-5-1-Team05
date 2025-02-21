@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -38,6 +39,18 @@ public class OrdersItemService {
     // TODO: orderRepository save가 다중 작업시 반복처리 되는것이 신경쓰인다. jpa가 효율적으로 해주나?
     // TODO: 다중 상품 주문 담기에서 quantity 로직 매커니즘이 올바르지 않다.
     // TODO: Repository 호출이 최소화, 저는 빈번해요 -> jpa 기능 중에 일괄처리 작동 이것이  지혼자 해주는지? 그게 기억이안나요 -> transactional 처리를 해야되요
+
+    // 주문내역 id로 주문내역 찾기
+    public Optional<OrdersItem> findByOrdersItemId(Long ordersItemId) {
+        return ordersItemRepository.findById(ordersItemId);
+    }
+
+    // 구매자로 주문내역 찾기
+    public OrdersItem findByOrders(Orders orders) {
+
+        return ordersItemRepository.findByOrders(orders)
+                .orElseThrow(() -> new IllegalArgumentException("조회하려는 구매자가 없습니다."));
+    }
 
     // 상품 주문 담기
     public void orderProducts(Orders orders, ArrayList<String> productNames, ArrayList<Integer> quantity) {
@@ -86,7 +99,7 @@ public class OrdersItemService {
     }
 
     // 특정 시간 범위의 주문 조회 및 배송 처리
-    public List<Orders> findOrdersDuring2pm() {
+    public List<OrdersItem> findOrdersDuring2pm() {
 
         // 현재시간 변수에 저장
         LocalDateTime now = LocalDateTime.now();
@@ -95,50 +108,47 @@ public class OrdersItemService {
 
         // 오후 2시 ~ 다음날 오후 2시 변수 세팅
         LocalDateTime startTime = deliveryStartTime;
-//        LocalDateTime endTime = deliveryStartTime.plusMinutes(10);
         LocalDateTime endTime = deliveryStartTime.plusDays(1);
 
         // 테스트용
         System.out.println("시작 시간 : " + startTime);
         System.out.println("종료 시간 : " + endTime);
 
-        // ordersRepository에서 모든 데이터 조회
-        List<Orders> allOrders = ordersRepository.findAll();
+        // ordersItemRepository에서 모든 데이터 조회
+        List<OrdersItem> allOrdersItem = ordersItemRepository.findAll();
 
-        // 조회된 Orders 목록 순회하고 OrdersItem의 주문일시가 오후 2시부터 다음날 오후 2시까지인 주문들 추출
-        List<Orders> deliveryOrders = allOrders.stream()
-                .filter(orders -> orders.getOrdersItems().stream()
-                        .anyMatch(ordersItem -> {
-                            LocalDateTime orderTime = ordersItem.getOrderDate();
-                            return orderTime.isAfter(startTime) && orderTime.isBefore(endTime);
-                        })
-                ).toList();
+        // 조회된 OrdersItem 목록 순회하고 OrdersItem의 주문일시가 오후 2시부터 다음날 오후 2시까지인 주문들만 추출
+        List<OrdersItem> deliveryOrdersItems = allOrdersItem.stream()
+                .filter(ordersItem -> {
+                    LocalDateTime orderTime = ordersItem.getOrderDate();
+                    return orderTime.isAfter(deliveryStartTime) && orderTime.isBefore(endTime);
+                }).toList();
 
-        return deliveryOrders;
+        return deliveryOrdersItems;
     }
 
-    // processDelivery에서 호출하는 시간 범위 처리
-    private List<Orders> processDelivery() {
 
-        List<Orders> deliveryOrders = findOrdersDuring2pm();
+    // processDelivery에서 호출하는 시간 범위 처리
+    private void processDelivery() {
+
+        List<OrdersItem> deliveryOrdersItems = findOrdersDuring2pm();
 
         // 콘솔 출력용 배송 처리
-        if (deliveryOrders.isEmpty()) {
-            System.out.println("배송할 주문이 없습니다.");
-        } else {
-            System.out.println("배송할 주문 내역 (오후 2시 ~ 다음날 오후 2시)");
+        if (deliveryOrdersItems.isEmpty()) {
 
-            for (Orders orders : deliveryOrders) {
-                System.out.println("주문자 이메일: " + orders.getEmail());
+            System.out.println("배송할 주문이 없습니다.");
+
+        } else {
+
+            System.out.println("- 배송할 주문 내역 (오후 2시 ~ 다음날 오후 2시) -");
+
+            for (OrdersItem ordersItem : deliveryOrdersItems) {
+                System.out.println("주문자 이메일: " + ordersItem.getOrders().getEmail());
                 System.out.println("<주문 상품 리스트>");
 
-                for (OrdersItem ordersItem : orders.getOrdersItems()) {
-                    System.out.println("상품명: " + ordersItem.getOrderProductName() + "갯수: " + ordersItem.getQuantity());
-                }
+                System.out.println("상품명: " + ordersItem.getOrderProductName() + "갯수: " + ordersItem.getQuantity());
             }
         }
-
-        return deliveryOrders;
     }
 
 }

@@ -50,13 +50,13 @@ public class BaseInitData {
 
         // 샘플 데이터 생성 (유저 정보 작성)
         Orders o1 = ordersService.add("haeun9988@naver.com", "서울시 구로구", 352);
-        Orders o2 = ordersService.add( "apple1234@google.com", "서울시 강남구", 12345);
-        Orders o3 = ordersService.add( "banana9876@google.com", "경기도 고양시", 86452);
+        Orders o2 = ordersService.add("apple1234@google.com", "서울시 강남구", 12345);
+        Orders o3 = ordersService.add("banana9876@google.com", "경기도 고양시", 86452);
 
         // 샘플 데이터 생성 (주문서 작성)
-        ordersItemService.orderProduct(o1,"아메리카노", 1);
-        ordersItemService.orderProduct(o2,"아메리카노", 2);
+        ordersItemService.orderProduct(o1, "아메리카노", 1);
+        ordersItemService.orderProduct(o2, "아메리카노", 2);
         ordersItemService.orderProduct(o3, "카페라떼", 1);
-    }
 
+    }
 }
