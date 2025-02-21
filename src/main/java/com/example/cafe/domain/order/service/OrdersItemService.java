@@ -232,7 +232,7 @@ public class OrdersItemService {
         List<OrdersItem> deliveryOrdersItems = allOrdersItem.stream()
                 .filter(ordersItem -> {
                     LocalDateTime orderTime = ordersItem.getOrderDate();
-                    return !orderTime.isBefore(endTime) && !orderTime.isAfter(startTime) && !ordersItem.isCompleted();
+                    return orderTime.isBefore(endTime) && orderTime.isAfter(startTime) && ordersItem.isCompleted();
                 }).toList();
 
         return deliveryOrdersItems;
@@ -241,10 +241,10 @@ public class OrdersItemService {
     // 호출하는 시간 범위 처리
     private void processDelivery() {
 
-        List<OrdersItem> deliveryOrdersItems = findOrdersDuring2pm();
+        List<OrdersItem> deliveryProcessItems = findOrdersDuring2pm();
 
         // 콘솔 출력용 배송 처리
-        if (deliveryOrdersItems.isEmpty()) {
+        if (deliveryProcessItems.isEmpty()) {
 
             System.out.println("배송할 주문이 없습니다.");
 
@@ -252,14 +252,17 @@ public class OrdersItemService {
 
             System.out.println("- 배송할 주문 내역 (오후 2시 ~ 다음날 오후 2시) -");
 
-            for (OrdersItem ordersItem : deliveryOrdersItems) {
+            for (OrdersItem ordersItem : deliveryProcessItems) {
+                System.out.println("------------------------------");
                 System.out.println("주문자 이메일: " + ordersItem.getOrders().getEmail());
-                System.out.println("<주문 상품 리스트>");
-
-                System.out.println("상품명: " + ordersItem.getOrderProductName()
-                        + "\n갯수: " + ordersItem.getQuantity()
-                        + "\n주문 날짜: " + ordersItem.getOrderDate());
+                System.out.println("<주문 상품 정보>");
+                System.out.println("  - 상품명: " + ordersItem.getOrderProductName());
+                System.out.println("  - 갯수: " + ordersItem.getQuantity());
+                System.out.println("  - 주문 날짜: " + ordersItem.getOrderDate());
+                System.out.println("------------------------------");
             }
+
+            System.out.println("배송할 총 상품 갯수: " + deliveryProcessItems.size());
         }
     }
 }
