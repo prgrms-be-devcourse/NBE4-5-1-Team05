@@ -13,6 +13,8 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.core.annotation.Order;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+
 @Configuration
 @RequiredArgsConstructor
 public class BaseInitData {
@@ -57,6 +59,10 @@ public class BaseInitData {
         ordersItemService.orderProduct(o1, "아메리카노", 1);
         ordersItemService.orderProduct(o2, "아메리카노", 2);
         ordersItemService.orderProduct(o3, "카페라떼", 1);
+
+        // 샘플 데이터에 시간 주입
+        o1.getOrdersItems().get(0).setOrderDate(LocalDate.now().minusDays(1).atStartOfDay());
+        o3.getOrdersItems().get(0).setOrderDate(LocalDate.now().minusDays(2).atStartOfDay());
 
     }
 }

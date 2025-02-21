@@ -421,7 +421,7 @@ class CafeApplicationTests {
 		assertThat(deliveryOrders).isNotNull();
 
 		// 크기 확인
-		assertThat(deliveryOrders.size()).isEqualTo(4);
+		assertThat(deliveryOrders.size()).isEqualTo(2);
 
 		// 주문 가져오기
 		OrdersItem filteredDeliveryOrders = deliveryOrders.getFirst();

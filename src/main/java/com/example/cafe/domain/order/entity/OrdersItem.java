@@ -71,4 +71,8 @@ public class OrdersItem {
         this.orders = orders;
     }
 
+    // 임의로 시간을 넣기 위한 메서드
+    public void setOrderDate(LocalDateTime orderDate) {
+        this.orderDate = orderDate;
+    }
 }
