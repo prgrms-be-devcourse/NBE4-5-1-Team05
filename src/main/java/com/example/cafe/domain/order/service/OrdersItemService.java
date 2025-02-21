@@ -179,20 +179,20 @@ public class OrdersItemService {
     public void updateDeliveryStatus() {
 
         LocalDateTime startDate = LocalDateTime.now().withHour(14).withMinute(0).withSecond(0);
-        LocalDateTime endDate = startDate.plusDays(1);
+        LocalDateTime endDate = startDate.minusDays(1).withHour(14).withMinute(0).withSecond(0);
 
         // 오후 2시 이후 주문 변수에 담기
         List<OrdersItem> deliveryProcessOrders = ordersItemRepository.findAll().stream()
                 .filter(ordersItem -> {
                     LocalDateTime orderTime = ordersItem.getOrderDate();
-                    return orderTime.isAfter(startDate) && orderTime.isBefore(endDate);
+                    return !orderTime.isBefore(endDate) && !orderTime.isAfter(startDate);
                 }).toList();
 
         // 오후 2시 이전 주문 변수에 담기
         List<OrdersItem> deliveryCompleteOrders = ordersItemRepository.findAll().stream()
                 .filter(ordersItem -> {
                     LocalDateTime orderTime = ordersItem.getOrderDate();
-                    return orderTime.isBefore(startDate);
+                    return orderTime.isBefore(endDate);
                 }).toList();
 
         // 오후 2시 이후 주문은 배송중(true)로 수정
@@ -216,12 +216,10 @@ public class OrdersItemService {
 
         // 현재시간 변수에 저장
         LocalDateTime now = LocalDateTime.now();
-        // 기준 시간 오후 2시를 변수에 저장
-        LocalDateTime deliveryStartTime = now.withHour(ctime).withMinute(0).withSecond(0);
 
-        // 오후 2시 ~ 다음날 오후 2시 변수 세팅
-        LocalDateTime startTime = deliveryStartTime;
-        LocalDateTime endTime = deliveryStartTime.plusDays(1);
+        // 기준 시간 오후 2시 ~ 다음날 오후 2시 변수 세팅
+        LocalDateTime startTime = now.withHour(ctime).withMinute(0).withSecond(0);
+        LocalDateTime endTime = startTime.minusDays(1).withHour(ctime).withMinute(0).withSecond(0);
 
         // 테스트용
         System.out.println("시작 시간 : " + startTime);
@@ -234,7 +232,7 @@ public class OrdersItemService {
         List<OrdersItem> deliveryOrdersItems = allOrdersItem.stream()
                 .filter(ordersItem -> {
                     LocalDateTime orderTime = ordersItem.getOrderDate();
-                    return orderTime.isAfter(deliveryStartTime) && orderTime.isBefore(endTime) && !ordersItem.isCompleted();
+                    return !orderTime.isBefore(endTime) && !orderTime.isAfter(startTime) && !ordersItem.isCompleted();
                 }).toList();
 
         return deliveryOrdersItems;

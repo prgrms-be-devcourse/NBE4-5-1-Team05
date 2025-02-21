@@ -488,7 +488,7 @@ class CafeApplicationTests {
 		System.out.println("상품 수량: " + cafelatte.getQuantity());
 		System.out.println("상품 구매 시간: " + cafelatte.getOrderDate());
 		System.out.println("배송 상태 (true면 배송중 / false면 배송완료): " + cafelatte.isCompleted());
-		
+
 		// 2시 이전 주문인 아메리카노는 배송완료 상태
 		assertThat(americano).isNotNull();
 		assertThat(americano.isCompleted()).isFalse();
