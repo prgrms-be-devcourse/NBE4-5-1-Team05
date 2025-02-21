@@ -62,6 +62,11 @@ public class OrdersItemService {
         return ordersItemRepository.findOrdersItemByOrderDate(orderDate); // OrdersItemRepository의 findOrdersItemByOrderDate 메서드 호출
     }
 
+    // 구매내역의 배송 상태 값으로 찾기
+    public Optional<OrdersItem> findOrdersItemByCompleted(boolean completed) {
+        return ordersItemRepository.findOrdersItemByCompleted(completed);
+    }
+
     // 모든 주문내역 찾기
     public void findAll() {
         ordersItemRepository.findAll();
@@ -179,6 +184,7 @@ public class OrdersItemService {
         processDelivery();
     }
 
+    // 배송 상태 업데이트 로직
     @Transactional
     public void updateDeliveryStatus() {
 
@@ -235,16 +241,22 @@ public class OrdersItemService {
         List<OrdersItem> allOrdersItem = ordersItemRepository.findAll();
 
         // 조회된 OrdersItem 목록 순회하고 OrdersItem의 주문일시가 오후 2시부터 다음날 오후 2시까지인 주문들만 추출
+//        List<OrdersItem> deliveryOrdersItems = allOrdersItem.stream()
+//                .filter(ordersItem -> {
+//                    LocalDateTime orderTime = ordersItem.getOrderDate();
+//                    return orderTime.isAfter(deliveryStartTime) && orderTime.isBefore(endTime);
+//                }).toList();
+
         List<OrdersItem> deliveryOrdersItems = allOrdersItem.stream()
                 .filter(ordersItem -> {
                     LocalDateTime orderTime = ordersItem.getOrderDate();
-                    return orderTime.isAfter(deliveryStartTime) && orderTime.isBefore(endTime);
+                    return orderTime.isAfter(deliveryStartTime) && orderTime.isBefore(endTime) && !ordersItem.isCompleted(); // completed 필드 조건 추가!
                 }).toList();
 
         return deliveryOrdersItems;
     }
 
-    // processDelivery에서 호출하는 시간 범위 처리
+    // processDelivery 에서 호출하는 시간 범위 처리
     private void processDelivery() {
 
         List<OrdersItem> deliveryOrdersItems = findOrdersDuring2pm();

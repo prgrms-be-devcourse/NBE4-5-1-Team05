@@ -26,9 +26,8 @@ public class OrdersService {
     }
 
     // 구매자 이메일로 구매자 찾기
-    public Orders findOrderByEmail(String email) {
-        return ordersRepository.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("조회하려는 이메일이 없습니다."));
+    public Optional<Orders> findByEmail(String email) {
+        return ordersRepository.findByEmail(email);
     }
 
     // 구매자 주소로 구매자 찾기

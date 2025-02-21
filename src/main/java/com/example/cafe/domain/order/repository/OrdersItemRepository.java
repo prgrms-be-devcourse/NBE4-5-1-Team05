@@ -15,6 +15,7 @@ public interface OrdersItemRepository extends JpaRepository<OrdersItem, Long> {
     Optional<OrdersItem> findByOrders(Orders orders);
     Optional<OrdersItem> findOrdersItemByOrdersEmail(String ordersEmail);
     Optional<OrdersItem> findOrdersItemByOrderDate(LocalDateTime orderDate);
+    Optional<OrdersItem> findOrdersItemByCompleted(boolean completed);
     List<OrdersItem> findAll();
 
     // 삭제
