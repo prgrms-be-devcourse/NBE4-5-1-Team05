@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -153,7 +154,7 @@ public class OrdersItemService {
                 .build();
     }
 
-    /// 시간 관련 메서드 ///
+    /// 주문 배송 관련 메서드 ///
     // 당일 오후 2시부터 다음날 오후 2시까지의 주문 조회
     @Scheduled(cron = "0 0 14 * * *")
     public void startDelivery() {
@@ -171,7 +172,47 @@ public class OrdersItemService {
         // 조금 걸려요 findall, delete
         // controller 빠르게 할수있다.
 
+        // 배송 상태 업테이트 로직
+        updateDeliveryStatus();
+
+        // 배송 처리 로직
         processDelivery();
+    }
+
+    @Transactional
+    public void updateDeliveryStatus() {
+
+        LocalDateTime startDate = LocalDateTime.now().withHour(14).withMinute(0).withSecond(0);
+        LocalDateTime endDate = startDate.plusDays(1);
+
+        // 오후 2시 이후 주문 변수에 담기
+        List<OrdersItem> deliveryProcessOrders = ordersItemRepository.findAll().stream()
+                .filter(ordersItem -> {
+                    LocalDateTime orderTime = ordersItem.getOrderDate();
+                    return orderTime.isAfter(startDate) && orderTime.isBefore(endDate);
+                }).toList();
+
+        // 오후 2시 이전 주문 변수에 담기
+        List<OrdersItem> deliveryCompleteOrders = ordersItemRepository.findAll().stream()
+                .filter(ordersItem -> {
+                    LocalDateTime orderTime = ordersItem.getOrderDate();
+                    return orderTime.isBefore(startDate);
+                }).toList();
+
+        // 오후 2시 이후 주문은 배송중(true)로 수정
+        for (OrdersItem ordersItem : deliveryProcessOrders) {
+            ordersItem.setCompleted(true);
+            ordersItemRepository.save(ordersItem);
+        }
+
+        // 오후 2시 이전 주문은 배송완료(false)로 수정
+        for (OrdersItem ordersItem : deliveryCompleteOrders) {
+            ordersItem.setCompleted(false);
+            ordersItemRepository.save(ordersItem);
+        }
+
+        // 확인용 출력
+        System.out.println("배송 중인 상품: " + deliveryProcessOrders.size());
     }
 
     // 특정 시간 범위의 주문 조회 및 배송 처리
@@ -203,7 +244,6 @@ public class OrdersItemService {
         return deliveryOrdersItems;
     }
 
-
     // processDelivery에서 호출하는 시간 범위 처리
     private void processDelivery() {
 
@@ -226,5 +266,7 @@ public class OrdersItemService {
             }
         }
     }
+
+    // 주문 상품 완료 처리
 
 }

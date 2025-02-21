@@ -62,6 +62,7 @@ public class OrdersItem {
     private LocalDateTime modifiedDate;
 
     // 주문 완료
+    @Setter
     @Column(columnDefinition = "boolean default false")
     private boolean completed;
 

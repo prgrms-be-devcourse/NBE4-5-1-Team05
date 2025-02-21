@@ -347,9 +347,6 @@ class CafeApplicationTests {
 	void findOrderProduct2pmBefore() {
 
 		// 구매자 생성
-//		Orders orders = ordersService.add("testemail@mail.com", "서울시 마포구", 96587);
-//		ordersRepository.save(orders);
-
 		System.out.println("서비스 저장 a");
 		Orders orders = ordersService.add("testemail@mail.com", "서울시 마포구", 96587);
 
@@ -364,7 +361,6 @@ class CafeApplicationTests {
 		// 당일 오후 2시 이전에 주문 (카페라떼)
 		OrdersItem ordersItemBefore2pm = OrdersItem.builder()
 				.orders(orders)
-				.orderProductPrice(1000)
 				.orderProductId(2L)
 				.orderProductName("카페라떼")
 				.quantity(2)
@@ -379,7 +375,6 @@ class CafeApplicationTests {
 		// 당일 오후 2시 이후에 주문 (아이스티)
 		OrdersItem ordersItemAfter2pm = OrdersItem.builder()
 				.orders(orders)
-				.orderProductPrice(1000)
 				.orderProductId(3L)
 				.orderProductName("아이스티")
 				.quantity(4)
@@ -426,6 +421,53 @@ class CafeApplicationTests {
 		// 주문 가져오기
 		OrdersItem filteredDeliveryOrders = deliveryOrders.getFirst();
 //		OrdersItem filteredDeliveryOrdersItems = filteredDeliveryOrders.getOrdersItems();
+
+	}
+
+	@Test
+	@DisplayName("상품 배달완료 확인")
+	void deliveryProcessing() {
+
+		// 구매자 생성
+		Orders orders = ordersService.add("testemail@mail.com", "서울시 마포구", 96587);
+		
+		// 주문 상품 정보 생성 및 구매
+		OrdersItem ordersItemAfter2pm = OrdersItem.builder()
+				.orders(orders)
+				.orderProductId(3L)
+				.orderProductName("아이스티")
+				.quantity(2)
+				.orderDate(LocalDateTime.now().minusDays(2))
+				.build();
+
+		// DB에 영속화 및 주문목록에 저장
+		ordersItemRepository.save(ordersItemAfter2pm);
+		orders.addOrdersItem(ordersItemAfter2pm);
+
+		// 배송 메서드 실행
+		ordersItemService.startDelivery();
+
+		/// 검증 ///
+		System.out.println("{ 배송 대상 주문 목록 테스트 }");
+
+		if (deliveryOrders.isEmpty()) {
+			System.out.println("배송할 주문이 없습니다.");
+		} else {
+			for (OrdersItem ordersItem : deliveryOrders) {
+				System.out.println("주문자 이메일: " + ordersItem.getOrders().getEmail());
+				System.out.print("주문 상품) ");
+
+				System.out.println("상품명: " + ordersItem.getOrderProductName() +
+						", 갯수: " + ordersItem.getQuantity() +
+						", 구매 시간: " + ordersItem.getOrderDate());
+			}
+		}
+
+	}
+
+	@Test
+	@DisplayName("상품 배달완료 확인")
+	void deliveryComplete() {
 
 	}
 
