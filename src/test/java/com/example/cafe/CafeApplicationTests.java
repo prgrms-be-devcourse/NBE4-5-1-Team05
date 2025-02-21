@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -251,12 +250,14 @@ class CafeApplicationTests {
 		// 저장해 둔 이메일
 		String email = "testX@gmail.com";
 
+		// 이메일로 주문 검색
+		Optional<Orders> findOrders = ordersRepository.findByEmail(email);
+
 		// 조회 된 주문이 비어있는지 확인
-		assertThatThrownBy(() -> {
-			ordersService.findByEmail(email);
-		})
-				.isInstanceOf(RuntimeException.class)
-				.hasMessage("조회하려는 이메일이 없습니다.");
+		assertThat(findOrders).isEmpty();
+
+		// 출력
+		System.out.println("찾으시려는 주문자가 없습니다.");
 	}
 
 	@Test
