@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -20,7 +19,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class OrdersItemService {
-
+    
     @Autowired
     private final OrdersItemRepository ordersItemRepository;
 
@@ -35,10 +34,6 @@ public class OrdersItemService {
     public static void setCtime(int ctime) {
         OrdersItemService.ctime = ctime;
     }
-
-    // TODO: orderRepository save가 다중 작업시 반복처리 되는것이 신경쓰인다. jpa가 효율적으로 해주나?
-    // TODO: 다중 상품 주문 담기에서 quantity 로직 매커니즘이 올바르지 않다.
-    // TODO: Repository 호출이 최소화, 저는 빈번해요 -> jpa 기능 중에 일괄처리 작동 이것이  지혼자 해주는지? 그게 기억이안나요 -> transactional 처리를 해야되요
 
     /// 기본 메서드 ///
     // 주문내역 id로 주문내역 찾기
@@ -114,17 +109,13 @@ public class OrdersItemService {
         return true;
     }
 
-    // 주문 내역 수정 (수량)
+    // 주문 내역 수정 (수량 수정)
 //    public Optional<OrdersItem> save(Long orderItemId, String ordersEmail, int quantity)
 
 
-    /// 구매 관련 메서드 ///
+    /// 주문 관련 메서드 ///
     // 상품 주문 담기
     public void orderProducts(Orders orders, ArrayList<String> productNames, ArrayList<Integer> quantity) {
-        //OrdersItem 수량이 의미하는
-        /*
-         *각각의 Product에 해당하는 수량이 필요할것 같아요
-         * */
 
         // 들어있는 상품명의 갯수에 따라 단일로 저장
         for (int i = 0; i < productNames.size(); i++) {
@@ -184,8 +175,7 @@ public class OrdersItemService {
         processDelivery();
     }
 
-    // 배송 상태 업데이트 로직
-    @Transactional
+    // 배송 상태(배송완료인지 배송중인지) 수정
     public void updateDeliveryStatus() {
 
         LocalDateTime startDate = LocalDateTime.now().withHour(14).withMinute(0).withSecond(0);
@@ -221,7 +211,7 @@ public class OrdersItemService {
         System.out.println("배송 중인 상품: " + deliveryProcessOrders.size());
     }
 
-    // 특정 시간 범위의 주문 조회 및 배송 처리
+    // 특정 시간 범위의 주문 조회 및 배송 처리 (테스트용)
     public List<OrdersItem> findOrdersDuring2pm() {
 
         // 현재시간 변수에 저장
@@ -241,22 +231,16 @@ public class OrdersItemService {
         List<OrdersItem> allOrdersItem = ordersItemRepository.findAll();
 
         // 조회된 OrdersItem 목록 순회하고 OrdersItem의 주문일시가 오후 2시부터 다음날 오후 2시까지인 주문들만 추출
-//        List<OrdersItem> deliveryOrdersItems = allOrdersItem.stream()
-//                .filter(ordersItem -> {
-//                    LocalDateTime orderTime = ordersItem.getOrderDate();
-//                    return orderTime.isAfter(deliveryStartTime) && orderTime.isBefore(endTime);
-//                }).toList();
-
         List<OrdersItem> deliveryOrdersItems = allOrdersItem.stream()
                 .filter(ordersItem -> {
                     LocalDateTime orderTime = ordersItem.getOrderDate();
-                    return orderTime.isAfter(deliveryStartTime) && orderTime.isBefore(endTime) && !ordersItem.isCompleted(); // completed 필드 조건 추가!
+                    return orderTime.isAfter(deliveryStartTime) && orderTime.isBefore(endTime) && !ordersItem.isCompleted();
                 }).toList();
 
         return deliveryOrdersItems;
     }
 
-    // processDelivery 에서 호출하는 시간 범위 처리
+    // 호출하는 시간 범위 처리
     private void processDelivery() {
 
         List<OrdersItem> deliveryOrdersItems = findOrdersDuring2pm();
@@ -274,11 +258,10 @@ public class OrdersItemService {
                 System.out.println("주문자 이메일: " + ordersItem.getOrders().getEmail());
                 System.out.println("<주문 상품 리스트>");
 
-                System.out.println("상품명: " + ordersItem.getOrderProductName() + "갯수: " + ordersItem.getQuantity());
+                System.out.println("상품명: " + ordersItem.getOrderProductName()
+                        + "\n갯수: " + ordersItem.getQuantity()
+                        + "\n주문 날짜: " + ordersItem.getOrderDate());
             }
         }
     }
-
-    // 주문 상품 완료 처리
-
 }

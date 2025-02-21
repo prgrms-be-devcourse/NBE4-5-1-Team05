@@ -41,41 +41,9 @@ class CafeApplicationTests {
 
 	@Autowired
 	private OrdersItemRepository ordersItemRepository;
+
 	@Autowired
 	private OrdersItemService ordersItemService;
-
-//	// 테스트 전 한번만 실행
-//	@BeforeAll
-//	static void beforeAll() {
-//		// db 저장 작업까지하시고
-//		// before each product들만 넣으시고
-//		// test case로 작업하는게 좋아보여요
-//		// 목적) 프로젝트 시작과 더불어 가장 처음 product data 세팅하자!
-//		// - db에 저장된 product 정보를 가져온다.
-//		// - baseInitdata 여기서
-//		// - cafeApplication main() 여기서
-//		// - test case- beforeall
-//		// 어차피 baseinitdata에서 data 세팅을하면 test케이스도 적용이 된다. 선택이다.
-//		// beforeAll - product 만 준비하고
-//		//             커피, 바나나 ,사과, 에 대한 정보
-//		// test case에서 주문을 준비한다.
-//		// 실제 주문하는 상황을 가정해서 생각해야 설계가 이후에 별로 안바
-//		// 데이터로 그냥 집어넣고 시작하면
-//		// 사용자가 넘겨주는 데이터의 흐름 생각하지 않게 x
-//		// 이미 값이 들어가
-//		// ex orders랑 ordersItem
-//		// 사실은 상호의존적관계 코드상 둘중에 하나만 있을 수가 없게되어있어
-//		// test케이스 수기작성하기
-//		// 확인 하는 절차는 test case에서
-//
-//		// 다중 주문하였을때, 한명이 하나의 orders내에서 여러개의 ordersitem
-//
-//		// 한명이 두개의 orders 생기는 경우
-//		// 이것을 어떻게 처리할 것인지?
-//		// - orders 기존 추가할까?
-//		// - 아니야 두개는 다른거야
-//		// 1. 날짜 비교 통해서 나중에 일괄 처리하여 배송이 완료됨을 알린다. ()
-//	}
 
 	@Test
 	@DisplayName("출력 시험")
@@ -134,41 +102,6 @@ class CafeApplicationTests {
 		Orders orders = ordersService.findByEmail("test2@gmail.com")
 				.orElseThrow(() -> new IllegalArgumentException("이메일로 등록된 구매자를 찾을 수 없습니다."));
 
-		/* ordersRepository
-		Orders를 저장을해요 (회원정보를 담고 있어요)
-		OrdersItem은 주문정보를 담고있어요
-
-		Orders - OrdersItem의 관계 자바 설계가 조금 이상하다
-		Orders
-		- 고유 id
-		- 회원정보
-		- List<OrdersItem> = new List<>;
-			- List는 언제 값을 가져올것인가?
-			- jpa는 repository로 탐색할때 찾는것이 기본입니다. (Lazy 방식)
-				- 그럼 찾는 메서드는 언제 실행시키지?
-				findOrders(long email);
-				addOrdersItem();
-
-		Orders의 특정 지역변수만 알고있을때 OrdersItem을 찾아야 돼요
-		요구조건이 충실한거고, 확장성이 고려되지않음 이름으로 찾고
-		- Orders o = Orders.findByemail();
-		- long id = o.getId();
-		- OrdersItem oI = ordersRepository.findbyOrdersId(Orders.getid())
-		- 이것을 출력한다.
-
-		- for(OrdersItem oi : Orders)
-		{
-		if(oi.getName() == 사용자의 입력값)
-		return oi;
-		}
-
-		OrdersItem
-		- Orders 정보
-		- Item 정보
-
-		-> testcase2) 이메일을 통해서 단일 상품조회
-		*/
-
 		/// 검증 ///
 		// 이메일이 맞는지 확인
 		assertThat(orders.getEmail()).isEqualTo(email);
@@ -179,21 +112,6 @@ class CafeApplicationTests {
 		// 반환된 우편번호가 맞는지 확인
 		assertThat(orders.getPostCode()).isEqualTo(postCode);
 
-		/*
-		 주문이 왔을때 해당 주문에 포함된 아메리카노에 대한 정보를 어디에서 가져올 것인가
-		 상품정보는 BaseInitData() 세팅을 할것이다. -> 커피, 바나나, 사과 (DB -> 자바 메모리)
-		 db에 잘저장이되었니(저장 Service를 통해서 저장하고 값을)? 세팅 이후에 자바메모리에서 잘 저장이 되니(해당 Entity의 setter를 통해서 확인)?
-		 DB에서 자바메모리로 VO(바나나, 사과, 커피) 들을 옮기는 과정에서 자료구조가 있어야 되겠는데?
-		 Product들의 정보를 담는 ProductsList가 있으면 되겠다.
-			 수업중 Comment와 Comments 관계에서 사용되는 방법이 있습니다.
-			 Product 객체 내부에 List<Product>를 지역변수로 설정하는 방법
-		 검증하려는 목적이 중요
-		 1. db 에 잘저장되어있는지
-		 2. OrdersItem하고 Product 연결하는 메서드를 작성하였는데 그게 잘 작동하는지
-		 검증 - 반환된 상품명이 아메리카노인지 확인
-		 OrderItem -> orderProuductName으로 접근 뒤 검증
-		 */
-
 		// 수량이 맞는지 확인
 		assertThat(orders.getOrdersItems().getFirst().getQuantity()).isEqualTo(quantity.getFirst());
 
@@ -203,45 +121,6 @@ class CafeApplicationTests {
 
 		assertThat(savedOrdersItem.getOrderProductName()).isEqualTo(productName.getFirst());
 	}
-
-//	@Test
-//	@DisplayName("이메일로 단일 주문 내역 찾기 - 성공")
-//	void findByEmailSuccess() {
-//
-//		// 주문할 상품명, 이메일, 주소, 우편주소 하나 저장
-//		ArrayList<String> productName = new ArrayList<>();
-//			productName.add("아메리카노");
-//		String email = "test3@gmail.com";
-//		String address = "테스트용 주소3";
-//		ArrayList<Integer> quantity = new ArrayList<>();
-//			quantity.add(1);
-//		int postCode = 54867;
-//
-//		// 상품을 주문
-//		ordersService.startOrders(productName, quantity, email, address, postCode);
-//
-//		// 저장해 둔 이메일
-//		String email2 = "test3@gmail.com";
-//
-//		/// 검증 ///
-//		// 이메일로 주문내역 찾아 변수에 저장
-//		Orders foundOrder = ordersService.findOrderByEmail(email2);
-//
-//		// 조회 된 주문이 비어있는지 확인
-//		assertThat(foundOrder).isNotNull();
-//
-//		// 조회 된 이메일이 똑같은지 확인
-//		assertThat(foundOrder.getEmail()).isEqualTo(email2);
-//
-//		// 수량이 맞는지 확인
-//		assertThat(foundOrder.getOrdersItems().getFirst().getQuantity()).isEqualTo(quantity.getFirst());
-//
-//		// 반환된 상품명이 아메리카노인지 확인
-//		List<OrdersItem> ordersItems = foundOrder.getOrdersItems();
-//		OrdersItem savedOrdersItem = ordersItems.getFirst();
-//
-//		assertThat(savedOrdersItem.getOrderProductName()).isEqualTo(productName.getFirst());
-//	}
 
 	@Test
 	@DisplayName("이메일로 단일 주문 내역 찾기 - 실패")
@@ -321,6 +200,7 @@ class CafeApplicationTests {
 	@Test
 	@DisplayName("날짜 생성 및 확인")
 	void orderDate() {
+
 		// 주문할 상품명, 이메일, 주소, 우편주소 하나 저장
 		ArrayList<String> productName = new ArrayList<>();
 		productName.add("카페라떼");
@@ -340,6 +220,7 @@ class CafeApplicationTests {
 		Orders foundProduct = ordersService.findByEmail("test5@gmail.com")
 				.orElseThrow(() -> new IllegalArgumentException("이메일로 등록된 구매자를 찾을 수 없습니다."));
 
+		/// 검증 ///
 		// 날짜가 같은지 확인
 		LocalDateTime orderedDateTime = foundProduct.getOrdersItems().getFirst().getOrderDate();
 
@@ -394,15 +275,11 @@ class CafeApplicationTests {
 
 		System.out.println("추가한 시간" + ordersItemAfter2pm.getOrderDate());
 
-
 		// 변수 ctime 설정 (임시 값이므로 변경 필수)
 		OrdersItemService.setCtime(14);
 
 		// 배송 메서드 실행
 		List<OrdersItem> deliveryOrders = ordersItemService.findOrdersDuring2pm();
-		/*
-		해당 메서드 로직에 스케줄러가 작동되는 시간을 조절하는 변수가 (* * * * *)
-		* */
 
 		/// 검증 ///
 		System.out.println("{ 배송 대상 주문 목록 테스트 }");
@@ -412,11 +289,11 @@ class CafeApplicationTests {
 		} else {
 			for (OrdersItem ordersItem : deliveryOrders) {
 				System.out.println("주문자 이메일: " + ordersItem.getOrders().getEmail());
-				System.out.print("주문 상품) ");
+				System.out.print("{ 주문 상품 }");
 
 				System.out.println("상품명: " + ordersItem.getOrderProductName() +
-						", 갯수: " + ordersItem.getQuantity() +
-						", 구매 시간: " + ordersItem.getOrderDate());
+						"\n상품 갯수: " + ordersItem.getQuantity() +
+						"\n상품 구매 시간: " + ordersItem.getOrderDate());
 			}
 		}
 
@@ -458,14 +335,9 @@ class CafeApplicationTests {
 		/// 검증 ///
 		// 구매자의 이메일로 주문한 상품 찾기
 		Optional<OrdersItem> foundOrdersItemBefore2pm = ordersItemService.findOrdersItemByOrdersEmail("testemail@testmail.com");
-
-		// 주문 상품이 존재하는지 확인
-		assertThat(foundOrdersItemBefore2pm).isPresent();
+		
+		// 상품 변수에 저장
 		OrdersItem ordersItemBefore2pm = foundOrdersItemBefore2pm.get();
-
-		// 주문시간이 오후 2시 이전임으로 배송완료(false) 상태
-		assertThat(ordersItemBefore2pm.isCompleted())
-				.isFalse();
 
 		// 출력
 		System.out.println("{ 배송 대상 주문 목록 테스트 }");
@@ -481,6 +353,13 @@ class CafeApplicationTests {
 					+ "\n상품 수량: " + ordersItemBefore2pm.getQuantity()
 					+ "\n상품 구매 시간: " + ordersItemBefore2pm.getOrderDate());
 		}
+		
+		// 주문 상품이 존재하는지 확인
+		assertThat(foundOrdersItemBefore2pm).isPresent();
+		
+		// 주문시간이 오후 2시 이전임으로 배송완료(false) 상태
+		assertThat(ordersItemBefore2pm.isCompleted())
+				.isFalse();
 	}
 
 	@Test
@@ -509,14 +388,9 @@ class CafeApplicationTests {
 		/// 검증 ///
 		// 구매자의 이메일로 주문한 상품 찾기
 		Optional<OrdersItem> foundOrdersItemBefore2pm = ordersItemService.findOrdersItemByOrdersEmail("testemail@testmail.com");
-
-		// 주문 상품이 존재하는지 확인
-		assertThat(foundOrdersItemBefore2pm).isPresent();
+		
+		// 상품 가져와 변수에 저장
 		OrdersItem ordersItemBefore2pm = foundOrdersItemBefore2pm.get();
-
-		// 주문시간이 오후 2시 이후임으로 배송중(true) 상태
-		assertThat(ordersItemBefore2pm.isCompleted())
-				.isTrue();
 
 		// 출력
 		System.out.println("{ 배송 대상 주문 목록 테스트 }");
@@ -532,6 +406,13 @@ class CafeApplicationTests {
 					+ "\n상품 수량: " + ordersItemBefore2pm.getQuantity()
 					+ "\n상품 구매 시간: " + ordersItemBefore2pm.getOrderDate());
 		}
+
+		// 주문 상품이 존재하는지 확인
+		assertThat(foundOrdersItemBefore2pm).isPresent();
+
+		// 주문시간이 오후 2시 이후임으로 배송중(true) 상태
+		assertThat(ordersItemBefore2pm.isCompleted())
+				.isTrue();
 	}
 
 	@Test
@@ -547,7 +428,7 @@ class CafeApplicationTests {
 				.orderProductId(1L)
 				.orderProductName("아메리카노")
 				.quantity(10)
-				.orderDate(LocalDateTime.now().minusDays(1))
+				.orderDate(LocalDateTime.now().minusDays(1).minusMinutes(10))
 				.build();
 
 		// DB에 영속화 및 주문목록에 저장
@@ -590,14 +471,6 @@ class CafeApplicationTests {
 				cafelatte = ordersItem;
 			}
 		}
-		
-		// 2시 이전 주문인 아메리카노는 배송완료 상태
-		assertThat(americano).isNotNull();
-		assertThat(americano.isCompleted()).isFalse();
-
-		// 2시 이후 주문인 카페라떼는 배송중 상태
-		assertThat(cafelatte).isNotNull();
-		assertThat(cafelatte.isCompleted()).isTrue();
 
 		// 출력
 		System.out.println("{ 배송 대상 주문 목록 테스트 }");
@@ -607,14 +480,22 @@ class CafeApplicationTests {
 		System.out.println("상품명: " + americano.getOrderProductName());
 		System.out.println("상품 수량: " + americano.getQuantity());
 		System.out.println("상품 구매 시간: " + americano.getOrderDate());
-		System.out.println("배송 완료 상태: " + americano.isCompleted());
+		System.out.println("배송 상태 (true면 배송중 / false면 배송완료): " + americano.isCompleted());
 
 		// 출력 (배송 중 상품 정보 - 카페라떼)
 		System.out.println("\n{ 배송 중 상품 정보 - 카페라떼 (2시 이후 주문) }");
 		System.out.println("상품명: " + cafelatte.getOrderProductName());
 		System.out.println("상품 수량: " + cafelatte.getQuantity());
 		System.out.println("상품 구매 시간: " + cafelatte.getOrderDate());
-		System.out.println("배송 중 상태: " + cafelatte.isCompleted());
+		System.out.println("배송 상태 (true면 배송중 / false면 배송완료): " + cafelatte.isCompleted());
+		
+		// 2시 이전 주문인 아메리카노는 배송완료 상태
+		assertThat(americano).isNotNull();
+		assertThat(americano.isCompleted()).isFalse();
+
+		// 2시 이후 주문인 카페라떼는 배송중 상태
+		assertThat(cafelatte).isNotNull();
+		assertThat(cafelatte.isCompleted()).isTrue();
 	}
 
 //	@Test

@@ -20,6 +20,7 @@ public class OrdersService {
     @Autowired
     private OrdersItemService ordersItemService;
 
+    /// 기본 메서드 ///
     // 구매자 id로 구매자 찾기
     public Optional<Orders> findByOrderId(Long orderId) {
         return ordersRepository.findById(orderId);
@@ -72,6 +73,7 @@ public class OrdersService {
     
     // 수정 (구매자 이메일, 주소, 우편주소)
 
+    /// 기능 메서드 ///
     // 구매자 정보 기입
     public Orders add(String email, String address, int postCode) {
 
@@ -84,6 +86,7 @@ public class OrdersService {
         return ordersRepository.save(orders);
     }
 
+    /// 주문서 작성 ///
     // 주문서 작성하기 (시작)
     public void startOrders(ArrayList<String> productName, ArrayList<Integer> quantity, String email, String address, int postCode) {
 
