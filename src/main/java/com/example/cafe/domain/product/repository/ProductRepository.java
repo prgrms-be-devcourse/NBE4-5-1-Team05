@@ -21,11 +21,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     boolean deleteByPrice(int price);
     boolean deleteByNameContaining(String productName);
 
-    // 수정
-    Optional<Product> modifyByProductId(Long id, Product product);
-    Optional<Product> modifyByName(String name);
-    Optional<Product> modifyByPrice(int price);
-
     // 갯수 세기
-    int countAllProducts();
+    long count();
 }

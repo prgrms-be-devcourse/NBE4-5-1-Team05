@@ -87,13 +87,13 @@ public class OrdersItemService {
     }
 
     // 주문자 이메일로 주문내역 삭제
-    public boolean deleteByOrdersItemByEmail(String email) {
-        Optional<Orders> ordersOp = ordersRepository.findByOrderEmail(email);
+    public boolean deleteByOrders_Email(String email) {
+        Optional<Orders> ordersOp = ordersRepository.findByEmail(email);
 
-        if (!ordersOp.isPresent()) {
+        if (ordersOp.isEmpty()) {
             return false;
         }
-        ordersItemRepository.deleteByOrdersItemByEmail(email);
+        ordersItemRepository.deleteByOrders_Email(email);
 
         return true;
     }
@@ -108,10 +108,8 @@ public class OrdersItemService {
         return true;
     }
 
-    // 주문 내역 수정
-//    public Optional<OrdersItem> modifyOrdersItem(OrdersItem ordersItem) {
-//
-//    }
+    // 주문 내역 수정 (수량)
+//    public Optional<OrdersItem> save(Long orderItemId, String ordersEmail, int quantity)
 
 
     /// 구매 관련 메서드 ///

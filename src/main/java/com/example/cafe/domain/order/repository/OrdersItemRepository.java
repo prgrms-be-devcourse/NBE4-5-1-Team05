@@ -20,14 +20,9 @@ public interface OrdersItemRepository extends JpaRepository<OrdersItem, Long> {
     // 삭제
     boolean deleteOrdersItemByOrdersItemId(Long orderItemId);
     boolean deleteByOrders(Orders orders);
-    boolean deleteByOrdersItemByEmail(String email);
+    boolean deleteByOrders_Email(String email);
     boolean deleteByOrderDate(LocalDateTime orderDate);
 
-    // 수정
-    Optional<OrdersItem> modifyOrdersItem(OrdersItem ordersItem);
-    Optional<OrdersItem> modifyOrdersItemByOrdersItemId(Long ordersItemId, Orders orders);
-    Optional<OrdersItem> modifyOrdersItemByEmail(String email, Orders orders);
-
     // 갯수 세기
-    int countAllOrdersItem();
+    long count();
 }

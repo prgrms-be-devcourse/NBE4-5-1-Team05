@@ -10,8 +10,8 @@ public interface OrdersRepository extends JpaRepository<Orders, Long> {
 
     // 찾기
     Optional<Orders> findByOrderId(Long orderId);
-    Optional<Orders> findByOrderEmail(String email);
-    Optional<Orders> findByOrderAddress(String address);
+    Optional<Orders> findByEmail(String email);
+    Optional<Orders> findByAddress(String address);
     List<Orders> findAll();
 
     // 삭제
@@ -19,11 +19,6 @@ public interface OrdersRepository extends JpaRepository<Orders, Long> {
     boolean deleteByEmail(String email);
     boolean deleteByAddress(String address);
 
-    // 수정
-    Optional<Orders> modifyByOrderId(Long orderId, Orders orders);
-    Optional<Orders> modifyByEmail(String email, Orders orders);
-    Optional<Orders> modifyByAddress(String address, Orders orders);
-
     // 갯수 세기
-    int countAllOrders();
+    long count();
 }

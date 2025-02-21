@@ -64,7 +64,7 @@ public class ProductService {
     }
 
     // 상품 id로 삭제
-    public boolean deleteByProductId(Long id) {
+    public boolean deleteByOrderId(Long id) {
         if (!productRepository.existsById(id)) {
             return false;
         }
@@ -103,7 +103,7 @@ public class ProductService {
         return true;
     }
 
-    // 수정
+    // 수정 (상품명, 상품가격, 상품 이미지)
 
     /// 기능 메서드 ///
     // 메뉴 담기

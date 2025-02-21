@@ -27,13 +27,13 @@ public class OrdersService {
 
     // 구매자 이메일로 구매자 찾기
     public Orders findOrderByEmail(String email) {
-        return ordersRepository.findByOrderEmail(email)
+        return ordersRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("조회하려는 이메일이 없습니다."));
     }
 
     // 구매자 주소로 구매자 찾기
     public Optional<Orders> findByAddress(String address) {
-        return ordersRepository.findByOrderAddress(address);
+        return ordersRepository.findByAddress(address);
     }
 
     // 모든 구매자 찾기
@@ -41,7 +41,7 @@ public class OrdersService {
         return ordersRepository.findAll();
     }
 
-    // 주문자 id로 삭제
+    // 구매자 id로 삭제
     boolean deleteByOrderId(Long orderId) {
         if (!ordersRepository.existsById(orderId)) {
             return false;
@@ -51,9 +51,9 @@ public class OrdersService {
         return true;
     }
 
-    // 주문자 이메일로 삭제
+    // 구매자 이메일로 삭제
     boolean deleteByEmail(String email) {
-        if (ordersRepository.findByOrderEmail(email).isEmpty()) {
+        if (ordersRepository.findByEmail(email).isEmpty()) {
             return false;
         }
         ordersRepository.deleteByEmail(email);
@@ -61,9 +61,9 @@ public class OrdersService {
         return true;
     }
 
-    // 주문자 주소로 삭제
+    // 구매자 주소로 삭제
     boolean deleteByAddress(String address) {
-        if (ordersRepository.findByOrderAddress(address).isEmpty()) {
+        if (ordersRepository.findByAddress(address).isEmpty()) {
             return false;
         }
         ordersRepository.deleteByAddress(address);
@@ -71,9 +71,9 @@ public class OrdersService {
         return true;
     }
     
-    // 수정
+    // 수정 (구매자 이메일, 주소, 우편주소)
 
-    // 주문자 정보 기입
+    // 구매자 정보 기입
     public Orders add(String email, String address, int postCode) {
 
         Orders orders = Orders.builder()

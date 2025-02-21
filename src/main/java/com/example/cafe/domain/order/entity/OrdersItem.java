@@ -1,10 +1,7 @@
 package com.example.cafe.domain.order.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -25,7 +22,7 @@ public class OrdersItem {
 
     // 주문자 정보 (N:1)
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "orderId")
+    @JoinColumn(name = "order_Id")
     private Orders orders;
 
     // 주문한 상품 (N:1)
@@ -53,7 +50,9 @@ public class OrdersItem {
     @Column(nullable = false)
     private int quantity;
 
+    // 임의로 시간을 넣기 위한 메서드
     // 주문 날짜
+    @Setter
     @Column
     @Builder.Default
     private LocalDateTime orderDate = LocalDateTime.now();
@@ -71,8 +70,4 @@ public class OrdersItem {
         this.orders = orders;
     }
 
-    // 임의로 시간을 넣기 위한 메서드
-    public void setOrderDate(LocalDateTime orderDate) {
-        this.orderDate = orderDate;
-    }
 }
