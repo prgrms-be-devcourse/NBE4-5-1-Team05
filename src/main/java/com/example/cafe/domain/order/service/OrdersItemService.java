@@ -3,13 +3,17 @@ package com.example.cafe.domain.order.service;
 import com.example.cafe.domain.order.entity.Orders;
 import com.example.cafe.domain.order.entity.OrdersItem;
 import com.example.cafe.domain.order.repository.OrdersItemRepository;
+import com.example.cafe.domain.order.repository.OrdersRepository;
 import com.example.cafe.domain.product.entity.Product;
 import com.example.cafe.domain.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -20,6 +24,9 @@ public class OrdersItemService {
 
     @Autowired
     private final ProductService productService;
+
+    @Autowired
+    private final OrdersRepository ordersRepository;
 
     // TODO: orderRepository save가 다중 작업시 반복처리 되는것이 신경쓰인다. jpa가 효율적으로 해주나?
     // TODO: 다중 상품 주문 담기에서 quantity 로직 매커니즘이 올바르지 않다.
@@ -63,5 +70,42 @@ public class OrdersItemService {
                 .orderProductPrice(product.getPrice())
                 .quantity(quantity)
                 .build();
+    }
+
+    // 당일 오후 2시부터 다음날 오후 2시까지의 주문 조회
+    @Scheduled(cron = "0 0 14 * * *")
+    public void findOrdersDuring2pm() {
+
+        // 현재시간 변수에 저장
+        LocalDateTime now = LocalDateTime.now();
+        // 기준 시간 오후 2시를 변수에 저장
+        LocalDateTime deliveryStartTime = now.withHour(14).withMinute(0).withSecond(0);
+
+        // 오후 2시 ~ 다음날 오후 2시 변수 세팅
+        LocalDateTime startTime = deliveryStartTime;
+        LocalDateTime endTime = deliveryStartTime.plusDays(1);
+
+        // ordersRepository에서 모든 데이터 조회
+        List<Orders> allOrders = ordersRepository.findAll();
+
+        // 조회된 Orders 목록 순회하고 OrdersItem의 주문일시가 오후 2시부터 다음날 오후 2시까지인 주문들 추출
+        List<Orders> deliversyOrders = allOrders.stream()
+                .filter(orders -> orders.getOrdersItems().stream()
+                        .anyMatch(ordersItem -> {
+                            LocalDateTime orderTime = ordersItem.getOrderDate();
+                            return orderTime.isAfter(startTime) && orderTime.isBefore(endTime);
+                        })
+                ).toList();
+
+        // 콘솔 출력용 배송 처리
+        if (deliversyOrders.isEmpty()) {
+            System.out.println("배송할 주문이 없습니다.");
+        } else {
+            System.out.println("배송할 주문 내역 (오후 2시 ~ 다음날 오후 2시)");
+
+            for (Orders orders : deliversyOrders) {
+                System.out.println("주문자 이메일: " + orders.getEmail());
+            }
+        }
     }
 }

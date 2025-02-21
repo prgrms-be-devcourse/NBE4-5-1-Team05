@@ -41,6 +41,7 @@ public class BaseInitData {
         // 샘플 데이터 생성 (상품 담아두기)
         productService.add("아메리카노", 4500, "이미지");
         productService.add("카페라떼", 5500, "이미지");
+        productService.add("아이스티", 3500, "이미지");
 
     }
 

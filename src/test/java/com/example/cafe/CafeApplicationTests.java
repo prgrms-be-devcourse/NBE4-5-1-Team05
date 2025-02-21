@@ -329,23 +329,23 @@ class CafeApplicationTests {
 
 	}
 
-//	@Test
-//	@DisplayName("날짜 생성 및 수정")
-//	void orderDateAndModify() {
-//
-//	}
+	@Test
+	@DisplayName("오후 2시부터 다음날 오후 2시까지의 한 구매자의 주문 내역 확인")
+	void findOrderProduct2pmBefore() {
 
-//	@Test
-//	@DisplayName("오후 2시부터 다음날 오후 2시까지의 한 구매자의 주문 내역 확인")
-//	void findOrderProduct2pmBefore() {
-//
-//	}
+		// 주문할 상품명, 이메일, 주소, 우편주소 하나 저장
+		ArrayList<String> productName = new ArrayList<>();
+			productName.add("카페라떼");
+			productName.add("아이스티");
+		String email = "test6@gmail.com";
+		String address = "테스트용 주소6";
+		ArrayList<Integer> quantity = new ArrayList<>();
+			quantity.add(2);
+			quantity.add(4);
+		int postCode = 95487;
 
-//	@Test
-//	@DisplayName("오후 2시부터 다음날 오후 2시 이후까지의 한 구매자의 주문 내역 확인")
-//	void findOrderProduct2pmAfter() {
-//
-//	}
+
+	}
 
 //	@Test
 //	@DisplayName("주문 삭제 후 확인")

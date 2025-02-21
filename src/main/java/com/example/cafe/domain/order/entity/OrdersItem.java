@@ -62,6 +62,10 @@ public class OrdersItem extends BaseTime {
     @LastModifiedDate
     private LocalDateTime modifiedDate;
 
+    // 주문 완료
+    @Column(nullable = false, columnDefinition = "boolean default false")
+    private boolean completed;
+
     // 연관관계 편의 메서드
     public void setOrder(Orders orders) {
         this.orders = orders;
