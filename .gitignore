@@ -166,4 +166,8 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+# 보고서 파일 무시
+build/reports/
+build/reports/problems/
+
 # End of https://www.toptal.com/developers/gitignore/api/intellij,java,windows
