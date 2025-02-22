@@ -186,6 +186,12 @@ class CafeApplicationTests {
 	}
 
 	@Test
+	@DisplayName("상품 id로 상품 삭제")
+	void deleteProductById() {
+
+	}
+
+	@Test
 	@DisplayName("특정 상품의 이름으로 상품 삭제")
 	void deleteProduct() {
 

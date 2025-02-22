@@ -64,7 +64,7 @@ public class ProductService {
     }
 
     // 상품 id로 삭제
-    public void deleteByOrderId(Long id) {
+    public void deleteByProductId(Long id) {
         if (!productRepository.existsById(id)) {
             System.out.println("상품 id에 해당하는 상품이 없습니다.");
         } else {
@@ -99,7 +99,23 @@ public class ProductService {
         }
     }
 
-    // 수정 (상품명, 상품가격, 상품 이미지)
+    // 상품명을 받아 수정
+    public void modifyProductName(Product product, String productName) {
+        product.setName(productName);
+        productRepository.save(product);
+    }
+
+    // 상품명을 받아 상품가격 수정
+    public void modifyProductPrice(Product product, int productPrice) {
+        product.setPrice(productPrice);
+        productRepository.save(product);
+    }
+
+    // 상품명을 받아 상품 이미지 수정
+    public void modifyProductImgUrl(Product product, String imageURL) {
+        product.setImageURL(imageURL);
+        productRepository.save(product);
+    }
 
     /// 기능 메서드 ///
     // 메뉴 담기
