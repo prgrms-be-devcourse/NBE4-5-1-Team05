@@ -1,10 +1,72 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <meta charset="UTF-8">
+    <title>상품 추가</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            background-color: #f8f9fa;
+            margin: 0;
+        }
+
+        .form-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            width: 320px; /* 입력 폼 크기 조정 */
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* 중앙 정렬 */
+        }
+
+        input {
+            width: 90%; /* 입력 필드 너비 조정 */
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            text-align: left; /* ✅ 입력 텍스트 왼쪽 정렬 */
+        }
+
+        /* 버튼 스타일 (admin 페이지 상품 추가 버튼 색상 적용) */
+        .submit-button {
+            background-color: #343a40; /* admin 페이지의 버튼 색상과 동일 */
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            transition: 0.3s;
+            width: 100%;
+        }
+
+        .submit-button:hover {
+            background-color: #23272b; /* 호버 시 조금 더 어두운 색상 */
+        }
+    </style>
 </head>
 <body>
-$END$
+
+<h2>상품 추가</h2>
+
+<div class="form-container">
+    <form th:action="@{/admin/add}" method="post" th:object="${product}">
+        <input type="text" th:field="*{name}" placeholder="상품명" required>
+        <input type="number" th:field="*{price}" placeholder="가격" required>
+        <input type="text" th:field="*{imageURL}" placeholder="이미지 URL" required>
+
+        <button type="submit" class="submit-button">추가하기</button>
+    </form>
+</div>
+
 </body>
 </html>

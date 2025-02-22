@@ -65,11 +65,14 @@
             background-color: #c82333;
         }
 
-        /* 상품 추가 버튼 */
+        /* 상품 추가 버튼 (표 하단으로 이동, 표 색상과 동일하게 변경) */
         .add-product-button {
-            margin-top: 20px;
+            display: block;
+            text-align: center;
+            width: 150px;
+            margin-top: 10px; /* 표와 간격 조정 */
             padding: 10px 20px;
-            background-color: #28a745;
+            background-color: #343a40; /* 테이블 색상과 동일 */
             color: white;
             font-size: 16px;
             border-radius: 5px;
@@ -78,16 +81,13 @@
         }
 
         .add-product-button:hover {
-            background-color: #218838;
+            background-color: #23272b; /* 호버 시 조금 더 어두운 색상 */
         }
     </style>
 </head>
 <body>
 
 <h2>관리자 페이지 - 상품 목록</h2>
-
-<!-- 상품 추가 버튼 -->
-<a href="/admin/add" class="add-product-button">+ 상품 추가</a>
 
 <table>
     <thead>
@@ -113,6 +113,9 @@
     </tr>
     </tbody>
 </table>
+
+<!-- 상품 추가 버튼 (표 하단으로 이동) -->
+<a href="/admin/add" class="add-product-button">+ 상품 추가</a>
 
 </body>
 </html>
