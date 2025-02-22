@@ -516,20 +516,20 @@ class CafeApplicationTests {
 		// 구매자 생성
 		Orders orders = ordersService.add("testemail7@testmail.com", "서울시 마포구", 96587);
 
-		// 주문 상품 정보 생성 및 구매 (아메리카노 어제 오후 2시 이전에 주문)
+		// 주문 상품 정보 생성 및 구매 (아메리카노 어제 오후 1시 30분에 주문)
 		OrdersItem ordersItemBefore2pm = OrdersItem.builder()
 				.orders(orders)
 				.orderProductId(1L)
 				.orderProductName("아메리카노")
 				.quantity(10)
-				.orderDate(LocalDateTime.now().minusDays(1).minusMinutes(10))
+				.orderDate(LocalDateTime.now().minusDays(1).withHour(13).withMinute(30))
 				.build();
 
 		// DB에 영속화 및 주문목록에 저장
 		ordersItemRepository.save(ordersItemBefore2pm);
 		orders.addOrdersItem(ordersItemBefore2pm);
 
-		// 주문 상품 정보 생성 및 구매 (카페라떼 다음날 오후 2시 30분에 주문)
+		// 주문 상품 정보 생성 및 구매 (카페라떼 현재 오후 2시 30분에 주문)
 		OrdersItem ordersItemAfter2pm = OrdersItem.builder()
 				.orders(orders)
 				.orderProductId(2L)
@@ -570,14 +570,14 @@ class CafeApplicationTests {
 		System.out.println("{ 배송 대상 주문 목록 테스트 }");
 
 		// 출력 (배송 완료 상품 정보 - 아메리카노)
-		System.out.println("{ 배송 완료 상품 정보 - 아메리카노 (어제 2시 이전 주문) }");
+		System.out.println("{ 배송 완료 상품 정보 - 아메리카노 (어제 오후 2시 이전 주문) }");
 		System.out.println("상품명: " + americano.getOrderProductName());
 		System.out.println("상품 수량: " + americano.getQuantity());
 		System.out.println("상품 구매 시간: " + americano.getOrderDate());
 		System.out.println("배송 상태 (true면 배송중 / false면 배송완료): " + americano.isCompleted());
 
 		// 출력 (배송 중 상품 정보 - 카페라떼)
-		System.out.println("\n{ 배송 중 상품 정보 - 카페라떼 (오늘 2시 이전 주문) }");
+		System.out.println("\n{ 배송 중 상품 정보 - 카페라떼 (현재 오후 2시 이후 주문) }");
 		System.out.println("상품명: " + cafelatte.getOrderProductName());
 		System.out.println("상품 수량: " + cafelatte.getQuantity());
 		System.out.println("상품 구매 시간: " + cafelatte.getOrderDate());
