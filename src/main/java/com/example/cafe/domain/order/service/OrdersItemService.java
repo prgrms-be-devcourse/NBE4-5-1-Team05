@@ -213,8 +213,8 @@ public class OrdersItemService {
 
             for (OrdersItem ordersItem : deliveryProcessItems) {
                 System.out.println("------------------------------");
-                System.out.println("주문자 이메일: " + ordersItem.getOrders().getEmail());
-                System.out.println("<주문 상품 정보>");
+                System.out.println("구매자 이메일: " + ordersItem.getOrders().getEmail());
+                System.out.println("<구매 상품 정보>");
                 System.out.println("- 상품명: " + ordersItem.getOrderProductName());
                 System.out.println("- 갯수: " + ordersItem.getQuantity());
                 System.out.println("- 주문 날짜: " + ordersItem.getOrderDate());
