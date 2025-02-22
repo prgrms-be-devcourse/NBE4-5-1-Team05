@@ -167,3 +167,6 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.toptal.com/developers/gitignore/api/intellij,java,windows
+
+db_dev.mv.db
+db_dev.trace.db

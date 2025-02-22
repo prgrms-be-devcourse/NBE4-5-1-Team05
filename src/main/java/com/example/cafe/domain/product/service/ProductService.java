@@ -49,7 +49,7 @@ public class ProductService {
     }
 
     // 모든 상품 찾기
-    List<Product> findAll() {
+    public List<Product> findAll() {
         return productRepository.findAll();
     }
 

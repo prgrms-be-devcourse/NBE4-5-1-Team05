@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>상품 목록</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        /* 전체 페이지 중앙 정렬 */
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            background-color: #f8f9fa;
+            margin: 0;
+        }
+
+        /* 테이블 스타일 */
+        table {
+            border-collapse: collapse;
+            width: 60%;
+            background: white;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+            text-align: center;
+        }
+
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+
+        /* 이미지 스타일 */
+        .product-image {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+
+        /* 관리자 버튼 스타일 (텍스트: admin) */
+        .admin-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #e9ecef; /* 배경색 - 너무 튀지 않게 설정 */
+            color: #495057; /* 어두운 회색 */
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: bold;
+            text-decoration: none;
+            transition: 0.3s;
+            box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .admin-button:hover {
+            background-color: #dee2e6; /* 마우스 오버 시 색상 변경 */
+        }
+    </style>
+</head>
+<body>
+
+<h2>📦 상품 목록</h2>
+
+<table>
+    <thead>
+    <tr>
+        <th>상품명</th>
+        <th>가격</th>
+        <th>이미지</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- 상품 리스트를 반복 출력 -->
+    <tr th:each="product : ${products}">
+        <td th:text="${product.name}"></td>
+        <td th:text="${product.price} + ' 원'"></td>
+        <td>
+            <img th:src="@{${product.imageURL}}" class="product-image" alt="상품 이미지">
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<!-- 관리자 버튼 (텍스트: admin) -->
+<a href="/admin" class="admin-button">admin</a>
+
+</body>
+</html>
