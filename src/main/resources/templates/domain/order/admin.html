@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>관리자 페이지</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            background-color: #f8f9fa;
+            margin: 0;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 70%;
+            background: white;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+            text-align: center;
+        }
+
+        th {
+            background-color: #343a40;
+            color: white;
+        }
+
+        /* 버튼 스타일 */
+        .action-button {
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            text-decoration: none;
+            color: white;
+            transition: 0.3s;
+        }
+
+        .edit-button {
+            background-color: #ffc107;
+        }
+
+        .edit-button:hover {
+            background-color: #e0a800;
+        }
+
+        .delete-button {
+            background-color: #dc3545;
+        }
+
+        .delete-button:hover {
+            background-color: #c82333;
+        }
+
+        /* 상품 추가 버튼 */
+        .add-product-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            font-size: 16px;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        .add-product-button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+
+<h2>관리자 페이지 - 상품 목록</h2>
+
+<!-- 상품 추가 버튼 -->
+<a href="/admin/add" class="add-product-button">+ 상품 추가</a>
+
+<table>
+    <thead>
+    <tr>
+        <th>상품명</th>
+        <th>가격</th>
+        <th>이미지</th>
+        <th>관리</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- 상품 리스트 반복 출력 -->
+    <tr th:each="product : ${products}">
+        <td th:text="${product.name}"></td>
+        <td th:text="${product.price} + ' 원'"></td>
+        <td>
+            <img th:src="@{${product.imageURL}}" alt="상품 이미지" style="width: 50px; height: 50px; object-fit: cover;">
+        </td>
+        <td>
+            <a th:href="@{/admin/edit/{id}(id=${product.productId})}" class="action-button edit-button">수정</a>
+            <a th:href="@{/admin/delete/{id}(id=${product.productId})}" class="action-button delete-button">삭제</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>
