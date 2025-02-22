@@ -596,12 +596,117 @@ class CafeApplicationTests {
 	@DisplayName("이미 구매한 상품에서 상품의 갯수 차감")
 	void modifyReduceProduct() {
 
+		// 주문할 상품명, 이메일, 주소, 수량, 우편주소 하나 저장
+		ArrayList<String> productName = new ArrayList<>();
+			productName.add("카페라떼");
+		String email = "test12@gmail.com";
+		String address = "테스트용 주소12";
+		ArrayList<Integer> quantity = new ArrayList<>();
+			quantity.add(4);
+		int postCode = 78454;
+
+		// 주문 하기
+		ordersService.startOrders(productName, quantity, email, address, postCode);
+
+		// 주문자 이메일로 주문자 id 획득
+		Orders foundOrders = ordersRepository.findByEmail(email).get();
+		// 주문자로 주문한 상품 가져오기
+		List<OrdersItem> ordersItems = foundOrders.getOrdersItems();
+
+		// 카페라떼 찾아 변수에 저장
+		OrdersItem ordersItem = null;
+
+		for (OrdersItem Item : ordersItems) {
+			if ("카페라떼".equals(Item.getOrderProductName())) {
+				ordersItem = Item;
+				break;
+			}
+		}
+
+		// 찾은 "카페라떼"의 상품 id 획득
+		Long orderItemId = ordersItem.getOrdersItemId();
+		// 수정할 수량 : 2개
+		int reduceQuantity = 2;
+
+		// 수정 작업
+		OrdersItem modifyOrdersItem = ordersItemService.save(orderItemId, email, reduceQuantity);
+
+		/// 검증 ///
+		// 출력
+		System.out.println("{ 수정된 상품 }");
+		System.out.println("상품명: " + modifyOrdersItem.getOrderProductName());
+		System.out.println("(기존) 상품 갯수: " + quantity.getFirst());
+		System.out.println("(수정) 상품 갯수: " + modifyOrdersItem.getQuantity());
+
+		// 존재 확인 및 값 확인
+		assertThat(modifyOrdersItem).isNotNull();
+		
+		// 수정된 주문 상품의 수량이 2개인지 확인
+		assertThat(modifyOrdersItem.getQuantity()).isEqualTo(reduceQuantity);
+
+		// DB에서 다시 조회해서 실제 수량이 변경되었는지 확인
+		OrdersItem foundOrdersItem = ordersItemRepository.findById(orderItemId).get();
+		assertThat(foundOrdersItem).isNotNull();
+		assertThat(foundOrdersItem.getQuantity()).isEqualTo(reduceQuantity);
+
 	}
 
 	@Test
 	@DisplayName("이미 구매한 상품에서 상품의 갯수 증가")
 	void modifyIncreaseProduct() {
 
+		// 주문할 상품명, 이메일, 주소, 수량, 우편주소 하나 저장
+		ArrayList<String> productName = new ArrayList<>();
+			productName.add("아이스티");
+		String email = "test13@gmail.com";
+		String address = "테스트용 주소13";
+		ArrayList<Integer> quantity = new ArrayList<>();
+			quantity.add(5);
+		int postCode = 78454;
+
+		// 주문 하기
+		ordersService.startOrders(productName, quantity, email, address, postCode);
+
+		// 주문자 이메일로 주문자 id 획득
+		Orders foundOrders = ordersRepository.findByEmail(email).get();
+		// 주문자로 주문한 상품 가져오기
+		List<OrdersItem> ordersItems = foundOrders.getOrdersItems();
+
+		// 카페라떼 찾아 변수에 저장
+		OrdersItem ordersItem = null;
+
+		for (OrdersItem Item : ordersItems) {
+			if ("아이스티".equals(Item.getOrderProductName())) {
+				ordersItem = Item;
+				break;
+			}
+		}
+
+		// 찾은 "카페라떼"의 상품 id 획득
+		Long orderItemId = ordersItem.getOrdersItemId();
+		// 수정할 수량 : 2개
+		int reduceQuantity = 10;
+
+		// 수정 작업
+		OrdersItem modifyOrdersItem = ordersItemService.save(orderItemId, email, reduceQuantity);
+
+		/// 검증 ///
+		// 출력
+		System.out.println("{ 수정된 상품 }");
+		System.out.println("상품명: " + modifyOrdersItem.getOrderProductName());
+		System.out.println("(기존) 상품 갯수: " + quantity.getFirst());
+		System.out.println("(수정) 상품 갯수: " + modifyOrdersItem.getQuantity());
+
+		// 존재 확인 및 값 확인
+		assertThat(modifyOrdersItem).isNotNull();
+
+		// 수정된 주문 상품의 수량이 2개인지 확인
+		assertThat(modifyOrdersItem.getQuantity()).isEqualTo(reduceQuantity);
+
+		// DB에서 다시 조회해서 실제 수량이 변경되었는지 확인
+		OrdersItem foundOrdersItem = ordersItemRepository.findById(orderItemId).get();
+		assertThat(foundOrdersItem).isNotNull();
+		assertThat(foundOrdersItem.getQuantity()).isEqualTo(reduceQuantity);
 	}
 
 //	@Test

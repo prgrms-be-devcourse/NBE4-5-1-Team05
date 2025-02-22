@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class OrdersItemService {
     
@@ -111,7 +113,7 @@ public class OrdersItemService {
     }
 
     // 주문 내역 수정 (수량 수정)
-    public Optional<OrdersItem> save(Long orderItemId, String ordersEmail, int quantity) {
+    public OrdersItem save(Long orderItemId, String ordersEmail, int quantity) {
 
         // 구매자 조회
         Optional<Orders> ordersOp = ordersRepository.findByEmail(ordersEmail);
@@ -119,7 +121,7 @@ public class OrdersItemService {
         // 구매자를 찾지 못했을 경우
         if (ordersOp.isEmpty()) {
             System.out.println("구매자 (" + ordersEmail + ")를 찾을 수 없습니다");
-            return Optional.empty();
+            return null;
         }
 
         // Orders 객체 추출
@@ -131,7 +133,7 @@ public class OrdersItemService {
         // 상품을 찾을 수 없을 경우
         if (ordersItemOp.isEmpty()) {
             System.out.println("주문하신 상품을 찾을 수 없습니다.");
-            return Optional.empty();
+            return null;
         }
 
         // OrdersItem 객체 추출
@@ -140,7 +142,7 @@ public class OrdersItemService {
         // 주문 상품에 대한 주문자 검증
         if (!ordersItem.getOrders().equals(orders)) {
             System.out.println("주문하신 상품이 해당 주문자의 주문 상품이 아닙니다.");
-            return Optional.empty();
+            return null;
         }
 
         // 주문 상품 수량 수정
@@ -150,7 +152,7 @@ public class OrdersItemService {
         OrdersItem modifiedOrdersItem = ordersItemRepository.save(ordersItem);
 
         // 수정된 주문 상품을 Optional에 담아 반환
-        return Optional.of(modifiedOrdersItem);
+        return modifiedOrdersItem;
     }
 
 
