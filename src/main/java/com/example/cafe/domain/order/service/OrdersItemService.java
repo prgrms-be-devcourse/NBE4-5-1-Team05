@@ -30,29 +30,36 @@ public class OrdersItemService {
     private OrdersRepository ordersRepository;
 
     /// 기본 메서드 ///
-    // 주문내역 id로 주문내역 찾기
-    public Optional<OrdersItem> findByOrdersItemId(Long ordersItemId) {
-        return ordersItemRepository.findById(ordersItemId);
+    // 구매내역 id로 구매내역 찾기
+    public List<OrdersItem> findByOrdersItemId(Long ordersItemId) {
+        OrdersItem ordersItem = ordersItemRepository.findByOrdersItemId(ordersItemId);
+
+        // ordersItem이 비어있지 않다면 반환 / 비어있으면 빈 리스트 반환
+        if (ordersItem != null) {
+            return List.of(ordersItem);
+        } else {
+            return List.of();
+        }
     }
 
     // 구매자로 주문내역 찾기
-    public OrdersItem findByOrders(Orders orders) {
-        return ordersItemRepository.findByOrders(orders)
-                .orElseThrow(() -> new IllegalArgumentException("조회하려는 구매자가 없습니다."));
+//    public OrdersItem findByOrders(Orders orders) {
+//        return ordersItemRepository.findByOrders(orders)
+//                .orElseThrow(() -> new IllegalArgumentException("조회하려는 구매자가 없습니다."));
+//    }
+
+    // 구매자 이메일로 모든 구매내역 찾기
+    public List<OrdersItem> findOrdersItemByOrdersEmail(String ordersEmail) {
+        return ordersItemRepository.findOrdersItemByOrdersEmail(ordersEmail);
     }
 
-    // 구매자 이메일로 주문내역 찾기
-    public Optional<OrdersItem> findOrdersItemByOrdersEmail(String ordersEmail) {
-        return ordersItemRepository.findOrdersItemByOrdersEmail(ordersEmail); // OrdersItemRepository의 findOrdersItemByOrdersEmail 메서드 호출
-    }
-
-    // 구매자의 구매내역 시간으로 찾기
-    public Optional<OrdersItem> findOrdersItemByOrderDate(LocalDateTime orderDate) {
-        return ordersItemRepository.findOrdersItemByOrderDate(orderDate); // OrdersItemRepository의 findOrdersItemByOrderDate 메서드 호출
+    // 구매자의 구매내역 시간으로 모든 구매내역 찾기
+    public List<OrdersItem> findOrdersItemByOrderDate(LocalDateTime orderDate) {
+        return ordersItemRepository.findOrdersItemByOrderDate(orderDate);
     }
 
     // 구매내역의 배송 상태 값으로 찾기
-    public Optional<OrdersItem> findOrdersItemByCompleted(boolean completed) {
+    public List<OrdersItem> findOrdersItemByCompleted(boolean completed) {
         return ordersItemRepository.findOrdersItemByCompleted(completed);
     }
 

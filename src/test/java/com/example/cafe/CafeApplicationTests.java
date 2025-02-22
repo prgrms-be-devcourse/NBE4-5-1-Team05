@@ -83,16 +83,109 @@ class CafeApplicationTests {
 	}
 
 	@Test
+	@DisplayName("구매자 이메일로 구매자의 모든 상품들을 조회")
+	void findAllOrdersItemsByOrdersEmail() {
+
+		// 주문할 상품 이름 2개, 이메일, 주소, 수량, 우편번호 저장
+		ArrayList<String> productNames = new ArrayList<>();
+			productNames.add("카페라떼");
+			productNames.add("아이스티");
+		String email = "test10@gmail.com";
+		String address = "테스트용 주소10";
+		ArrayList<Integer> quantity = new ArrayList<>();
+			quantity.add(5);
+			quantity.add(8);
+		int postCode = 3782543;
+
+		// 주문하기
+		ordersService.startOrders(productNames, quantity, email, address, postCode);
+
+		// 이메일로 찾아 변수에 상품 리스트 저장
+		List<OrdersItem> ordersItems = ordersItemRepository.findOrdersItemByOrdersEmail(email);
+
+		/// 검증 ///
+		// 출력
+		System.out.println("구매자 이메일: " + ordersItems.getFirst().getOrders().getEmail());
+		System.out.println("구매 내역");
+
+		for (OrdersItem ordersItem : ordersItems) {
+			System.out.println("상품명: " + ordersItem.getOrderProductName());
+			System.out.println("수량: " + ordersItem.getQuantity());
+			System.out.println("-----------------------------");
+		}
+
+		// 사이즈가 2인지 확인
+		assertThat(ordersItems)
+				.isNotNull()
+				.isNotEmpty()
+				.hasSize(2);
+
+		// 상품명, 수량이 맞는지 확인
+		assertThat(ordersItems.getFirst().getOrderProductName()).isEqualTo(productNames.getFirst());
+		assertThat(ordersItems.getFirst().getQuantity()).isEqualTo(quantity.getFirst());
+	}
+
+	@Test
+	@DisplayName("주문내역 id로 주문 삭제 검증")
+	void deleteOrdersItemByOrdersItemId() {
+
+		// 구매자 생성
+		Orders orders = ordersService.add("testemail@mail.com", "서울시 마포구", 96587);
+
+		OrdersItem ordersItem = OrdersItem.builder()
+				.orders(orders)
+				.orderProductId(2L)
+				.orderProductName("카페라떼")
+				.quantity(2)
+				.build();
+
+		// 주문하기
+		ordersItemRepository.save(ordersItem);
+		orders.addOrdersItem(ordersItem);
+
+		// 주문내역 id로 삭제
+		boolean isDeleted = ordersItemService.deleteOrdersItemByOrdersItemId(2L);
+
+		/// 검증 ///
+		// 삭제 성공 여부
+		assertThat(isDeleted).isTrue();
+	}
+
+	@Test
+	@DisplayName("이메일로 주문을 찾아 삭제 후 확인")
+	void deleteOrdersItemByOrdersEmail() {
+
+		// 주문할 상품 이름 2개, 이메일, 주소, 수량, 우편번호 저장
+		ArrayList<String> productNames = new ArrayList<>();
+			productNames.add("아이스티");
+			productNames.add("아이스티");
+		String email = "test10@gmail.com";
+		String address = "테스트용 주소10";
+		ArrayList<Integer> quantity = new ArrayList<>();
+			quantity.add(2);
+			quantity.add(7);
+		int postCode = 3782543;
+
+		// 주문하기
+		ordersService.startOrders(productNames, quantity, email, address, postCode);
+
+		// 이메일 기반으로 주문 삭제
+		boolean isDeleted = ordersItemService.deleteByOrders_Email(email);
+		assertThat(isDeleted).isTrue();
+
+	}
+
+	@Test
 	@DisplayName("단일 상품 주문 후 이메일로 검증")
 	void orderProductAndFindByEmail() {
 
 		// 주문할 상품명, 이메일, 주소, 우편주소 하나 저장
 		ArrayList<String> productName = new ArrayList<>();
-		productName.add("카페라떼");
+			productName.add("카페라떼");
 		String email = "test2@gmail.com";
 		String address = "테스트용 주소2";
 		ArrayList<Integer> quantity = new ArrayList<>();
-		quantity.add(4);
+			quantity.add(4);
 		int postCode = 12345;
 
 		// 상품을 주문
@@ -145,13 +238,13 @@ class CafeApplicationTests {
 
 		// 주문할 상품 이름 2개, 이메일, 주소, 우편번호 저장
 		ArrayList<String> productNames = new ArrayList<>();
-		productNames.add("아메리카노");
-		productNames.add("카페라떼");
+			productNames.add("아메리카노");
+			productNames.add("카페라떼");
 		String email = "test4@gmail.com";
 		String address = "테스트용 주소4";
 		ArrayList<Integer> quantity = new ArrayList<>();
-		quantity.add(1);
-		quantity.add(2);
+			quantity.add(1);
+			quantity.add(2);
 		int postCode = 78645;
 
 		// 주문하기
@@ -203,11 +296,11 @@ class CafeApplicationTests {
 
 		// 주문할 상품명, 이메일, 주소, 우편주소 하나 저장
 		ArrayList<String> productName = new ArrayList<>();
-		productName.add("카페라떼");
+			productName.add("카페라떼");
 		String email = "test5@gmail.com";
 		String address = "테스트용 주소5";
 		ArrayList<Integer> quantity = new ArrayList<>();
-		quantity.add(2);
+			quantity.add(2);
 		int postCode = 97283;
 
 		// 현재 날짜와 시간 생성 (나노초 차이 때문에 500나노초 더하기)
@@ -305,7 +398,7 @@ class CafeApplicationTests {
 
 		// 주문 가져오기 (배송 중인 주문이 1개 이상인지 확인)
 		assertThat(deliveryOrders.size()).isGreaterThanOrEqualTo(1);
-		OrdersItem ordersItem = deliveryOrders.get(0);
+		OrdersItem ordersItem = deliveryOrders.getFirst();
 
 		//
 	}
@@ -335,10 +428,10 @@ class CafeApplicationTests {
 
 		/// 검증 ///
 		// 구매자의 이메일로 주문한 상품 찾기
-		Optional<OrdersItem> foundOrdersItemBefore2pm = ordersItemService.findOrdersItemByOrdersEmail("testemail@testmail.com");
-		
+		List<OrdersItem> foundOrdersItemBefore2pm = ordersItemService.findOrdersItemByOrdersEmail("testemail@testmail.com");
+
 		// 상품 변수에 저장
-		OrdersItem ordersItemBefore2pm = foundOrdersItemBefore2pm.get();
+		OrdersItem ordersItemBefore2pm = foundOrdersItemBefore2pm.get(0);
 
 		// 출력
 		System.out.println("{ 배송 대상 주문 목록 테스트 }");
@@ -356,7 +449,7 @@ class CafeApplicationTests {
 		}
 		
 		// 주문 상품이 존재하는지 확인
-		assertThat(foundOrdersItemBefore2pm).isPresent();
+		assertThat(foundOrdersItemBefore2pm).isNotEmpty();
 		
 		// 주문시간이 오후 2시 이전임으로 배송완료(false) 상태
 		assertThat(ordersItemBefore2pm.isCompleted())
@@ -388,10 +481,10 @@ class CafeApplicationTests {
 
 		/// 검증 ///
 		// 구매자의 이메일로 주문한 상품 찾기
-		Optional<OrdersItem> foundOrdersItemBefore2pm = ordersItemService.findOrdersItemByOrdersEmail("testemail@testmail.com");
+		List<OrdersItem> foundOrdersItemBefore2pm = ordersItemService.findOrdersItemByOrdersEmail("testemail@testmail.com");
 		
 		// 상품 가져와 변수에 저장
-		OrdersItem ordersItemBefore2pm = foundOrdersItemBefore2pm.get();
+		OrdersItem ordersItemBefore2pm = foundOrdersItemBefore2pm.getFirst();
 
 		// 출력
 		System.out.println("{ 배송 대상 주문 목록 테스트 }");
@@ -409,7 +502,7 @@ class CafeApplicationTests {
 		}
 
 		// 주문 상품이 존재하는지 확인
-		assertThat(foundOrdersItemBefore2pm).isPresent();
+		assertThat(foundOrdersItemBefore2pm).isNotEmpty();
 
 		// 주문시간이 오후 2시 이후임으로 배송중(true) 상태
 		assertThat(ordersItemBefore2pm.isCompleted())
@@ -498,12 +591,6 @@ class CafeApplicationTests {
 		assertThat(cafelatte).isNotNull();
 		assertThat(cafelatte.isCompleted()).isTrue();
 	}
-
-//	@Test
-//	@DisplayName("주문 삭제 후 확인")
-//	void deleteOrder() {
-//
-//	}
 
 //	@Test
 //	@DisplayName("이미 구매한 상품에서 상품의 갯수 차감")
