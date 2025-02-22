@@ -47,6 +47,7 @@ public class OrdersItem {
     private int orderProductPrice;
 
     // 주문하려는 상품의 수량
+    @Setter
     @Column(nullable = false)
     private int quantity;
 

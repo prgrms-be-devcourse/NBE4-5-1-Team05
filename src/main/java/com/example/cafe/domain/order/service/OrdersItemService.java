@@ -111,7 +111,47 @@ public class OrdersItemService {
     }
 
     // 주문 내역 수정 (수량 수정)
-//    public Optional<OrdersItem> save(Long orderItemId, String ordersEmail, int quantity)
+    public Optional<OrdersItem> save(Long orderItemId, String ordersEmail, int quantity) {
+
+        // 구매자 조회
+        Optional<Orders> ordersOp = ordersRepository.findByEmail(ordersEmail);
+
+        // 구매자를 찾지 못했을 경우
+        if (ordersOp.isEmpty()) {
+            System.out.println("구매자 (" + ordersEmail + ")를 찾을 수 없습니다");
+            return Optional.empty();
+        }
+
+        // Orders 객체 추출
+        Orders orders = ordersOp.get();
+
+        // 주문 상품 조회 (ID를 이용함)
+        Optional<OrdersItem> ordersItemOp = ordersItemRepository.findById(orderItemId);
+
+        // 상품을 찾을 수 없을 경우
+        if (ordersItemOp.isEmpty()) {
+            System.out.println("주문하신 상품을 찾을 수 없습니다.");
+            return Optional.empty();
+        }
+
+        // OrdersItem 객체 추출
+        OrdersItem ordersItem = ordersItemOp.get();
+
+        // 주문 상품에 대한 주문자 검증
+        if (!ordersItem.getOrders().equals(orders)) {
+            System.out.println("주문하신 상품이 해당 주문자의 주문 상품이 아닙니다.");
+            return Optional.empty();
+        }
+
+        // 주문 상품 수량 수정
+        ordersItem.setQuantity(quantity);
+
+        // 수정된 주문 상품 저장
+        OrdersItem modifiedOrdersItem = ordersItemRepository.save(ordersItem);
+
+        // 수정된 주문 상품을 Optional에 담아 반환
+        return Optional.of(modifiedOrdersItem);
+    }
 
 
     /// 주문 관련 메서드 ///

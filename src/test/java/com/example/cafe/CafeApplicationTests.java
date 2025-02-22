@@ -592,11 +592,17 @@ class CafeApplicationTests {
 		assertThat(cafelatte.isCompleted()).isTrue();
 	}
 
-//	@Test
-//	@DisplayName("이미 구매한 상품에서 상품의 갯수 차감")
-//	void reduceProduct() {
-//
-//	}
+	@Test
+	@DisplayName("이미 구매한 상품에서 상품의 갯수 차감")
+	void modifyReduceProduct() {
+
+	}
+
+	@Test
+	@DisplayName("이미 구매한 상품에서 상품의 갯수 증가")
+	void modifyIncreaseProduct() {
+
+	}
 
 //	@Test
 //	@DisplayName("")
