@@ -22,7 +22,7 @@ public class OrdersItem {
 
     // 주문자 정보 (N:1)
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "order_Id")
+    @JoinColumn(name = "orders_Id")
     private Orders orders;
 
     // 주문 상품의 id

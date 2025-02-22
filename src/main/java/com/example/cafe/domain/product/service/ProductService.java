@@ -64,43 +64,39 @@ public class ProductService {
     }
 
     // 상품 id로 삭제
-    public boolean deleteByOrderId(Long id) {
+    public void deleteByOrderId(Long id) {
         if (!productRepository.existsById(id)) {
-            return false;
+            System.out.println("상품 id에 해당하는 상품이 없습니다.");
+        } else {
+            productRepository.deleteById(id);
         }
-        productRepository.deleteById(id);
-
-        return true;
     }
 
     // 상품 이름으로 삭제
-    public boolean deleteByName(String name) {
+    public void deleteByName(String name) {
         if (productRepository.findByName(name).isEmpty()) {
-            return false;
+            System.out.println("상품명에 해당하는 상품이 없습니다.");
+        } else {
+            productRepository.deleteByName(name);
         }
-        productRepository.deleteByName(name);
-
-        return true;
     }
 
     // 상품 가격으로 삭제
-    public boolean deleteByPrice(int price) {
+    public void deleteByPrice(int price) {
         if (productRepository.findByPrice(price).isEmpty()) {
-            return false;
+            System.out.println("상품 가격에 해당하는 상품이 없습니다.");
+        } else {
+            productRepository.deleteByPrice(price);
         }
-        productRepository.deleteByPrice(price);
-
-        return true;
     }
 
     // 상품 이름에 특정 단어 포함하면 삭제
-    public boolean deleteByNameContaining(String productName) {
+    public void deleteByNameContaining(String productName) {
         if (productRepository.findByNameContaining(productName).isEmpty()) {
-            return false;
+            System.out.println("특정 단어에 해당하는 상품이 없습니다.");
+        } else {
+            productRepository.deleteByNameContaining(productName);
         }
-        productRepository.deleteByNameContaining(productName);
-
-        return true;
     }
 
     // 수정 (상품명, 상품가격, 상품 이미지)

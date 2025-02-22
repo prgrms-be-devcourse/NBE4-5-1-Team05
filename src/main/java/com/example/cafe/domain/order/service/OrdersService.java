@@ -5,6 +5,7 @@ import com.example.cafe.domain.order.repository.OrdersRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -88,6 +89,7 @@ public class OrdersService {
 
     /// 주문서 작성 ///
     // 주문서 작성하기 (시작)
+    @Transactional
     public void startOrders(ArrayList<String> productName, ArrayList<Integer> quantity, String email, String address, int postCode) {
 
         // Orders에 구매자 저장

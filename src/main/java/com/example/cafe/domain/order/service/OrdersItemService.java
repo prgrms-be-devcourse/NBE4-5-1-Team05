@@ -51,7 +51,7 @@ public class OrdersItemService {
 //    }
 
     // 구매자 이메일로 모든 구매내역 찾기
-    public Optional<OrdersItem> findOrdersItemByOrdersEmail(String ordersEmail) {
+    public List<OrdersItem> findOrdersItemByOrdersEmail(String ordersEmail) {
         return ordersItemRepository.findOrdersItemByOrdersEmail(ordersEmail);
     }
 
@@ -81,22 +81,32 @@ public class OrdersItemService {
 
     // 주문자로 주문내역 삭제
     public void deleteByOrders(Orders orders) {
-        if (orders == null || orders.getOrderId() == null) {
-            System.out.println("주문자 정보에 해당하는 주문내역이 없습니다.");
-        } else {
-            ordersItemRepository.deleteByOrders(orders);
-        }
+        ordersItemRepository.deleteByOrders(orders);
     }
 
     // 주문자 이메일로 주문내역 삭제
-    public void deleteByOrders_Email(String email) {
+    public void deleteByOrdersEmail(String email) {
         Optional<Orders> ordersOp = ordersRepository.findByEmail(email);
 
         if (ordersOp.isEmpty()) {
             System.out.println("주문자 이메일에 해당하는 주문내역이 없습니다.");
         } else {
             Orders orders = ordersOp.get();
-            ordersItemRepository.deleteByOrders(orders);
+
+            // 삭제 전 아이템 개수 확인
+            List<OrdersItem> beforeDelete = ordersItemRepository.findOrdersItemByOrdersEmail(email);
+            System.out.println("삭제 전 주문 상품 갯수: " + beforeDelete.size());
+
+            // 강제로 ordersItems 비우기 + 변경 감지를 위해 save 호출
+            orders.getOrdersItems().clear();
+            ordersRepository.save(orders);
+
+            // DELETE 실행
+//            ordersItemRepository.deleteByOrders(orders);
+
+            // 삭제 후 아이템 개수 확인
+            List<OrdersItem> afterDelete = ordersItemRepository.findOrdersItemByOrdersEmail(email);
+            System.out.println("삭제 후 주문 상품 갯수: " + afterDelete.size());
         }
     }
 
@@ -205,32 +215,32 @@ public class OrdersItemService {
     // 배송 상태(배송완료인지 배송중인지) 수정
     public void updateDeliveryStatus() {
 
-        // Date2pm는 오늘 오후 2시
-        LocalDateTime date2pm = LocalDateTime.now().withHour(14).withMinute(0).withSecond(0);
+        // today2pm는 오늘 오후 2시 / yesterday2pm은 어제 오후 2시
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime today2pm = now.withHour(14).withMinute(0).withSecond(0).withNano(0);
+        LocalDateTime yesterday2pm = today2pm.minusDays(1);
 
         // 배송중인 상품 리스트 / 배송완료인 상품 리스트
         List<OrdersItem> deliveryProcessOrders;
         List<OrdersItem> deliveryCompleteOrders;
 
         // 현재 시간이 오후 2시 이전이라면
-        if (LocalDateTime.now().isBefore(date2pm)) {
-            
+        if (LocalDateTime.now().isBefore(today2pm)) {
+
             // 배송중 기준이 전날 오후 2시 이후
             deliveryProcessOrders = ordersItemRepository
                     .findAll().stream()
-                    .filter(ordersItem ->
-                            !ordersItem.getOrderDate()
-                                    .isBefore(date2pm.minusDays(1).plusHours(2)) &&
-                            !ordersItem.getOrderDate()
-                                    .isAfter(LocalDateTime.now())
-                            ).toList();
+                    .filter(ordersItem -> {
+                                LocalDateTime orderTime = ordersItem.getOrderDate();
+                                return orderTime.isAfter(yesterday2pm);
+                            }).toList();
 
             // 배송완료 기준이 전날 오후 2시 이전
             deliveryCompleteOrders = ordersItemRepository
                     .findAll().stream()
                     .filter(ordersItem ->
                             ordersItem.getOrderDate()
-                                    .isBefore(date2pm.minusDays(1)))
+                                    .isBefore(yesterday2pm))
                     .toList();
 
         }
@@ -240,15 +250,17 @@ public class OrdersItemService {
             // 배송중 기준이 오늘 오후 2시 이후
             deliveryProcessOrders = ordersItemRepository
                     .findAll().stream()
-                    .filter(ordersItem ->
-                            !ordersItem.getOrderDate().isBefore(date2pm))
+                    .filter(ordersItem -> {
+                        LocalDateTime orderTime = ordersItem.getOrderDate();
+                        return orderTime.isAfter(today2pm);
+                    })
                     .toList();
 
             // 배송완료 기준이 현재 오후 2시 이전
             deliveryCompleteOrders = ordersItemRepository
                     .findAll().stream()
                     .filter(ordersItem ->
-                            ordersItem.getOrderDate().isBefore(date2pm))
+                            ordersItem.getOrderDate().isBefore(today2pm))
                     .toList();
         }
 
