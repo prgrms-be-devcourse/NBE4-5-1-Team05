@@ -161,6 +161,31 @@ class CafeApplicationTests {
 	}
 
 	@Test
+	@DisplayName("상품명으로 상품 찾기")
+	void findProductByName() {
+
+		// 상품명으로 상품 찾기
+		Product product = productService.findByName("아메리카노");
+
+		/// 검증 ///
+		assertThat(product).isNotNull();
+		assertThat(product.getName()).isEqualTo("아메리카노");
+	}
+
+	@Test
+	@DisplayName("특정 상품의 가격으로 상품 찾기")
+	void findProductByPrice() {
+
+		// 상품 가격으로 상품 찾기 (5500원인 카페라떼 찾기)
+		Optional<Product> product = productService.findByPrice(5500);
+
+		/// 검증 ///
+		assertThat(product).isNotNull();
+		assertThat(product.get().getName()).isEqualTo("카페라떼");
+		assertThat(product.get().getPrice()).isEqualTo(5500);
+	}
+
+	@Test
 	@DisplayName("특정 상품의 이름으로 상품 삭제")
 	void deleteProduct() {
 
