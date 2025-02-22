@@ -51,17 +51,17 @@ public class OrdersItemService {
 //    }
 
     // 구매자 이메일로 모든 구매내역 찾기
-    public List<OrdersItem> findOrdersItemByOrdersEmail(String ordersEmail) {
+    public Optional<OrdersItem> findOrdersItemByOrdersEmail(String ordersEmail) {
         return ordersItemRepository.findOrdersItemByOrdersEmail(ordersEmail);
     }
 
     // 구매자의 구매내역 시간으로 모든 구매내역 찾기
-    public List<OrdersItem> findOrdersItemByOrderDate(LocalDateTime orderDate) {
+    public Optional<OrdersItem> findOrdersItemByOrderDate(LocalDateTime orderDate) {
         return ordersItemRepository.findOrdersItemByOrderDate(orderDate);
     }
 
     // 구매내역의 배송 상태 값으로 찾기
-    public List<OrdersItem> findOrdersItemByCompleted(boolean completed) {
+    public Optional<OrdersItem> findOrdersItemByCompleted(boolean completed) {
         return ordersItemRepository.findOrdersItemByCompleted(completed);
     }
 
@@ -71,45 +71,42 @@ public class OrdersItemService {
     }
 
     // 주문내역 id로 주문내역 삭제
-    public boolean deleteOrdersItemByOrdersItemId(Long orderItemId) {
+    public void deleteOrdersItemByOrdersItemId(Long orderItemId) {
         if (!ordersItemRepository.existsById(orderItemId)) {
-            return false;
+            System.out.println("주문내역 id에 해당하는 주문내역이 없습니다.");
+        } else {
+            ordersItemRepository.deleteById(orderItemId);
         }
-        ordersItemRepository.deleteById(orderItemId);
-
-        return true;
     }
 
     // 주문자로 주문내역 삭제
-    public boolean deleteByOrders(Orders orders) {
+    public void deleteByOrders(Orders orders) {
         if (orders == null || orders.getOrderId() == null) {
-            return false;
+            System.out.println("주문자 정보에 해당하는 주문내역이 없습니다.");
+        } else {
+            ordersItemRepository.deleteByOrders(orders);
         }
-        ordersItemRepository.deleteByOrders(orders);
-
-        return true;
     }
 
     // 주문자 이메일로 주문내역 삭제
-    public boolean deleteByOrders_Email(String email) {
+    public void deleteByOrders_Email(String email) {
         Optional<Orders> ordersOp = ordersRepository.findByEmail(email);
 
         if (ordersOp.isEmpty()) {
-            return false;
+            System.out.println("주문자 이메일에 해당하는 주문내역이 없습니다.");
+        } else {
+            Orders orders = ordersOp.get();
+            ordersItemRepository.deleteByOrders(orders);
         }
-        ordersItemRepository.deleteByOrders_Email(email);
-
-        return true;
     }
 
     // 주문 날짜로 주문내역 삭제
-    public boolean deleteByOrderDate(LocalDateTime orderDate) {
+    public void deleteByOrderDate(LocalDateTime orderDate) {
         if (orderDate == null) {
-            return false;
+            System.out.println("주문 날짜에 해당하는 주문내역이 없습니다.");
+        } else {
+            ordersItemRepository.deleteByOrderDate(orderDate);
         }
-        ordersItemRepository.deleteByOrderDate(orderDate);
-
-        return true;
     }
 
     // 주문 내역 수정 (수량 수정)

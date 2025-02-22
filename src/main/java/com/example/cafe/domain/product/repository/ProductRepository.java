@@ -11,15 +11,15 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     // 찾기
     Optional<Product> findByName(String name);
     Optional<Product> findByProductId(Long id);
-    List<Product> findAll();
     Optional<Product> findByPrice(int productPrice);
     Optional<Product> findByNameContaining(String productName);
+    List<Product> findAll();
 
     // 삭제
-    boolean deleteByProductId(Long id);
-    boolean deleteByName(String name);
-    boolean deleteByPrice(int price);
-    boolean deleteByNameContaining(String productName);
+    void deleteByProductId(Long id);
+    void deleteByName(String name);
+    void deleteByPrice(int price);
+    void deleteByNameContaining(String productName);
 
     // 갯수 세기
     long count();

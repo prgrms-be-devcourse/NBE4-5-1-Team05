@@ -6,22 +6,23 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 public interface OrdersItemRepository extends JpaRepository<OrdersItem, Long> {
 
     // 찾기
     OrdersItem findByOrdersItemId(Long orderId);
 //    Optional<OrdersItem> findByOrders(Orders orders);
-    List<OrdersItem> findOrdersItemByOrdersEmail(String ordersEmail);
-    List<OrdersItem> findOrdersItemByOrderDate(LocalDateTime orderDate);
-    List<OrdersItem> findOrdersItemByCompleted(boolean completed);
+    Optional<OrdersItem> findOrdersItemByOrdersEmail(String ordersEmail);
+    Optional<OrdersItem> findOrdersItemByOrderDate(LocalDateTime orderDate);
+    Optional<OrdersItem> findOrdersItemByCompleted(boolean completed);
     List<OrdersItem> findAll();
 
     // 삭제
-    boolean deleteOrdersItemByOrdersItemId(Long orderItemId);
-    boolean deleteByOrders(Orders orders);
-    Integer deleteByOrders_Email(String email);
-    boolean deleteByOrderDate(LocalDateTime orderDate);
+    void deleteOrdersItemByOrdersItemId(Long orderItemId);
+    void deleteByOrders(Orders orders);
+//    Integer deleteByOrders_Email(String email);
+    void deleteByOrderDate(LocalDateTime orderDate);
 
     // 갯수 세기
     long count();

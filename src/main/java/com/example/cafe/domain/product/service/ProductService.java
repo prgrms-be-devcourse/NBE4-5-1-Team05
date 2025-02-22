@@ -33,11 +33,6 @@ public class ProductService {
         return product.get();
     }
 
-    // 모든 상품 찾기
-    List<Product> findAll() {
-        return productRepository.findAll();
-    }
-
     // 상품 가격으로 찾기
     public Optional<Product> findByPrice(int productPrice) {
         return productRepository.findByPrice(productPrice);
@@ -46,6 +41,11 @@ public class ProductService {
     // 상품 이름에 포함된 단어로 찾기
     public Optional<Product> findByNameContaining(String productName) {
         return productRepository.findByNameContaining(productName);
+    }
+
+    // 모든 상품 찾기
+    List<Product> findAll() {
+        return productRepository.findAll();
     }
 
     // 상품 id로 삭제
