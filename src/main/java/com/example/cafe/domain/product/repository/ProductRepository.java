@@ -9,7 +9,7 @@ import java.util.Optional;
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
     // 찾기
-    Optional<Product> findByName(String name);
+    Optional<Product> findByName(String productName);
     Optional<Product> findByProductId(Long id);
     Optional<Product> findByPrice(int productPrice);
     Optional<Product> findByNameContaining(String productName);
@@ -21,13 +21,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     void deleteByPrice(int price);
     void deleteByNameContaining(String productName);
 
-    // 수정
-    void modifyProductName(Product product, String productName);
-    void modifyProductPrice(Product product, int productPrice);
-    void modifyProductImgUrl(Product product, String productUrl);
-
     // 갯수 세기
     long count();
-
-    Long getProductByName(String name);
 }

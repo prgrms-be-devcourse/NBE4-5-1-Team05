@@ -63,7 +63,7 @@ class CafeApplicationTests {
 		System.out.println("{ 모든 상품 목록 }");
 		for (Product product : products) {
 			System.out.println("상품명: " + product.getName());
-			System.out.println("상품 가격: " + product.getPrice());
+			System.out.println("상품 가격: " + product.getName());
 			System.out.println("-------------------------------");
 		}
 
