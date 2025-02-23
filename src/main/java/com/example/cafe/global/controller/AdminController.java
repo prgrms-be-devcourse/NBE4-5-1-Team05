@@ -2,14 +2,21 @@ package com.example.cafe.global.controller;
 
 import com.example.cafe.domain.product.entity.Product;
 import com.example.cafe.domain.product.service.ProductService;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/admin")
@@ -20,6 +27,22 @@ public class AdminController {
     public AdminController(ProductService productService) {
         this.productService = productService;
     }
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class ProductForm {
+        @NotBlank(message = "상품명을 입력하세요.")
+        @Length(min = 3, message = "상품명은 최소 3자 이상이어야 합니다.")
+        private String name;
+
+        @Min(value = 1, message = "가격은 1원 이상이어야 합니다.")
+        private int price;
+
+        @NotBlank(message = "이미지 URL을 입력하세요.")
+        private String imageURL;
+    }
+
 
     @GetMapping
     public String adminPage(Model model) {
@@ -29,27 +52,52 @@ public class AdminController {
     }
 
     @GetMapping("/add")
-    public String addProduct(Model model) {
-        // 전체 상품 리스트 조회
-        model.addAttribute("product",new Product());
-        return "domain/order/admin-add"; // admin.html 템플릿 반환
+    public String showAddProductForm(Model model) {
+        model.addAttribute("product", new ProductForm()); // 빈 ProductForm 객체 전달
+        return "domain/order/admin-add";
     }
+
 
     @PostMapping("/add")
-    @ResponseBody
-    public ResponseEntity<String> addProduct(
-            @NotBlank(message = "상품명을 입력하세요.") @Length(min = 3, message = "상품명은 최소 3자 이상이어야 합니다.") @RequestParam String name,
-            @RequestParam(defaultValue = "0") int price, // 기본값 설정
-            @NotBlank(message = "이미지 URL을 입력하세요.") @RequestParam String imageURL
+    public String addProduct(
+            @Valid @ModelAttribute("product") ProductForm form,
+            BindingResult bindingResult,
+            Model model
     ) {
-        // 가격 검증
-        if (price < 1) {
-            return ResponseEntity.badRequest().body("가격은 1원 이상이어야 합니다.");
+        System.out.println("Received name: " + form.getName());
+        System.out.println("Received price: " + form.getPrice());
+        System.out.println("Received imageURL: " + form.getImageURL());
+
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("errorMessage", bindingResult.getFieldError().getDefaultMessage());
+            return "domain/order/admin-add"; // 상품 추가 폼 유지
         }
 
-        // 상품 저장 로직
-        productService.add(name, price, imageURL);
+        System.out.println("2"+form.getPrice());
+        if (form.getPrice() < 1) {
+            model.addAttribute("errorMessage", "가격은 1원 이상이어야 합니다.");
+            return "domain/order/admin-add"; // 상품 추가 폼 유지
+        }
+        System.out.println("3"+form.getPrice());
+        productService.add(form.getName(), form.getPrice(), form.getImageURL());
 
-        return ResponseEntity.ok("상품이 추가되었습니다.");
+        model.addAttribute("successMessage", "상품이 성공적으로 추가되었습니다!");
+        return "domain/order/admin-success";
     }
+
+    @GetMapping("/edit/{id}")
+    public String showEditProductForm(@PathVariable Long id, Model model) {
+        Optional<Product> productOptional = productService.findByProductId(id);
+        if (productOptional.isPresent()) {
+            Product product = productOptional.get();
+            ProductForm form = new ProductForm(product.getName(), product.getPrice(), product.getImageURL());
+            model.addAttribute("product", form);
+            model.addAttribute("productId", id); // 상품 ID 전달
+            return "domain/order/admin-edit";
+        } else {
+            model.addAttribute("errorMessage", "해당 상품을 찾을 수 없습니다.");
+            return "redirect:/admin";
+        }
+    }
+
 }
