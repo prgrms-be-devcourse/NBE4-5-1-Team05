@@ -855,7 +855,7 @@ class CafeApplicationTests {
 		// 주문자로 주문한 상품 가져오기
 		List<OrdersItem> ordersItems = foundOrders.getOrdersItems();
 
-		// 카페라떼 찾아 변수에 저장
+		// 아이스티 찾아 변수에 저장
 		OrdersItem ordersItem = null;
 
 		for (OrdersItem Item : ordersItems) {
@@ -865,9 +865,9 @@ class CafeApplicationTests {
 			}
 		}
 
-		// 찾은 "카페라떼"의 상품 id 획득
+		// 찾은 "아이스티"의 상품 id 획득
 		Long orderItemId = ordersItem.getOrdersItemId();
-		// 수정할 수량 : 2개
+		// 수정할 수량 : 10개
 		int reduceQuantity = 10;
 
 		// 수정 작업
@@ -883,7 +883,7 @@ class CafeApplicationTests {
 		// 존재 확인 및 값 확인
 		assertThat(modifyOrdersItem).isNotNull();
 
-		// 수정된 주문 상품의 수량이 2개인지 확인
+		// 수정된 주문 상품의 수량이 10개인지 확인
 		assertThat(modifyOrdersItem.getQuantity()).isEqualTo(reduceQuantity);
 
 		// DB에서 다시 조회해서 실제 수량이 변경되었는지 확인

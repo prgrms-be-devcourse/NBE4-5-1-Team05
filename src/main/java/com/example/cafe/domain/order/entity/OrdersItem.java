@@ -34,6 +34,7 @@ public class OrdersItem {
     private String orderProductName;
 
     // 주문한 총가격
+    @Setter
     @Column(nullable = false)
     private int orderProductPrice;
 

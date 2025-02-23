@@ -164,8 +164,23 @@ public class OrdersItemService {
             System.out.println("배송완료된 상품은 수량 수정이 불가능합니다.");
             return null;
         } else {
-            // 주문 상품 수량 수정
+
+            // 상품 정보 조회
+            Optional<Product> productOp = productService.findByName(ordersItem.getOrderProductName());
+
+            // 조회된 상품이 없을 경우
+            if (productOp.isEmpty()) {
+                System.out.println("상품 수량을 수정할 수 없습니다.");
+                return null;
+            }
+            Product product = productOp.get();
+
+            // 수정할 상품의 수량에 따라 상품 가격 계산
+            int calculatedPrice = product.getPrice() * quantity;
+
+            // 주문 상품 수량 수정 + 가격 수정
             ordersItem.setQuantity(quantity);
+            ordersItem.setOrderProductPrice(calculatedPrice);
 
             // 수정된 주문 상품 저장
             OrdersItem modifiedOrdersItem = ordersItemRepository.save(ordersItem);
@@ -175,8 +190,7 @@ public class OrdersItemService {
         }
     }
 
-
-    /// 주문 관련 메서드 ///
+    /// 주문 메서드 ///
     // 상품 주문 담기
     public void orderProducts(Orders orders, ArrayList<String> productNames, ArrayList<Integer> quantity) {
 
@@ -204,12 +218,15 @@ public class OrdersItemService {
     // 구매자 정보와 구매한 상품들을 객체화시켜 orderProduct로 리턴
     private OrdersItem createOrderItem(Orders orders, Product product, int quantity) {
 
+        // 수량에 따라 상품 가격 변동
+        int calculatedPrice = product.getPrice() * quantity;
+
         // 구매한 상품 객체 생성
         return OrdersItem.builder()
                 .orders(orders)
                 .orderProductId(product.getProductId())
                 .orderProductName(product.getName())
-                .orderProductPrice(product.getPrice())
+                .orderProductPrice(calculatedPrice)
                 .quantity(quantity)
                 .build();
     }
