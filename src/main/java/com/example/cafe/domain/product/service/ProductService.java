@@ -17,11 +17,18 @@ public class ProductService {
     /// 기본 메서드 ///
     // 상품 id로 찾기
     public Optional<Product> findByProductId(Long productId) {
-        return productRepository.findById(productId);
+
+        Optional<Product> product = productRepository.findById(productId);
+
+        if (product.isEmpty()) {
+            System.out.println("조회된 상품 없음");
+        }
+
+        return product;
     }
 
     // 상품명으로 찾기
-    public Product findByName(String name) {
+    public Optional<Product> findByName(String name) {
 
         Optional<Product> product = productRepository.findByName(name);
 
@@ -30,7 +37,7 @@ public class ProductService {
             return null;
         }
 
-        return product.get();
+        return product;
     }
 
     // 상품 가격으로 찾기

@@ -12,7 +12,6 @@ public interface OrdersItemRepository extends JpaRepository<OrdersItem, Long> {
 
     // 찾기
     OrdersItem findByOrdersItemId(Long orderId);
-//    Optional<OrdersItem> findByOrders(Orders orders);
     List<OrdersItem> findOrdersItemByOrdersEmail(String ordersEmail);
     Optional<OrdersItem> findOrdersItemByOrderDate(LocalDateTime orderDate);
     Optional<OrdersItem> findOrdersItemByCompleted(boolean completed);

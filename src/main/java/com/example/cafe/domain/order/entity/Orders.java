@@ -19,14 +19,17 @@ public class Orders {
     private Long orderId;
 
     // 구매자 이메일
+    @Setter
     @Column(length = 50, nullable = false) // 길이 50, Not Null 제약
     private String email;
 
     // 구매자 주소
+    @Setter
     @Column(length = 50, nullable = false) // 길이 50, Not Null 제약
     private String address;
 
     // 구매자 우편 번호
+    @Setter
     @Column
     private int postCode;
 

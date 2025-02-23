@@ -44,12 +44,6 @@ public class OrdersItemService {
         }
     }
 
-    // 구매자로 주문내역 찾기
-//    public OrdersItem findByOrders(Orders orders) {
-//        return ordersItemRepository.findByOrders(orders)
-//                .orElseThrow(() -> new IllegalArgumentException("조회하려는 구매자가 없습니다."));
-//    }
-
     // 구매자 이메일로 모든 구매내역 찾기
     public List<OrdersItem> findOrdersItemByOrdersEmail(String ordersEmail) {
         return ordersItemRepository.findOrdersItemByOrdersEmail(ordersEmail);
@@ -177,7 +171,8 @@ public class OrdersItemService {
     public void orderProduct(Orders orders, String productName, int quantity) {
 
         // 상품명으로 Product 정보를 조회하여 변수에 저장
-        Product product = productService.findByName(productName);
+        Optional<Product> productOp = productService.findByName(productName);
+        Product product = productOp.get();
 
         // createOrderItem 메서드에 구매자 정보, 상품, 수량을 보내 객체 생성 후 변수에 저장
         OrdersItem orderedItem = createOrderItem(orders, product, quantity);

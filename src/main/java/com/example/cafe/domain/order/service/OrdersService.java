@@ -52,27 +52,35 @@ public class OrdersService {
         return true;
     }
 
-    // 구매자 이메일로 삭제
-    boolean deleteByEmail(String email) {
+    // 구매자 이메일을 받아 삭제
+    public void deleteByEmail(String email) {
         if (ordersRepository.findByEmail(email).isEmpty()) {
-            return false;
+            System.out.println("이메일에 해당하는 구매자가 없습니다.");
+        } else {
+            ordersRepository.deleteByEmail(email);
         }
-        ordersRepository.deleteByEmail(email);
-
-        return true;
-    }
-
-    // 구매자 주소로 삭제
-    boolean deleteByAddress(String address) {
-        if (ordersRepository.findByAddress(address).isEmpty()) {
-            return false;
-        }
-        ordersRepository.deleteByAddress(address);
-
-        return true;
     }
     
-    // 수정 (구매자 이메일, 주소, 우편주소)
+    // 구매자 이메일을 받아 수정
+    public void modifyByEmail(Orders orders, String ordersEmail, String ordersAddress, int ordersPostCode) {
+
+        // 구매자 이메일 수정
+        if (ordersEmail != null) {
+            orders.setEmail(ordersEmail);
+        }
+
+        // 구매자 주소 수정
+        if (ordersAddress != null) {
+            orders.setAddress(ordersAddress);
+        }
+
+        // 구매자 우편주소
+        if (ordersPostCode != 0) {
+            orders.setPostCode(ordersPostCode);
+        }
+
+        ordersRepository.save(orders);
+    }
 
     /// 기능 메서드 ///
     // 구매자 정보 기입

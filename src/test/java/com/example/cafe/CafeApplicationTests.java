@@ -165,7 +165,8 @@ class CafeApplicationTests {
 	void findProductByName() {
 
 		// 상품명으로 상품 찾기
-		Product product = productService.findByName("아메리카노");
+		Optional<Product> productOp = productService.findByName("아메리카노");
+		Product product = productOp.get();
 
 		/// 검증 ///
 		assertThat(product).isNotNull();
@@ -242,7 +243,8 @@ class CafeApplicationTests {
 		productService.add("아이스 바닐라 라떼", 6000, "임시");
 
 		// 상품명 수정
-		Product product = productService.findByName("아이스 바닐라 라떼");
+		Optional<Product> productOp = productService.findByName("아이스 바닐라 라떼");
+		Product product = productOp.get();
 		productService.modifyProduct(product, "아인슈페너", 50000, null);
 
 		/// 검증 ///
@@ -257,7 +259,8 @@ class CafeApplicationTests {
 			System.out.println("---------------------------------------");
 		}
 
-		Product modifiedProduct = productService.findByName("아인슈페너");
+		Optional<Product> productModifyOp = productService.findByName("아인슈페너");
+		Product modifiedProduct = productModifyOp.get();
 
 		// 상품명, 상품 가격, 상품 이미지(수정 안함) 확인
 		assertThat(modifiedProduct).isNotNull();
@@ -268,22 +271,63 @@ class CafeApplicationTests {
 	}
 
 	@Test
-	@DisplayName("상품명을 받아 상품 가격 수정")
-	void modifyProductByProductPrice() {
+	@DisplayName("구매자 이메일으로 구매자 삭제")
+	void deleteByOrdersEmail() {
 
-		// 샘플 상품 데이터 추가
-		productService.add("아이스 바닐라 라떼", 6000, "임시");
+		// 구매자 샘플 추가
+		ordersService.add("임시email1", "임시주소", 45678);
 
-		// 새 상품명
-		String newProductName = "아인슈페너";
+		// 구매자 이메일 삭제
+		ordersService.deleteByEmail("임시email1");
 
-		// 새 상품 가격
-		int newProductPrice = 6500;
+		/// 검증 ///
+		// 출력
+		List<Orders> ordersList = ordersService.findAll();
 
-		// 상품명 수정
-		Product product = productService.findByName("아이스 바닐라 라떼");
-//		productService.modifyProductName(, "");
+		System.out.println("{ 구매자 목록 }");
+		for (Orders orders : ordersList) {
+			System.out.println("구매자 이메일: " + orders.getEmail());
+			System.out.println("구매자 주소: " + orders.getAddress());
+			System.out.println("구매자 우편주소: " + orders.getPostCode());
+			System.out.println("---------------------------------------");
+		}
 
+		assertThat(ordersRepository.findByEmail("임시email1")).isEmpty();
+
+	}
+
+	@Test
+	@DisplayName("구매자 이메일로 구매자 수정")
+	void modifyOrdersByEmail() {
+
+		// 샘플 구매자 데이터 추가
+		ordersService.add("임시email2", "임시주소", 47897);
+
+		// 구매자 수정
+		Optional<Orders> orders = ordersService.findByEmail("임시email2");
+		Orders order = orders.get();
+		ordersService.modifyByEmail(order, "modifyEmail.com", null, 99999);
+
+		/// 검증 ///
+		// 출력
+		List<Orders> ordersList = ordersService.findAll();
+
+		System.out.println("{ 구매자 목록 }");
+		for (Orders modifyOrders : ordersList) {
+			System.out.println("구매자 이메일: " + modifyOrders.getEmail());
+			System.out.println("구매자 주소: " + modifyOrders.getAddress());
+			System.out.println("구매자 우편주소: " + modifyOrders.getPostCode());
+			System.out.println("---------------------------------------");
+		}
+
+		Optional<Orders> modifyOrder = ordersService.findByEmail("modifyEmail.com");
+		Orders modifyOrders = modifyOrder.get();
+
+		// 구매자 이메일, 구매자 주소(수정 안함), 구매자 우편주소 확인
+		assertThat(modifyOrders).isNotNull();
+		assertThat(modifyOrders.getEmail()).isEqualTo("modifyEmail.com");
+		assertThat(modifyOrders.getAddress()).isEqualTo("임시주소");
+		assertThat(modifyOrders.getPostCode()).isEqualTo(99999);
 	}
 
 	@Test
