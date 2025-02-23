@@ -12,8 +12,7 @@ public interface OrdersItemRepository extends JpaRepository<OrdersItem, Long> {
 
     // 찾기
     OrdersItem findByOrdersItemId(Long orderId);
-//    Optional<OrdersItem> findByOrders(Orders orders);
-    Optional<OrdersItem> findOrdersItemByOrdersEmail(String ordersEmail);
+    List<OrdersItem> findOrdersItemByOrdersEmail(String ordersEmail);
     Optional<OrdersItem> findOrdersItemByOrderDate(LocalDateTime orderDate);
     Optional<OrdersItem> findOrdersItemByCompleted(boolean completed);
     List<OrdersItem> findAll();
@@ -21,8 +20,6 @@ public interface OrdersItemRepository extends JpaRepository<OrdersItem, Long> {
     // 삭제
     void deleteOrdersItemByOrdersItemId(Long orderItemId);
     void deleteByOrders(Orders orders);
-//    Integer deleteByOrders_Email(String email);
-    void deleteByOrderDate(LocalDateTime orderDate);
 
     // 갯수 세기
     long count();

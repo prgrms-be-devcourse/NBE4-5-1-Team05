@@ -22,7 +22,7 @@ public class OrdersItem {
 
     // 주문자 정보 (N:1)
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "order_Id")
+    @JoinColumn(name = "orders_Id")
     private Orders orders;
 
     // 주문 상품의 id
@@ -34,6 +34,7 @@ public class OrdersItem {
     private String orderProductName;
 
     // 주문한 총가격
+    @Setter
     @Column(nullable = false)
     private int orderProductPrice;
 
@@ -52,7 +53,7 @@ public class OrdersItem {
     @LastModifiedDate
     private LocalDateTime modifiedDate;
 
-    // 주문 완료
+    // 배송완료(false) / 배송중(true) 상태 설정
     @Setter
     @Column(columnDefinition = "boolean default false")
     private boolean completed;

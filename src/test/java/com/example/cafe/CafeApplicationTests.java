@@ -9,6 +9,7 @@ import com.example.cafe.domain.order.service.OrdersService;
 import com.example.cafe.domain.product.entity.Product;
 import com.example.cafe.domain.product.repository.ProductRepository;
 import com.example.cafe.domain.product.service.ProductService;
+import jakarta.persistence.PersistenceContext;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ActiveProfiles("test")
 @Transactional
 @Configuration
+@PersistenceContext
 class CafeApplicationTests {
 
 	@Autowired
@@ -63,7 +65,7 @@ class CafeApplicationTests {
 		System.out.println("{ 모든 상품 목록 }");
 		for (Product product : products) {
 			System.out.println("상품명: " + product.getName());
-			System.out.println("상품 가격: " + product.getPrice());
+			System.out.println("상품 가격: " + product.getName());
 			System.out.println("-------------------------------");
 		}
 
@@ -136,26 +138,54 @@ class CafeApplicationTests {
 		ordersService.startOrders(productNames, quantity, email, address, postCode);
 
 		// 이메일로 찾아 변수에 저장
-		Optional<OrdersItem> ordersItemList = ordersItemRepository.findOrdersItemByOrdersEmail(email);
-		OrdersItem ordersItem = ordersItemList.get();
+		List<OrdersItem> ordersItems = ordersItemRepository.findOrdersItemByOrdersEmail(email);
 
 		/// 검증 ///
 		// 출력
-		System.out.println("구매자 이메일: " + ordersItem.getOrders().getEmail());
+		System.out.println("구매자 이메일: " + ordersItems.get(0).getOrders().getEmail());
 		System.out.println("구매 내역");
 
-		System.out.println("상품명: " + ordersItem.getOrderProductName());
-		System.out.println("수량: " + ordersItem.getQuantity());
-		System.out.println("-----------------------------");
+		for (OrdersItem ordersItem : ordersItems) {
+			System.out.println("상품명: " + ordersItem.getOrderProductName());
+			System.out.println("수량: " + ordersItem.getQuantity());
+			System.out.println("-----------------------------");
+		}
 
 		// 값을 갖고 있는지 확인
-		assertThat(ordersItemList).isPresent();
-
-		// 사이즈가 2인지 확인
-		assertThat(ordersItem.getOrderProductName()).isEqualTo(productNames.getFirst());
+		assertThat(ordersItems).isNotEmpty();
 
 		// 상품명, 수량이 맞는지 확인
-		assertThat(ordersItem.getQuantity()).isEqualTo(quantity.getFirst());
+		assertThat(ordersItems.get(0).getOrderProductName()).isEqualTo(productNames.get(0));
+		assertThat(ordersItems.get(0).getQuantity()).isEqualTo(quantity.get(0));
+
+		assertThat(ordersItems.get(1).getOrderProductName()).isEqualTo(productNames.get(1));
+		assertThat(ordersItems.get(1).getQuantity()).isEqualTo(quantity.get(1));
+	}
+
+	@Test
+	@DisplayName("상품명으로 상품 찾기")
+	void findProductByName() {
+
+		// 상품명으로 상품 찾기
+		Optional<Product> productOp = productService.findByName("아메리카노");
+		Product product = productOp.get();
+
+		/// 검증 ///
+		assertThat(product).isNotNull();
+		assertThat(product.getName()).isEqualTo("아메리카노");
+	}
+
+	@Test
+	@DisplayName("특정 상품의 가격으로 상품 찾기")
+	void findProductByPrice() {
+
+		// 상품 가격으로 상품 찾기 (5500원인 카페라떼 찾기)
+		Optional<Product> product = productService.findByPrice(5500);
+
+		/// 검증 ///
+		assertThat(product).isNotNull();
+		assertThat(product.get().getName()).isEqualTo("카페라떼");
+		assertThat(product.get().getPrice()).isEqualTo(5500);
 	}
 
 	@Test
@@ -169,7 +199,137 @@ class CafeApplicationTests {
 		productService.deleteByName("핫도그");
 
 		/// 검증 ///
-		assertThat(productRepository.findByName("핫도그")).isNull();
+		// 출력
+		List<Product> ProductList = productRepository.findAll();
+
+		System.out.println("{ 상품 목록 }");
+		for (Product product : ProductList) {
+			System.out.println("상품명: " + product.getName());
+			System.out.println("가격: " + product.getPrice());
+			System.out.println("---------------------------------------");
+		}
+
+		assertThat(productRepository.findByName("핫도그")).isEmpty();
+	}
+
+	@Test
+	@DisplayName("상품 가격으로 상품 삭제")
+	void deleteProductByPrice() {
+
+		// 샘플 상품 데이터 추가
+		productService.add("초코칩 쿠키", 2500, "임시");
+
+		// 삭제
+		productService.deleteByPrice(2500);
+
+		/// 검증 ///
+		// 출력
+		List<Product> ProductList = productRepository.findAll();
+
+		System.out.println("{ 상품 목록 }");
+		for (Product product : ProductList) {
+			System.out.println("상품명: " + product.getName());
+			System.out.println("가격: " + product.getPrice());
+			System.out.println("---------------------------------------");
+		}
+
+		assertThat(productRepository.findByName("초코칩 쿠키")).isEmpty();
+
+	}
+
+	@Test
+	@DisplayName("상품명을 받아 상품 수정")
+	void modifyProductByProduct() {
+		
+		// 샘플 상품 데이터 추가
+		productService.add("아이스 바닐라 라떼", 6000, "임시");
+
+		// 상품명 수정
+		Optional<Product> productOp = productService.findByName("아이스 바닐라 라떼");
+		Product product = productOp.get();
+		productService.modifyProduct(product, "아인슈페너", 50000, null);
+
+		/// 검증 ///
+		// 출력
+		List<Product> ProductList = productRepository.findAll();
+
+		System.out.println("{ 상품 목록 }");
+		for (Product products : ProductList) {
+			System.out.println("상품명: " + products.getName());
+			System.out.println("상품 가격: " + products.getPrice());
+			System.out.println("상품 이미지: " + products.getImageURL());
+			System.out.println("---------------------------------------");
+		}
+
+		Optional<Product> productModifyOp = productService.findByName("아인슈페너");
+		Product modifiedProduct = productModifyOp.get();
+
+		// 상품명, 상품 가격, 상품 이미지(수정 안함) 확인
+		assertThat(modifiedProduct).isNotNull();
+		assertThat(modifiedProduct.getName()).isEqualTo("아인슈페너");
+		assertThat(modifiedProduct.getPrice()).isEqualTo(50000);
+		assertThat(modifiedProduct.getImageURL()).isEqualTo("임시");
+		
+	}
+
+	@Test
+	@DisplayName("구매자 이메일으로 구매자 삭제")
+	void deleteByOrdersEmail() {
+
+		// 구매자 샘플 추가
+		ordersService.add("임시email1", "임시주소", 45678);
+
+		// 구매자 이메일 삭제
+		ordersService.deleteByEmail("임시email1");
+
+		/// 검증 ///
+		// 출력
+		List<Orders> ordersList = ordersService.findAll();
+
+		System.out.println("{ 구매자 목록 }");
+		for (Orders orders : ordersList) {
+			System.out.println("구매자 이메일: " + orders.getEmail());
+			System.out.println("구매자 주소: " + orders.getAddress());
+			System.out.println("구매자 우편주소: " + orders.getPostCode());
+			System.out.println("---------------------------------------");
+		}
+
+		assertThat(ordersRepository.findByEmail("임시email1")).isEmpty();
+
+	}
+
+	@Test
+	@DisplayName("구매자 이메일로 구매자 수정")
+	void modifyOrdersByEmail() {
+
+		// 샘플 구매자 데이터 추가
+		ordersService.add("임시email2", "임시주소", 47897);
+
+		// 구매자 수정
+		Optional<Orders> orders = ordersService.findByEmail("임시email2");
+		Orders order = orders.get();
+		ordersService.modifyByEmail(order, "modifyEmail.com", null, 99999);
+
+		/// 검증 ///
+		// 출력
+		List<Orders> ordersList = ordersService.findAll();
+
+		System.out.println("{ 구매자 목록 }");
+		for (Orders modifyOrders : ordersList) {
+			System.out.println("구매자 이메일: " + modifyOrders.getEmail());
+			System.out.println("구매자 주소: " + modifyOrders.getAddress());
+			System.out.println("구매자 우편주소: " + modifyOrders.getPostCode());
+			System.out.println("---------------------------------------");
+		}
+
+		Optional<Orders> modifyOrder = ordersService.findByEmail("modifyEmail.com");
+		Orders modifyOrders = modifyOrder.get();
+
+		// 구매자 이메일, 구매자 주소(수정 안함), 구매자 우편주소 확인
+		assertThat(modifyOrders).isNotNull();
+		assertThat(modifyOrders.getEmail()).isEqualTo("modifyEmail.com");
+		assertThat(modifyOrders.getAddress()).isEqualTo("임시주소");
+		assertThat(modifyOrders.getPostCode()).isEqualTo(99999);
 	}
 
 	@Test
@@ -184,18 +344,21 @@ class CafeApplicationTests {
 				.orderProductId(2L)
 				.orderProductName("카페라떼")
 				.quantity(2)
+				.completed(true)
 				.build();
 
-		// 주문하기
-		ordersItemRepository.save(ordersItem);
-		orders.addOrdersItem(ordersItem);
+		// 주문하기 및 주문 내역 id 획득
+		OrdersItem savedOrdersItem = ordersItemRepository.save(ordersItem);
+		Long ordersItemId = savedOrdersItem.getOrdersItemId();
+		orders.addOrdersItem(savedOrdersItem);
 
 		// 주문내역 id로 삭제
-		ordersItemService.deleteOrdersItemByOrdersItemId(2L);
+		ordersItemService.deleteOrdersItemByOrdersItemId(ordersItemId);
 
 		/// 검증 ///
 		// 삭제 성공 여부
-		assertThat(ordersItemRepository.findOrdersItemByOrdersEmail(orders.getEmail())).isEmpty();
+		Optional<OrdersItem> deletedOrdersItem = ordersItemRepository.findById(ordersItemId);
+		assertThat(deletedOrdersItem).isEmpty();
 	}
 
 	@Test
@@ -205,8 +368,8 @@ class CafeApplicationTests {
 		// 주문할 상품 이름, 이메일, 주소, 수량, 우편번호 저장
 		ArrayList<String> productNames = new ArrayList<>();
 			productNames.add("아이스티");
-		String email = "test10@gmail.com";
-		String address = "테스트용 주소10";
+		String email = "test20@gmail.com";
+		String address = "테스트용 주소20";
 		ArrayList<Integer> quantity = new ArrayList<>();
 			quantity.add(2);
 		int postCode = 3782543;
@@ -214,13 +377,70 @@ class CafeApplicationTests {
 		// 주문하기
 		ordersService.startOrders(productNames, quantity, email, address, postCode);
 
+		// 배송 상태를 배송중(true)로 설정
+		List<OrdersItem> ordersItemsForTrue = ordersItemRepository.findOrdersItemByOrdersEmail(email);
+
+		for (OrdersItem ordersItem : ordersItemsForTrue) {
+			ordersItem.setCompleted(true);
+			ordersItemRepository.save(ordersItem);
+		}
+
 		// 이메일 기반으로 주문 삭제
-		ordersItemService.deleteByOrders_Email(email);
+		ordersItemService.deleteByOrdersEmail(email);
 
 		/// 검증 ///
+		// 주문한 상품들 모두 출력
+		List<OrdersItem> ordersItemsList = ordersItemRepository.findAll();
+
+		System.out.println("{ 주문된 상품 목록 }");
+		for (OrdersItem ordersItem : ordersItemsList) {
+			System.out.println("이메일: " + ordersItem.getOrders().getEmail());
+			System.out.println("상품명: " + ordersItem.getOrderProductName());
+			System.out.println("상품 갯수: " + ordersItem.getQuantity());
+			System.out.println("---------------------------------------");
+		}
+
 		// DB에서 주문 상품 아이템이 삭제되었는지 확인
-		Optional<OrdersItem> ordersItems = ordersItemRepository.findOrdersItemByOrdersEmail(email);
+		List<OrdersItem> ordersItems = ordersItemRepository.findOrdersItemByOrdersEmail(email);
+		System.out.println("TDD 검증용 OrdersItem 갯수: " + ordersItems.size());
 		assertThat(ordersItems).isEmpty();
+	}
+
+	@Test
+	@DisplayName("이메일로 주문을 찾아 삭제 후 확인(주문이 이미 배송 완료일 경우)")
+	void deleteOrdersItemByOrdersEmailFail() {
+
+		// 주문할 상품 이름, 이메일, 주소, 수량, 우편번호 저장
+		ArrayList<String> productNames = new ArrayList<>();
+		productNames.add("아이스티");
+		String email = "test20@gmail.com";
+		String address = "테스트용 주소20";
+		ArrayList<Integer> quantity = new ArrayList<>();
+		quantity.add(2);
+		int postCode = 3782543;
+
+		// 주문하기
+		ordersService.startOrders(productNames, quantity, email, address, postCode);
+
+		// 이메일 기반으로 주문 삭제
+		ordersItemService.deleteByOrdersEmail(email);
+
+		/// 검증 ///
+		// 주문한 상품들 모두 출력
+		List<OrdersItem> ordersItemsList = ordersItemRepository.findAll();
+
+		System.out.println("{ 주문된 상품 목록 }");
+		for (OrdersItem ordersItem : ordersItemsList) {
+			System.out.println("이메일: " + ordersItem.getOrders().getEmail());
+			System.out.println("상품명: " + ordersItem.getOrderProductName());
+			System.out.println("상품 갯수: " + ordersItem.getQuantity());
+			System.out.println("---------------------------------------");
+		}
+
+		// DB에서 주문 상품 아이템이 그대로 있는지 확인
+		List<OrdersItem> ordersItems = ordersItemRepository.findOrdersItemByOrdersEmail(email);
+		System.out.println("TDD 검증용 OrdersItem 갯수: " + ordersItems.size());
+		assertThat(ordersItems).hasSize(1);
 	}
 
 	@Test
@@ -395,8 +615,8 @@ class CafeApplicationTests {
 
 		/// 검증 ///
 		// 구매자의 이메일로 주문한 상품 찾기 및 변수에 저장
-		Optional<OrdersItem> ordersItemList = ordersItemService.findOrdersItemByOrdersEmail(orders.getEmail());
-		OrdersItem ordersItemBefore2pm = ordersItemList.get();
+		List<OrdersItem> ordersItems = ordersItemService.findOrdersItemByOrdersEmail(orders.getEmail());
+		OrdersItem ordersItemBefore2pm = ordersItems.getFirst();
 
 		// 출력
 		System.out.println("{ 배송 대상 주문 목록 테스트 }");
@@ -446,29 +666,29 @@ class CafeApplicationTests {
 
 		/// 검증 ///
 		// 구매자의 이메일로 주문한 상품 찾기
-		Optional<OrdersItem> ordersItemList = ordersItemService.findOrdersItemByOrdersEmail(orders.getEmail());
-		OrdersItem ordersItemBefore2pm = ordersItemList.get();
+		List<OrdersItem> ordersItemList = ordersItemService.findOrdersItemByOrdersEmail(orders.getEmail());
+		OrdersItem ordersItems = ordersItemList.getFirst();
 
 		// 출력
 		System.out.println("{ 배송 대상 주문 목록 테스트 }");
 
-		if (!ordersItemBefore2pm.isCompleted()) {
+		if (!ordersItems.isCompleted()) {
 			System.out.println("배송 완료 상품"
-					+ "\n상품명: " + ordersItemBefore2pm.getOrderProductName()
-					+ "\n상품 수량: " + ordersItemBefore2pm.getQuantity()
-					+ "\n상품 구매 시간: " + ordersItemBefore2pm.getOrderDate());
+					+ "\n상품명: " + ordersItems.getOrderProductName()
+					+ "\n상품 수량: " + ordersItems.getQuantity()
+					+ "\n상품 구매 시간: " + ordersItems.getOrderDate());
 		} else {
 			System.out.println("배송 중인 상품 "
-					+ "\n상품명: " + ordersItemBefore2pm.getOrderProductName()
-					+ "\n상품 수량: " + ordersItemBefore2pm.getQuantity()
-					+ "\n상품 구매 시간: " + ordersItemBefore2pm.getOrderDate());
+					+ "\n상품명: " + ordersItems.getOrderProductName()
+					+ "\n상품 수량: " + ordersItems.getQuantity()
+					+ "\n상품 구매 시간: " + ordersItems.getOrderDate());
 		}
 
 		// 주문 상품이 존재하는지 확인
-		assertThat(ordersItemBefore2pm).isNotNull();
+		assertThat(ordersItems).isNotNull();
 
 		// 주문시간이 오늘 오후 2시 이후임으로 배송중(true) 상태
-		assertThat(ordersItemBefore2pm.isCompleted())
+		assertThat(ordersItems.isCompleted())
 				.isTrue();
 	}
 
@@ -498,7 +718,7 @@ class CafeApplicationTests {
 				.orderProductId(2L)
 				.orderProductName("카페라떼")
 				.quantity(1)
-				.orderDate(LocalDateTime.now().withHour(14).plusMinutes(30))
+				.orderDate(LocalDateTime.now().plusDays(1).withHour(14).plusMinutes(30))
 				.build();
 
 		// DB에 영속화 및 주문목록에 저장
@@ -635,7 +855,7 @@ class CafeApplicationTests {
 		// 주문자로 주문한 상품 가져오기
 		List<OrdersItem> ordersItems = foundOrders.getOrdersItems();
 
-		// 카페라떼 찾아 변수에 저장
+		// 아이스티 찾아 변수에 저장
 		OrdersItem ordersItem = null;
 
 		for (OrdersItem Item : ordersItems) {
@@ -645,9 +865,9 @@ class CafeApplicationTests {
 			}
 		}
 
-		// 찾은 "카페라떼"의 상품 id 획득
+		// 찾은 "아이스티"의 상품 id 획득
 		Long orderItemId = ordersItem.getOrdersItemId();
-		// 수정할 수량 : 2개
+		// 수정할 수량 : 10개
 		int reduceQuantity = 10;
 
 		// 수정 작업
@@ -663,7 +883,7 @@ class CafeApplicationTests {
 		// 존재 확인 및 값 확인
 		assertThat(modifyOrdersItem).isNotNull();
 
-		// 수정된 주문 상품의 수량이 2개인지 확인
+		// 수정된 주문 상품의 수량이 10개인지 확인
 		assertThat(modifyOrdersItem.getQuantity()).isEqualTo(reduceQuantity);
 
 		// DB에서 다시 조회해서 실제 수량이 변경되었는지 확인

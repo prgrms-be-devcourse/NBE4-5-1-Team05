@@ -17,7 +17,6 @@ public interface OrdersRepository extends JpaRepository<Orders, Long> {
     // 삭제
     void deleteByOrderId(Long orderId);
     void deleteByEmail(String email);
-    void deleteByAddress(String address);
 
     // 갯수 세기
     long count();

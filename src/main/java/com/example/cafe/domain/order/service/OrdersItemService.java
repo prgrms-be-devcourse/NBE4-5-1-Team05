@@ -44,14 +44,8 @@ public class OrdersItemService {
         }
     }
 
-    // 구매자로 주문내역 찾기
-//    public OrdersItem findByOrders(Orders orders) {
-//        return ordersItemRepository.findByOrders(orders)
-//                .orElseThrow(() -> new IllegalArgumentException("조회하려는 구매자가 없습니다."));
-//    }
-
     // 구매자 이메일로 모든 구매내역 찾기
-    public Optional<OrdersItem> findOrdersItemByOrdersEmail(String ordersEmail) {
+    public List<OrdersItem> findOrdersItemByOrdersEmail(String ordersEmail) {
         return ordersItemRepository.findOrdersItemByOrdersEmail(ordersEmail);
     }
 
@@ -72,8 +66,12 @@ public class OrdersItemService {
 
     // 주문내역 id로 주문내역 삭제
     public void deleteOrdersItemByOrdersItemId(Long orderItemId) {
-        if (!ordersItemRepository.existsById(orderItemId)) {
+        OrdersItem ordersItem = ordersItemRepository.findByOrdersItemId(orderItemId);
+
+        if (ordersItem == null) {
             System.out.println("주문내역 id에 해당하는 주문내역이 없습니다.");
+        } else if (!ordersItem.isCompleted()) {
+            System.out.println("해당 상품은 이미 배송완료가 되어있습니다.");
         } else {
             ordersItemRepository.deleteById(orderItemId);
         }
@@ -81,31 +79,50 @@ public class OrdersItemService {
 
     // 주문자로 주문내역 삭제
     public void deleteByOrders(Orders orders) {
-        if (orders == null || orders.getOrderId() == null) {
-            System.out.println("주문자 정보에 해당하는 주문내역이 없습니다.");
-        } else {
-            ordersItemRepository.deleteByOrders(orders);
-        }
+        ordersItemRepository.deleteByOrders(orders);
     }
 
     // 주문자 이메일로 주문내역 삭제
-    public void deleteByOrders_Email(String email) {
+    public void deleteByOrdersEmail(String email) {
         Optional<Orders> ordersOp = ordersRepository.findByEmail(email);
 
         if (ordersOp.isEmpty()) {
-            System.out.println("주문자 이메일에 해당하는 주문내역이 없습니다.");
-        } else {
-            Orders orders = ordersOp.get();
-            ordersItemRepository.deleteByOrders(orders);
+            System.out.println("이메일에 해당하는 주문내역이 없습니다.");
         }
-    }
 
-    // 주문 날짜로 주문내역 삭제
-    public void deleteByOrderDate(LocalDateTime orderDate) {
-        if (orderDate == null) {
-            System.out.println("주문 날짜에 해당하는 주문내역이 없습니다.");
+        // 주문된 상품 목록 변수에 저장
+        Orders orders = ordersOp.get();
+        List<OrdersItem> ordersItems = ordersItemRepository.findOrdersItemByOrdersEmail(email);
+
+        if (ordersItems.isEmpty()) {
+            System.out.println("주문자 이메일에 해당하는 주문내역이 없습니다.");
+        }
+
+        // 배송 완료된 주문을 제외한 배송중인 주문 필터링
+        List<OrdersItem> deliveryOrderItems = ordersItems
+                .stream()
+                .filter(OrdersItem::isCompleted)
+                .toList();
+
+        // 주문이 있으면 진행
+        if (deliveryOrderItems.isEmpty()) {
+            System.out.println("삭제할 수 있는 주문이 없습니다.");
         } else {
-            ordersItemRepository.deleteByOrderDate(orderDate);
+
+            // 연관 관계에서 먼저 제거 후 삭제 진행하기
+            for (OrdersItem item : deliveryOrderItems) {
+                orders.getOrdersItems().remove(item);
+                ordersItemRepository.delete(item);
+            }
+
+            // 연관 관계 변경 사항 저장 및 DB 처리
+            ordersRepository.save(orders);
+            ordersItemRepository.flush();
+            System.out.println("배송중인 상품이 정상적으로 삭제되었습니다.");
+
+            // 삭제 후 남은 주문 개수 확인
+            List<OrdersItem> remainingOrders = ordersItemRepository.findOrdersItemByOrdersEmail(email);
+            System.out.println("삭제 후 남은 주문내역: " + remainingOrders.size());
         }
     }
 
@@ -142,18 +159,38 @@ public class OrdersItemService {
             return null;
         }
 
-        // 주문 상품 수량 수정
-        ordersItem.setQuantity(quantity);
+        // 주문내역이 배송 완료일 경우
+        if (ordersItem.isCompleted()) {
+            System.out.println("배송완료된 상품은 수량 수정이 불가능합니다.");
+            return null;
+        } else {
 
-        // 수정된 주문 상품 저장
-        OrdersItem modifiedOrdersItem = ordersItemRepository.save(ordersItem);
+            // 상품 정보 조회
+            Optional<Product> productOp = productService.findByName(ordersItem.getOrderProductName());
 
-        // 수정된 주문 상품을 Optional에 담아 반환
-        return modifiedOrdersItem;
+            // 조회된 상품이 없을 경우
+            if (productOp.isEmpty()) {
+                System.out.println("상품 수량을 수정할 수 없습니다.");
+                return null;
+            }
+            Product product = productOp.get();
+
+            // 수정할 상품의 수량에 따라 상품 가격 계산
+            int calculatedPrice = product.getPrice() * quantity;
+
+            // 주문 상품 수량 수정 + 가격 수정
+            ordersItem.setQuantity(quantity);
+            ordersItem.setOrderProductPrice(calculatedPrice);
+
+            // 수정된 주문 상품 저장
+            OrdersItem modifiedOrdersItem = ordersItemRepository.save(ordersItem);
+
+            // 수정된 주문 상품을 Optional에 담아 반환
+            return modifiedOrdersItem;
+        }
     }
 
-
-    /// 주문 관련 메서드 ///
+    /// 주문 메서드 ///
     // 상품 주문 담기
     public void orderProducts(Orders orders, ArrayList<String> productNames, ArrayList<Integer> quantity) {
 
@@ -167,7 +204,8 @@ public class OrdersItemService {
     public void orderProduct(Orders orders, String productName, int quantity) {
 
         // 상품명으로 Product 정보를 조회하여 변수에 저장
-        Product product = productService.findByName(productName);
+        Optional<Product> productOp = productService.findByName(productName);
+        Product product = productOp.get();
 
         // createOrderItem 메서드에 구매자 정보, 상품, 수량을 보내 객체 생성 후 변수에 저장
         OrdersItem orderedItem = createOrderItem(orders, product, quantity);
@@ -180,12 +218,15 @@ public class OrdersItemService {
     // 구매자 정보와 구매한 상품들을 객체화시켜 orderProduct로 리턴
     private OrdersItem createOrderItem(Orders orders, Product product, int quantity) {
 
+        // 수량에 따라 상품 가격 변동
+        int calculatedPrice = product.getPrice() * quantity;
+
         // 구매한 상품 객체 생성
         return OrdersItem.builder()
                 .orders(orders)
                 .orderProductId(product.getProductId())
                 .orderProductName(product.getName())
-                .orderProductPrice(product.getPrice())
+                .orderProductPrice(calculatedPrice)
                 .quantity(quantity)
                 .build();
     }
@@ -205,32 +246,32 @@ public class OrdersItemService {
     // 배송 상태(배송완료인지 배송중인지) 수정
     public void updateDeliveryStatus() {
 
-        // Date2pm는 오늘 오후 2시
-        LocalDateTime date2pm = LocalDateTime.now().withHour(14).withMinute(0).withSecond(0);
+        // today2pm는 오늘 오후 2시 / yesterday2pm은 어제 오후 2시
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime today2pm = now.withHour(14).withMinute(0).withSecond(0).withNano(0);
+        LocalDateTime yesterday2pm = today2pm.minusDays(1);
 
         // 배송중인 상품 리스트 / 배송완료인 상품 리스트
         List<OrdersItem> deliveryProcessOrders;
         List<OrdersItem> deliveryCompleteOrders;
 
         // 현재 시간이 오후 2시 이전이라면
-        if (LocalDateTime.now().isBefore(date2pm)) {
-            
+        if (LocalDateTime.now().isBefore(today2pm)) {
+
             // 배송중 기준이 전날 오후 2시 이후
             deliveryProcessOrders = ordersItemRepository
                     .findAll().stream()
-                    .filter(ordersItem ->
-                            !ordersItem.getOrderDate()
-                                    .isBefore(date2pm.minusDays(1).plusHours(2)) &&
-                            !ordersItem.getOrderDate()
-                                    .isAfter(LocalDateTime.now())
-                            ).toList();
+                    .filter(ordersItem -> {
+                                LocalDateTime orderTime = ordersItem.getOrderDate();
+                                return orderTime.isAfter(yesterday2pm);
+                            }).toList();
 
             // 배송완료 기준이 전날 오후 2시 이전
             deliveryCompleteOrders = ordersItemRepository
                     .findAll().stream()
                     .filter(ordersItem ->
                             ordersItem.getOrderDate()
-                                    .isBefore(date2pm.minusDays(1)))
+                                    .isBefore(yesterday2pm))
                     .toList();
 
         }
@@ -240,15 +281,17 @@ public class OrdersItemService {
             // 배송중 기준이 오늘 오후 2시 이후
             deliveryProcessOrders = ordersItemRepository
                     .findAll().stream()
-                    .filter(ordersItem ->
-                            !ordersItem.getOrderDate().isBefore(date2pm))
+                    .filter(ordersItem -> {
+                        LocalDateTime orderTime = ordersItem.getOrderDate();
+                        return orderTime.isAfter(today2pm);
+                    })
                     .toList();
 
             // 배송완료 기준이 현재 오후 2시 이전
             deliveryCompleteOrders = ordersItemRepository
                     .findAll().stream()
                     .filter(ordersItem ->
-                            ordersItem.getOrderDate().isBefore(date2pm))
+                            ordersItem.getOrderDate().isBefore(today2pm))
                     .toList();
         }
 
