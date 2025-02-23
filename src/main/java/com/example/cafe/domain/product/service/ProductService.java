@@ -85,20 +85,23 @@ public class ProductService {
     }
 
     // 상품명을 받아 수정
-    public void modifyProductName(Product product, String productName) {
-        product.setName(productName);
-        productRepository.save(product);
-    }
+    public void modifyProduct(Product product, String productName, Integer productPrice, String productImageUrl) {
 
-    // 상품명을 받아 상품가격 수정
-    public void modifyProductPrice(Product product, int productPrice) {
-        product.setPrice(productPrice);
-        productRepository.save(product);
-    }
+        // 상품명 수정
+        if (productName != null) {
+            product.setName(productName);
+        }
 
-    // 상품명을 받아 상품 이미지 수정
-    public void modifyProductImage(Product product, String imageURL) {
-        product.setImageURL(imageURL);
+        // 상품 가격 수정
+        if (productPrice != null) {
+            product.setPrice(productPrice);
+        }
+
+        // 상품 이미지 수정
+        if (productImageUrl != null) {
+            product.setImageURL(productImageUrl);
+        }
+
         productRepository.save(product);
     }
 

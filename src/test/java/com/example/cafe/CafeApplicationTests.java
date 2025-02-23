@@ -186,12 +186,6 @@ class CafeApplicationTests {
 	}
 
 	@Test
-	@DisplayName("상품 id로 상품 삭제")
-	void deleteProductById() {
-
-	}
-
-	@Test
 	@DisplayName("특정 상품의 이름으로 상품 삭제")
 	void deleteProduct() {
 
@@ -202,7 +196,94 @@ class CafeApplicationTests {
 		productService.deleteByName("핫도그");
 
 		/// 검증 ///
+		// 출력
+		List<Product> ProductList = productRepository.findAll();
+
+		System.out.println("{ 상품 목록 }");
+		for (Product product : ProductList) {
+			System.out.println("상품명: " + product.getName());
+			System.out.println("가격: " + product.getPrice());
+			System.out.println("---------------------------------------");
+		}
+
 		assertThat(productRepository.findByName("핫도그")).isEmpty();
+	}
+
+	@Test
+	@DisplayName("상품 가격으로 상품 삭제")
+	void deleteProductByPrice() {
+
+		// 샘플 상품 데이터 추가
+		productService.add("초코칩 쿠키", 2500, "임시");
+
+		// 삭제
+		productService.deleteByPrice(2500);
+
+		/// 검증 ///
+		// 출력
+		List<Product> ProductList = productRepository.findAll();
+
+		System.out.println("{ 상품 목록 }");
+		for (Product product : ProductList) {
+			System.out.println("상품명: " + product.getName());
+			System.out.println("가격: " + product.getPrice());
+			System.out.println("---------------------------------------");
+		}
+
+		assertThat(productRepository.findByName("초코칩 쿠키")).isEmpty();
+
+	}
+
+	@Test
+	@DisplayName("상품명을 받아 상품 수정")
+	void modifyProductByProduct() {
+		
+		// 샘플 상품 데이터 추가
+		productService.add("아이스 바닐라 라떼", 6000, "임시");
+
+		// 상품명 수정
+		Product product = productService.findByName("아이스 바닐라 라떼");
+		productService.modifyProduct(product, "아인슈페너", 50000, null);
+
+		/// 검증 ///
+		// 출력
+		List<Product> ProductList = productRepository.findAll();
+
+		System.out.println("{ 상품 목록 }");
+		for (Product products : ProductList) {
+			System.out.println("상품명: " + products.getName());
+			System.out.println("상품 가격: " + products.getPrice());
+			System.out.println("상품 이미지: " + products.getImageURL());
+			System.out.println("---------------------------------------");
+		}
+
+		Product modifiedProduct = productService.findByName("아인슈페너");
+
+		// 상품명, 상품 가격, 상품 이미지(수정 안함) 확인
+		assertThat(modifiedProduct).isNotNull();
+		assertThat(modifiedProduct.getName()).isEqualTo("아인슈페너");
+		assertThat(modifiedProduct.getPrice()).isEqualTo(50000);
+		assertThat(modifiedProduct.getImageURL()).isEqualTo("임시");
+		
+	}
+
+	@Test
+	@DisplayName("상품명을 받아 상품 가격 수정")
+	void modifyProductByProductPrice() {
+
+		// 샘플 상품 데이터 추가
+		productService.add("아이스 바닐라 라떼", 6000, "임시");
+
+		// 새 상품명
+		String newProductName = "아인슈페너";
+
+		// 새 상품 가격
+		int newProductPrice = 6500;
+
+		// 상품명 수정
+		Product product = productService.findByName("아이스 바닐라 라떼");
+//		productService.modifyProductName(, "");
+
 	}
 
 	@Test
