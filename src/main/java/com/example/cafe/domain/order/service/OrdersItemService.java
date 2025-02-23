@@ -66,8 +66,12 @@ public class OrdersItemService {
 
     // 주문내역 id로 주문내역 삭제
     public void deleteOrdersItemByOrdersItemId(Long orderItemId) {
-        if (!ordersItemRepository.existsById(orderItemId)) {
+        OrdersItem ordersItem = ordersItemRepository.findByOrdersItemId(orderItemId);
+
+        if (ordersItem == null) {
             System.out.println("주문내역 id에 해당하는 주문내역이 없습니다.");
+        } else if (!ordersItem.isCompleted()) {
+            System.out.println("해당 상품은 이미 배송완료가 되어있습니다.");
         } else {
             ordersItemRepository.deleteById(orderItemId);
         }
@@ -83,33 +87,42 @@ public class OrdersItemService {
         Optional<Orders> ordersOp = ordersRepository.findByEmail(email);
 
         if (ordersOp.isEmpty()) {
-            System.out.println("주문자 이메일에 해당하는 주문내역이 없습니다.");
-        } else {
-            Orders orders = ordersOp.get();
-
-            // 삭제 전 아이템 개수 확인
-            List<OrdersItem> beforeDelete = ordersItemRepository.findOrdersItemByOrdersEmail(email);
-            System.out.println("삭제 전 주문 상품 갯수: " + beforeDelete.size());
-
-            // 강제로 ordersItems 비우기 + 변경 감지를 위해 save 호출
-            orders.getOrdersItems().clear();
-            ordersRepository.save(orders);
-
-            // DELETE 실행
-//            ordersItemRepository.deleteByOrders(orders);
-
-            // 삭제 후 아이템 개수 확인
-            List<OrdersItem> afterDelete = ordersItemRepository.findOrdersItemByOrdersEmail(email);
-            System.out.println("삭제 후 주문 상품 갯수: " + afterDelete.size());
+            System.out.println("이메일에 해당하는 주문내역이 없습니다.");
         }
-    }
 
-    // 주문 날짜로 주문내역 삭제
-    public void deleteByOrderDate(LocalDateTime orderDate) {
-        if (orderDate == null) {
-            System.out.println("주문 날짜에 해당하는 주문내역이 없습니다.");
+        // 주문된 상품 목록 변수에 저장
+        Orders orders = ordersOp.get();
+        List<OrdersItem> ordersItems = ordersItemRepository.findOrdersItemByOrdersEmail(email);
+
+        if (ordersItems.isEmpty()) {
+            System.out.println("주문자 이메일에 해당하는 주문내역이 없습니다.");
+        }
+
+        // 배송 완료된 주문을 제외한 배송중인 주문 필터링
+        List<OrdersItem> deliveryOrderItems = ordersItems
+                .stream()
+                .filter(OrdersItem::isCompleted)
+                .toList();
+
+        // 주문이 있으면 진행
+        if (deliveryOrderItems.isEmpty()) {
+            System.out.println("삭제할 수 있는 주문이 없습니다.");
         } else {
-            ordersItemRepository.deleteByOrderDate(orderDate);
+
+            // 연관 관계에서 먼저 제거 후 삭제 진행하기
+            for (OrdersItem item : deliveryOrderItems) {
+                orders.getOrdersItems().remove(item);
+                ordersItemRepository.delete(item);
+            }
+
+            // 연관 관계 변경 사항 저장 및 DB 처리
+            ordersRepository.save(orders);
+            ordersItemRepository.flush();
+            System.out.println("배송중인 상품이 정상적으로 삭제되었습니다.");
+
+            // 삭제 후 남은 주문 개수 확인
+            List<OrdersItem> remainingOrders = ordersItemRepository.findOrdersItemByOrdersEmail(email);
+            System.out.println("삭제 후 남은 주문내역: " + remainingOrders.size());
         }
     }
 
@@ -146,14 +159,20 @@ public class OrdersItemService {
             return null;
         }
 
-        // 주문 상품 수량 수정
-        ordersItem.setQuantity(quantity);
+        // 주문내역이 배송 완료일 경우
+        if (ordersItem.isCompleted()) {
+            System.out.println("배송완료된 상품은 수량 수정이 불가능합니다.");
+            return null;
+        } else {
+            // 주문 상품 수량 수정
+            ordersItem.setQuantity(quantity);
 
-        // 수정된 주문 상품 저장
-        OrdersItem modifiedOrdersItem = ordersItemRepository.save(ordersItem);
+            // 수정된 주문 상품 저장
+            OrdersItem modifiedOrdersItem = ordersItemRepository.save(ordersItem);
 
-        // 수정된 주문 상품을 Optional에 담아 반환
-        return modifiedOrdersItem;
+            // 수정된 주문 상품을 Optional에 담아 반환
+            return modifiedOrdersItem;
+        }
     }
 
 

@@ -9,6 +9,7 @@ import com.example.cafe.domain.order.service.OrdersService;
 import com.example.cafe.domain.product.entity.Product;
 import com.example.cafe.domain.product.repository.ProductRepository;
 import com.example.cafe.domain.product.service.ProductService;
+import jakarta.persistence.PersistenceContext;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ActiveProfiles("test")
 @Transactional
 @Configuration
+@PersistenceContext
 class CafeApplicationTests {
 
 	@Autowired
@@ -342,6 +344,7 @@ class CafeApplicationTests {
 				.orderProductId(2L)
 				.orderProductName("카페라떼")
 				.quantity(2)
+				.completed(true)
 				.build();
 
 		// 주문하기 및 주문 내역 id 획득
@@ -374,6 +377,14 @@ class CafeApplicationTests {
 		// 주문하기
 		ordersService.startOrders(productNames, quantity, email, address, postCode);
 
+		// 배송 상태를 배송중(true)로 설정
+		List<OrdersItem> ordersItemsForTrue = ordersItemRepository.findOrdersItemByOrdersEmail(email);
+
+		for (OrdersItem ordersItem : ordersItemsForTrue) {
+			ordersItem.setCompleted(true);
+			ordersItemRepository.save(ordersItem);
+		}
+
 		// 이메일 기반으로 주문 삭제
 		ordersItemService.deleteByOrdersEmail(email);
 
@@ -384,7 +395,7 @@ class CafeApplicationTests {
 		System.out.println("{ 주문된 상품 목록 }");
 		for (OrdersItem ordersItem : ordersItemsList) {
 			System.out.println("이메일: " + ordersItem.getOrders().getEmail());
-			System.out.println("상품명" + ordersItem.getOrderProductName());
+			System.out.println("상품명: " + ordersItem.getOrderProductName());
 			System.out.println("상품 갯수: " + ordersItem.getQuantity());
 			System.out.println("---------------------------------------");
 		}
@@ -393,6 +404,43 @@ class CafeApplicationTests {
 		List<OrdersItem> ordersItems = ordersItemRepository.findOrdersItemByOrdersEmail(email);
 		System.out.println("TDD 검증용 OrdersItem 갯수: " + ordersItems.size());
 		assertThat(ordersItems).isEmpty();
+	}
+
+	@Test
+	@DisplayName("이메일로 주문을 찾아 삭제 후 확인(주문이 이미 배송 완료일 경우)")
+	void deleteOrdersItemByOrdersEmailFail() {
+
+		// 주문할 상품 이름, 이메일, 주소, 수량, 우편번호 저장
+		ArrayList<String> productNames = new ArrayList<>();
+		productNames.add("아이스티");
+		String email = "test20@gmail.com";
+		String address = "테스트용 주소20";
+		ArrayList<Integer> quantity = new ArrayList<>();
+		quantity.add(2);
+		int postCode = 3782543;
+
+		// 주문하기
+		ordersService.startOrders(productNames, quantity, email, address, postCode);
+
+		// 이메일 기반으로 주문 삭제
+		ordersItemService.deleteByOrdersEmail(email);
+
+		/// 검증 ///
+		// 주문한 상품들 모두 출력
+		List<OrdersItem> ordersItemsList = ordersItemRepository.findAll();
+
+		System.out.println("{ 주문된 상품 목록 }");
+		for (OrdersItem ordersItem : ordersItemsList) {
+			System.out.println("이메일: " + ordersItem.getOrders().getEmail());
+			System.out.println("상품명: " + ordersItem.getOrderProductName());
+			System.out.println("상품 갯수: " + ordersItem.getQuantity());
+			System.out.println("---------------------------------------");
+		}
+
+		// DB에서 주문 상품 아이템이 그대로 있는지 확인
+		List<OrdersItem> ordersItems = ordersItemRepository.findOrdersItemByOrdersEmail(email);
+		System.out.println("TDD 검증용 OrdersItem 갯수: " + ordersItems.size());
+		assertThat(ordersItems).hasSize(1);
 	}
 
 	@Test

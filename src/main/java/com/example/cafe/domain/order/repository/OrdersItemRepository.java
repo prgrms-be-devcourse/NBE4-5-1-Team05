@@ -20,7 +20,6 @@ public interface OrdersItemRepository extends JpaRepository<OrdersItem, Long> {
     // 삭제
     void deleteOrdersItemByOrdersItemId(Long orderItemId);
     void deleteByOrders(Orders orders);
-    void deleteByOrderDate(LocalDateTime orderDate);
 
     // 갯수 세기
     long count();
