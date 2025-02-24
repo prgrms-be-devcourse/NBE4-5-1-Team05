@@ -20,22 +20,48 @@
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-            width: 350px;
+            width: 400px;
             text-align: center;
         }
 
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            width: 100%;
+        }
+
+        label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
         input {
-            width: 90%;
+            width: calc(100% - 2px);
             padding: 10px;
-            margin: 10px 0;
             border: 1px solid #ddd;
             border-radius: 4px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+
+        input[type="number"] {
+            appearance: textfield;
+            -moz-appearance: textfield;
+        }
+
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
         }
 
         .submit-button {
             background-color: #28a745;
             color: white;
-            padding: 10px 20px;
+            padding: 12px;
             border-radius: 5px;
             border: none;
             cursor: pointer;
@@ -47,38 +73,101 @@
         .submit-button:hover {
             background-color: #218838;
         }
+
+        /*  주문 상품 스타일 */
+        .order-items {
+            width: 90%;
+            max-width:400px;
+            margin: 15px auto;
+            padding: 15px;
+            border-radius: 5px;
+            background: #f1f1f1;
+            text-align: center;
+        }
+
+        .order-items h3 {
+            margin-top: 0;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        /* ✅ 테이블 스타일 개선 */
+        .order-items table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 5px;
+            overflow: hidden;
+            table-layout: fixed; /* ✅ 테이블 셀 크기 균일하게 유지 */
+        }
+
+        .order-items th, .order-items td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+            text-align: center; /* ✅ 셀 내 텍스트 중앙 정렬 */
+            width: 50%; /* ✅ 두 열이 균등한 크기를 갖도록 설정 */
+        }
+
+        .order-items th {
+            background-color: #007bff;
+            color: white;
+            font-weight: bold;
+        }
+
+        .order-items tr:last-child td {
+            border-bottom: none;
+        }
     </style>
 </head>
 <body>
 
-<h2>주문 정보 입력</h2>
+<h2>📝 주문 정보 입력</h2>
 
-<!--  주문 정보 입력 Form -->
-<form action="/order/service" method="post" th:object="${orderForm}">
-    <!-- 주문자 정보 -->
-    <label>이메일:</label>
-    <input type="email" th:field="*{email}" required>
+<div class="form-container">
+    <!-- 주문 정보 입력 Form -->
+    <form action="/order/submit" method="post" th:object="${orderForm}">
 
-    <label>주소:</label>
-    <input type="text" th:field="*{address}" required>
+        <!-- 주문자 정보 -->
+        <div class="form-group">
+            <label for="email">이메일</label>
+            <input type="email" id="email" th:field="*{email}" required>
+        </div>
 
-    <label>우편번호:</label>
-    <input type="number" th:field="*{postCode}" required>
+        <div class="form-group">
+            <label for="address">주소</label>
+            <input type="text" id="address" th:field="*{address}" required>
+        </div>
 
-    <h3>🛒 주문 상품</h3>
-    <ul>
-        <!--  주문 상품 리스트 -->
-        <li th:each="item, stat : *{items}">
-            <input type="hidden" th:field="*{items[__${stat.index}__].productId}">
-            <input type="hidden" th:field="*{items[__${stat.index}__].quantity}">
-            <span th:text="${item.productId}"></span> -
-            <span th:text="${item.quantity}"></span>개
-        </li>
-    </ul>
+        <div class="form-group">
+            <label for="postCode">우편번호</label>
+            <input type="number" id="postCode" th:field="*{postCode}" required>
+        </div>
 
-    <!--  주문 완료 버튼 -->
-    <button type="submit" class="submit-button">주문 완료</button>
-</form>
+        <!-- 주문한 상품 목록 -->
+        <div class="order-items">
+            <h3>주문 상품</h3>
+            <table>
+                <thead>
+                <tr>
+                    <th>상품명</th>
+                    <th>수량</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="item, stat : *{items}">
+                    <input type="hidden" th:field="*{items[__${stat.index}__].productId}">
+                    <input type="hidden" th:field="*{items[__${stat.index}__].quantity}">
+                    <td th:text="${item.productName}"></td>
+                    <td th:text="${item.quantity} + '개'"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 주문 완료 버튼 -->
+        <button type="submit" class="submit-button">주문 완료</button>
+    </form>
+</div>
 
 </body>
 </html>

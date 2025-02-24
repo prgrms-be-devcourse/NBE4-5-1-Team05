@@ -5,14 +5,14 @@ import com.example.cafe.domain.order.service.OrdersItemService;
 import com.example.cafe.domain.order.service.OrdersService;
 import com.example.cafe.domain.product.entity.Product;
 import com.example.cafe.domain.product.service.ProductService;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +28,7 @@ public class AplV1OrdersController {
     private final ProductService productService;
 
     @Getter
+    @Setter
     @AllArgsConstructor
     @NoArgsConstructor
     public static class OrderForm {
@@ -38,10 +39,12 @@ public class AplV1OrdersController {
     }
 
     @Getter
+    @Setter
     @AllArgsConstructor
     @NoArgsConstructor
     public static class OrderItemDto {
         private Long productId;
+        private String productName;
         private int quantity;
     }
 
@@ -54,14 +57,13 @@ public class AplV1OrdersController {
 
     @PostMapping("/order/form")
     public String orderForm(@ModelAttribute OrderForm orderForm, Model model) {
-        System.out.println("orderForm: " + orderForm);
+        System.out.println("✅ Received orderForm: " + orderForm);
         System.out.println("📦 orderForm items: " + orderForm.getItems());
         if (orderForm.getItems() == null || orderForm.getItems().isEmpty()) {
             model.addAttribute("errorMessage", "장바구니가 비어 있습니다.");
             return "redirect:/";
         }
         model.addAttribute("orderForm", orderForm);
-        System.out.println("orderForm2: " + orderForm);
         return "domain/order/order-form"; // 주문 정보 입력 페이지 렌더링
     }
 

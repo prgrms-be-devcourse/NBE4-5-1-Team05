@@ -47,6 +47,21 @@
             color: white;
         }
 
+        .admin-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #e9ecef; /* 배경색 - 너무 튀지 않게 설정 */
+            color: #495057; /* 어두운 회색 */
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: bold;
+            text-decoration: none;
+            transition: 0.3s;
+            box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
         /* 이미지 스타일 */
         .product-image {
             width: 80px;
@@ -176,12 +191,14 @@
         <div id="cart-items" class="cart-items-container"></div>
 
         <form id="order-form" action="/order/form" method="post">
-            <divg id="cart-inputs"></divg> <!--  장바구니 데이터를 저장할 input hidden 필드 -->
+            <div id="cart-inputs"></div> <!--  장바구니 데이터를 저장할 input hidden 필드 -->
             <button type="submit" class="order-button">주문하기</button>
         </form>
     </div>
 </div>
+<!-- 상품 추가 버튼 (표 하단으로 이동) -->
 
+<a href="/admin" class="admin-button">admin</a>
 <script>
     let cart = {};
 
@@ -194,7 +211,7 @@
             let quantityElement = row.querySelector('.quantity');
 
             if (!cart[id]) {
-                cart[id] = { name: name, price: price, quantity: 0, productId: id };
+                cart[id] = { name: name, price: price, quantity: 0, productId: id, productName: name };
             }
             cart[id].quantity++;
             quantityElement.textContent = cart[id].quantity;
@@ -221,7 +238,10 @@
 
     function updateCartUI() {
         let cartContainer = document.getElementById("cart-items");
+        let cartInputsContainer = document.getElementById("cart-inputs"); //  form input 추가
         cartContainer.innerHTML = "";
+        cartInputsContainer.innerHTML = ""; //  기존 데이터 삭제
+
         let totalPrice = 0;
 
         Object.values(cart).forEach(item => {
@@ -230,6 +250,19 @@
             cartItem.innerHTML = `<span>${item.name} x ${item.quantity}</span><span>${item.price * item.quantity} 원</span>`;
             cartContainer.appendChild(cartItem);
             totalPrice += item.price * item.quantity;
+
+            //  주문 데이터 추가 (배열 인덱스 없이)
+            let index = 0;
+            cartInputsContainer.innerHTML = "";  // 기존 데이터 초기화
+
+            Object.values(cart).forEach(item => {
+                cartInputsContainer.innerHTML += `
+        <input type="hidden" name="items[${index}].productId" value="${item.productId}">
+        <input type="hidden" name="items[${index}].productName" value="${item.productName}">
+        <input type="hidden" name="items[${index}].quantity" value="${item.quantity}">
+    `;
+                index++;
+            });
         });
 
         if (Object.keys(cart).length === 0) {
