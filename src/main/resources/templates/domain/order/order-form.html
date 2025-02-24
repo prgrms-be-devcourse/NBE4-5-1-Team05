@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>주문 정보 입력</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            background-color: #f8f9fa;
+            margin: 0;
+        }
+
+        .form-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            width: 350px;
+            text-align: center;
+        }
+
+        input {
+            width: 90%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .submit-button {
+            background-color: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            transition: 0.3s;
+            width: 100%;
+        }
+
+        .submit-button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+
+<h2>주문 정보 입력</h2>
+
+<!--  주문 정보 입력 Form -->
+<form action="/order/service" method="post" th:object="${orderForm}">
+    <!-- 주문자 정보 -->
+    <label>이메일:</label>
+    <input type="email" th:field="*{email}" required>
+
+    <label>주소:</label>
+    <input type="text" th:field="*{address}" required>
+
+    <label>우편번호:</label>
+    <input type="number" th:field="*{postCode}" required>
+
+    <h3>🛒 주문 상품</h3>
+    <ul>
+        <!--  주문 상품 리스트 -->
+        <li th:each="item, stat : *{items}">
+            <input type="hidden" th:field="*{items[__${stat.index}__].productId}">
+            <input type="hidden" th:field="*{items[__${stat.index}__].quantity}">
+            <span th:text="${item.productId}"></span> -
+            <span th:text="${item.quantity}"></span>개
+        </li>
+    </ul>
+
+    <!--  주문 완료 버튼 -->
+    <button type="submit" class="submit-button">주문 완료</button>
+</form>
+
+</body>
+</html>

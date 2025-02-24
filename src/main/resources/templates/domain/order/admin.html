@@ -80,6 +80,21 @@
             transition: 0.3s;
         }
 
+        .admin-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #e9ecef; /* 배경색 - 너무 튀지 않게 설정 */
+            color: #495057; /* 어두운 회색 */
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: bold;
+            text-decoration: none;
+            transition: 0.3s;
+            box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
         .add-product-button:hover {
             background-color: #23272b; /* 호버 시 조금 더 어두운 색상 */
         }
@@ -117,5 +132,6 @@
 <!-- 상품 추가 버튼 (표 하단으로 이동) -->
 <a href="/admin/add" class="add-product-button">+ 상품 추가</a>
 
+<a href="/" class="admin-button">home</a>
 </body>
 </html>

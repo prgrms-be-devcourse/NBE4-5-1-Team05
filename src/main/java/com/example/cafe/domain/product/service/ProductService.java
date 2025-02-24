@@ -112,6 +112,26 @@ public class ProductService {
         productRepository.save(product);
     }
 
+    public void modifyProduct(Long id, String productName, Integer productPrice, String productImageUrl) {
+        Product product = findByProductId(id).get();
+        // 상품명 수정
+        if (productName != null) {
+            product.setName(productName);
+        }
+
+        // 상품 가격 수정
+        if (productPrice != null) {
+            product.setPrice(productPrice);
+        }
+
+        // 상품 이미지 수정
+        if (productImageUrl != null) {
+            product.setImageURL(productImageUrl);
+        }
+
+        productRepository.save(product);
+    }
+
     /// 기능 메서드 ///
     // 메뉴 담기
     public Product add(String name, int price, String imageURL) {

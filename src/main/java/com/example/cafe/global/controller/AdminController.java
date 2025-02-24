@@ -100,4 +100,26 @@ public class AdminController {
         }
     }
 
+    @PostMapping("/edit/{id}")
+    public String editProduct(
+            @PathVariable Long id,
+            @Valid @ModelAttribute("product") ProductForm form,
+            BindingResult bindingResult,
+            Model model
+    ) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("errorMessage", bindingResult.getFieldError().getDefaultMessage());
+            model.addAttribute("productId", id); // 수정 페이지 유지
+            return "domain/order/admin-edit";
+        }
+
+        productService.modifyProduct(id, form.getName(), form.getPrice(), form.getImageURL());
+        return "redirect:/admin";
+    }
+
+    @GetMapping("/delete/{id}")
+    public String deleteProduct(@PathVariable Long id) {
+        productService.deleteByProductId(id);
+        return "redirect:/admin";
+    }
 }
