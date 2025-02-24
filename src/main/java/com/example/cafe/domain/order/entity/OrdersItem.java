@@ -53,7 +53,7 @@ public class OrdersItem {
     @LastModifiedDate
     private LocalDateTime modifiedDate;
 
-    // 배송완료(false) / 배송중(true) 상태 설정
+    // 배송 전(false) / 배송 중(true) 상태 설정
     @Setter
     @Column(columnDefinition = "boolean default false")
     private boolean completed;

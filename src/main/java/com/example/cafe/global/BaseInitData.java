@@ -41,9 +41,10 @@ public class BaseInitData {
     public void productInit() {
 
         // 샘플 데이터 생성 (상품 담아두기)
-        productService.add("아메리카노", 4500, "/images/img.jpg");
-        productService.add("카페라떼", 5500, "/images/img.jpg");
-        productService.add("아이스티", 3500, "/images/img.jpg");
+        productService.add("에스프레소 디카페인", 20000, "/images/Espresso_Decaf_SW.jpg");
+        productService.add("이디오피아 예가체프", 19000, "/images/Ethiopia_Yirgacheff.jpg");
+        productService.add("하우스 블렌드", 18000, "/images/House_Blend.jpg");
+        productService.add("수마트라 만델링 다크", 25000, "/images/Sumatra_Dark.jpg");
 
     }
 
@@ -56,15 +57,16 @@ public class BaseInitData {
         Orders o3 = ordersService.add("banana9876@google.com", "경기도 고양시", 86452);
 
         // 샘플 데이터 생성 (주문서 작성)
-        ordersItemService.orderProduct(o1, "아메리카노", 1);
-        ordersItemService.orderProduct(o2, "아메리카노", 2);
-        ordersItemService.orderProduct(o3, "카페라떼", 1);
+        ordersItemService.orderProduct(o1, "하우스 블렌드", 1);
+        ordersItemService.orderProduct(o2, "하우스 블렌드", 2);
+        ordersItemService.orderProduct(o3, "에스프레소 디카페인", 1);
 
         // 샘플 데이터에 시간 주입
         o1.getOrdersItems().get(0).setOrderDate(LocalDate.now().minusDays(1).atStartOfDay());
         o3.getOrdersItems().get(0).setOrderDate(LocalDate.now().minusDays(2).atStartOfDay());
 
         // 샘플 데이터에 배송 상태 주입
-        o2.getOrdersItems().get(0).setCompleted(true);
+        o1.getOrdersItems().get(0).setCompleted(true);
+        o3.getOrdersItems().get(0).setCompleted(true);
     }
 }

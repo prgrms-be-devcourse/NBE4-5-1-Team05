@@ -98,7 +98,7 @@ public class OrdersItemService {
             System.out.println("주문자 이메일에 해당하는 주문내역이 없습니다.");
         }
 
-        // 배송 완료된 주문을 제외한 배송중인 주문 필터링
+        // 배송 중인 상품을 제외한 배송 전인 주문 필터링
         List<OrdersItem> deliveryOrderItems = ordersItems
                 .stream()
                 .filter(OrdersItem::isCompleted)
@@ -159,7 +159,7 @@ public class OrdersItemService {
             return null;
         }
 
-        // 주문내역이 배송 완료일 경우
+        // 주문내역이 배송 중일 경우
         if (ordersItem.isCompleted()) {
             System.out.println("배송완료된 상품은 수량 수정이 불가능합니다.");
             return null;
@@ -243,74 +243,28 @@ public class OrdersItemService {
         processDelivery();
     }
 
-    // 배송 상태(배송완료인지 배송중인지) 수정
+    // 배송 상태(배송 전인지 배송 중인지) 수정
     public void updateDeliveryStatus() {
 
-        // today2pm는 오늘 오후 2시 / yesterday2pm은 어제 오후 2시
+        // today2pm는 오늘 오후 2시
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime today2pm = now.withHour(14).withMinute(0).withSecond(0).withNano(0);
-        LocalDateTime yesterday2pm = today2pm.minusDays(1);
 
-        // 배송중인 상품 리스트 / 배송완료인 상품 리스트
-        List<OrdersItem> deliveryProcessOrders;
-        List<OrdersItem> deliveryCompleteOrders;
+        // 배송 중으로 변경할 주문 리스트 (오후 2시 이전에 주문된 상품)
+        List<OrdersItem> deliveryStartOrders = ordersItemRepository
+                .findAll().stream()
+                .filter(ordersItem ->
+                        ordersItem.getOrderDate().isBefore(today2pm) && !ordersItem.isCompleted()
+                ).toList();
 
-        // 현재 시간이 오후 2시 이전이라면
-        if (LocalDateTime.now().isBefore(today2pm)) {
-
-            // 배송중 기준이 전날 오후 2시 이후
-            deliveryProcessOrders = ordersItemRepository
-                    .findAll().stream()
-                    .filter(ordersItem -> {
-                                LocalDateTime orderTime = ordersItem.getOrderDate();
-                                return orderTime.isAfter(yesterday2pm);
-                            }).toList();
-
-            // 배송완료 기준이 전날 오후 2시 이전
-            deliveryCompleteOrders = ordersItemRepository
-                    .findAll().stream()
-                    .filter(ordersItem ->
-                            ordersItem.getOrderDate()
-                                    .isBefore(yesterday2pm))
-                    .toList();
-
-        }
-        // 현재 시간이 오후 2시 이후라면
-        else {
-
-            // 배송중 기준이 오늘 오후 2시 이후
-            deliveryProcessOrders = ordersItemRepository
-                    .findAll().stream()
-                    .filter(ordersItem -> {
-                        LocalDateTime orderTime = ordersItem.getOrderDate();
-                        return orderTime.isAfter(today2pm);
-                    })
-                    .toList();
-
-            // 배송완료 기준이 현재 오후 2시 이전
-            deliveryCompleteOrders = ordersItemRepository
-                    .findAll().stream()
-                    .filter(ordersItem ->
-                            ordersItem.getOrderDate().isBefore(today2pm))
-                    .toList();
-        }
-
-        // 배송 상태 업데이트
-        // 배송중(true)으로 수정
-        for (OrdersItem ordersItem : deliveryProcessOrders) {
+        // 배송 중(true)으로 상태 업데이트
+        for (OrdersItem ordersItem : deliveryStartOrders) {
             ordersItem.setCompleted(true);
             ordersItemRepository.save(ordersItem);
         }
 
-        // 배송완료(false)로 수정
-        for (OrdersItem ordersItem : deliveryCompleteOrders) {
-            ordersItem.setCompleted(false);
-            ordersItemRepository.save(ordersItem);
-        }
-
         // 확인용 출력
-        System.out.println("모든 배송중 상품: " + deliveryCompleteOrders.size());
-        System.out.println("모든 배송완료 상품: " + deliveryCompleteOrders.size());
+        System.out.println("모든 배송 중 상품: " + deliveryStartOrders.size());
     }
 
     // 주문 조회 및 배송 처리
@@ -338,31 +292,10 @@ public class OrdersItemService {
     // 호출하는 시간 범위 처리
     private void processDelivery() {
 
-        // now는 현재시간, date2pm은 오늘 오후 2시
-        LocalDateTime now = LocalDateTime.now();
-        LocalDateTime date2pm = now.withHour(14).withMinute(0).withSecond(0);
-
-        // 배송중 시작 시간 / 배송중 종료 시간
-        LocalDateTime startDateDeliveryProcess;
-        LocalDateTime endDateDeliveryProcess;
-
-        // 현재 시간이 오후 2시 이전이라면
-        if (now.isBefore(date2pm)) {
-            // 배송중 시작 시간은 전날 오후 2시 이후
-            startDateDeliveryProcess = date2pm.minusDays(1).plusHours(2);
-            // 배송중 종료 시간은 오늘 오후 2시
-            endDateDeliveryProcess = now;
-        }
-        // 현재 시간이 오후 2시 이후라면
-        else {
-            // 배송중 시작 시간은 오늘 오후 2시 이후
-            startDateDeliveryProcess = date2pm;
-            // 배송중 종료 시간은 다음날 자정
-            endDateDeliveryProcess = date2pm.plusDays(1).withHour(0).withMinute(0).withSecond(0);
-        }
-
-        // 배송 주문 목록 가져오기
-        List<OrdersItem> deliveryProcessItems = findOrdersDuring2pm(startDateDeliveryProcess, endDateDeliveryProcess);
+        // 배송 전인 주문 목록 가져오기
+        List<OrdersItem> deliveryProcessItems = ordersItemRepository.findAll().stream()
+                .filter(ordersItem -> !ordersItem.isCompleted())
+                .toList();
 
         // 콘솔 출력용 배송 처리
         if (deliveryProcessItems.isEmpty()) {
@@ -374,7 +307,6 @@ public class OrdersItemService {
             System.out.println("- 배송할 주문 내역 -");
 
             for (OrdersItem ordersItem : deliveryProcessItems) {
-                System.out.println("------------------------------");
                 System.out.println("구매자 이메일: " + ordersItem.getOrders().getEmail());
                 System.out.println("<구매 상품 정보>");
                 System.out.println("- 상품명: " + ordersItem.getOrderProductName());
