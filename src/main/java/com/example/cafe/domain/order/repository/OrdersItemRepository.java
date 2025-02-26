@@ -23,4 +23,6 @@ public interface OrdersItemRepository extends JpaRepository<OrdersItem, Long> {
 
     // 갯수 세기
     long count();
+
+    List<OrdersItem> findAllByCompleted(boolean completed);
 }

@@ -67,8 +67,8 @@
 <h2>🚚 배송 상태 확인</h2>
 
 <!-- 배송 중인 주문이 없을 경우 -->
-<p class="no-orders" th:if="${#lists.isEmpty(shippingOrders)}">현재 배송 중인 주문이 없습니다.</p>
-
+<!--<p class="no-orders" th:if="${#lists.isEmpty(shippingOrders)}">현재 배송 중인 주문이 없습니다.</p>-->
+<p class="no-orders" th:if="${shippingOrders == null or #lists.isEmpty(shippingOrders)}">현재 배송 중인 주문이 없습니다.</p>
 <!-- 배송 중인 주문이 있을 경우 테이블 표시 -->
 <table th:if="${not #lists.isEmpty(shippingOrders)}">
     <thead>
@@ -84,7 +84,8 @@
         <td th:text="${order.ordersItemId}"></td>
         <td th:text="${order.orderProductName}"></td>
         <td th:text="${order.quantity} + '개'"></td>
-        <td th:text="${order.isCompleted() ? '배송 완료' : '배송 중'}"></td> <!-- ✅ 수정된 부분 -->
+        <td th:text="${order.completed != null ? (order.completed ? '배송 완료' : '배송 중') : '알 수 없음'}"></td>
+<!--        <td th:text="${order.isCompleted() ? '배송 완료' : '배송 중'}"></td> &lt;!&ndash; ✅ 수정된 부분 &ndash;&gt;-->
     </tr>
     </tbody>
 </table>

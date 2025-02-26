@@ -55,8 +55,17 @@ public class OrdersItemService {
     }
 
     // 구매내역의 배송 상태 값으로 찾기
-    public Optional<OrdersItem> findOrdersItemByCompleted(boolean completed) {
-        return ordersItemRepository.findOrdersItemByCompleted(completed);
+//    public Optional<OrdersItem> findOrdersItemByCompleted(boolean completed) {
+//        return ordersItemRepository.findOrdersItemByCompleted(completed);
+//    }
+    public List<OrdersItem> findOrdersItemByCompleted(boolean completed) {
+        try {
+            return ordersItemRepository.findAllByCompleted(completed);
+        } catch (Exception e) {
+            // 예외 처리 및 로깅
+            e.printStackTrace(); // 또는 로깅 라이브러리 사용
+            return null; // 또는 빈 리스트 반환: return Collections.emptyList();
+        }
     }
 
     // 모든 주문내역 찾기

@@ -124,11 +124,24 @@ public class AdminController {
 
     @GetMapping("/shipping")
     public String getShippingStatus(Model model) {
-        List<OrdersItem> shippingOrders = ordersItemService.findOrdersItemByCompleted(false)
-                .stream()
-                .toList();
+        try {
+            List<OrdersItem> shippingOrders = ordersItemService.findOrdersItemByCompleted(false)
+                    .stream()
+                    .toList();
+            model.addAttribute("shippingOrders", shippingOrders);
+            return "domain/order/shipping-status";
+        } catch (Exception e) {
+            // 예외 처리 및 로깅
+            e.printStackTrace(); // 또는 로깅 라이브러리 사용
+            model.addAttribute("errorMessage", "배송 상태 조회 중 오류가 발생했습니다.");
+            return "error"; // 오류 페이지로 이동
+        }
 
-        model.addAttribute("shippingOrders", shippingOrders);
-        return "domain/order/shipping-status";
+//        List<OrdersItem> shippingOrders = ordersItemService.findOrdersItemByCompleted(false)
+//                .stream()
+//                .toList();
+//
+//        model.addAttribute("shippingOrders", shippingOrders);
+//        return "domain/order/shipping-status";
     }
 }
