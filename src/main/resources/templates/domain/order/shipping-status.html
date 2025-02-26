@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>배송 상태 확인</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            background-color: #f8f9fa;
+            margin: 0;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 80%;
+            background: white;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+            text-align: center;
+        }
+
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .no-orders {
+            text-align: center;
+            font-size: 16px;
+            font-weight: bold;
+            color: #6c757d;
+            padding: 20px;
+        }
+
+        .back-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #343a40;
+            color: white;
+            font-size: 16px;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        .back-button:hover {
+            background-color: #23272b;
+        }
+    </style>
+</head>
+<body>
+
+<h2>🚚 배송 상태 확인</h2>
+
+<!-- 배송 중인 주문이 없을 경우 -->
+<p class="no-orders" th:if="${#lists.isEmpty(shippingOrders)}">현재 배송 중인 주문이 없습니다.</p>
+
+<!-- 배송 중인 주문이 있을 경우 테이블 표시 -->
+<table th:if="${not #lists.isEmpty(shippingOrders)}">
+    <thead>
+    <tr>
+        <th>주문번호</th>
+        <th>상품명</th>
+        <th>수량</th>
+        <th>배송 상태</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="order : ${shippingOrders}">
+        <td th:text="${order.ordersItemId}"></td>
+        <td th:text="${order.orderProductName}"></td>
+        <td th:text="${order.quantity} + '개'"></td>
+        <td th:text="${order.isCompleted() ? '배송 완료' : '배송 중'}"></td> <!-- ✅ 수정된 부분 -->
+    </tr>
+    </tbody>
+</table>
+
+<a href="/admin" class="back-button">🔙 관리자 페이지로 돌아가기</a>
+
+</body>
+</html>

@@ -1,14 +1,13 @@
 package com.example.cafe.global.controller;
 
+import com.example.cafe.domain.order.entity.OrdersItem;
+import com.example.cafe.domain.order.service.OrdersItemService;
 import com.example.cafe.domain.product.entity.Product;
 import com.example.cafe.domain.product.service.ProductService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,14 +18,14 @@ import java.util.List;
 import java.util.Optional;
 
 @Controller
+@RequiredArgsConstructor
 @RequestMapping("/admin")
 public class AdminController {
 
-    private final ProductService productService;
 
-    public AdminController(ProductService productService) {
-        this.productService = productService;
-    }
+    private final ProductService productService;
+    private final OrdersItemService ordersItemService;
+
     @Getter
     @Setter
     @AllArgsConstructor
@@ -121,5 +120,15 @@ public class AdminController {
     public String deleteProduct(@PathVariable Long id) {
         productService.deleteByProductId(id);
         return "redirect:/admin";
+    }
+
+    @GetMapping("/shipping")
+    public String getShippingStatus(Model model) {
+        List<OrdersItem> shippingOrders = ordersItemService.findOrdersItemByCompleted(false)
+                .stream()
+                .toList();
+
+        model.addAttribute("shippingOrders", shippingOrders);
+        return "domain/order/shipping-status";
     }
 }
